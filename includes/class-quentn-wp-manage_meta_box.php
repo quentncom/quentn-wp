@@ -27,7 +27,7 @@ class Quentn_Wp_Page_Restrictions_Controller
      */
 
     public function quentn_register_meta_boxes() {
-        add_meta_box( 'quentn-access-restriction-meta-box', __( 'Quentn Page Restriction', 'quentn' ), array( $this, 'quentn_page_restriction_callback' ), 'page' );
+        add_meta_box( 'quentn-access-restriction-meta-box', __( 'Quentn Page Restriction', 'quentn-wp' ), array( $this, 'quentn_page_restriction_callback' ), 'page' );
     }
 
     /**
@@ -93,61 +93,61 @@ class Quentn_Wp_Page_Restrictions_Controller
         <div class="bootstrap-qntn">
             <div class="form-group">
                 <input type="checkbox"  name="quentn_page_access_status" id="quentn_page_access_status" value="1" <?php checked( $quentn_page_restrict_status ); ?> >
-                <small class="form-text text-muted"><?php  _e( 'Activate page Restriction', 'quentn' )?></small>
-                <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" title="<?php  _e( 'Help', 'quentn' )?>" data-content="<?php  _e( 'Page will only be accessible by invite users', 'quentn' )?>"><span class="glyphicon glyphicon-question-sign"></a>
+                <small class="form-text text-muted"><?php  _e( 'Activate page Restriction', 'quentn-wp' )?></small>
+                <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" title="<?php  _e( 'Help', 'quentn-wp' )?>" data-content="<?php  _e( 'Page will only be accessible by invite users', 'quentn-wp' )?>"><span class="glyphicon glyphicon-question-sign"></a>
             </div>
 
             <div id="quentn_permission_panel" style="display: <?php echo  ( $quentn_post_restrict_meta )?'block':'none'; ?>">
                 <div class="form-group">
                     <input type="checkbox" name="quentn_page_access_countdown" id="quentn_page_access_countdown" value="1" <?php echo checked( $quentn_page_restrict_countdown ); ?>>
-                    <small class="form-text text-muted"><?php  _e( 'Use Countdown', 'quentn' )?></small>
-                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" title="<?php  _e( 'Help', 'quentn' )?>" data-content="<?php  _e( 'Page will only be accessible for a certain period of time', 'quentn' )?>"><span class="glyphicon glyphicon-question-sign"></a>
+                    <small class="form-text text-muted"><?php  _e( 'Use Countdown', 'quentn-wp' )?></small>
+                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" title="<?php  _e( 'Help', 'quentn-wp' )?>" data-content="<?php  _e( 'Page will only be accessible for a certain period of time', 'quentn-wp' )?>"><span class="glyphicon glyphicon-question-sign"></a>
                 </div>
 
                 <div class="panel-group" id="quentn_countdown_settings" style="display: <?php echo (($quentn_page_restrict_countdown)?'block':'none')?>">
                     <div class="panel panel-default">
-                        <div class="panel-heading"><?php  _e( 'Countdown Settings', 'quentn' )?></div>
+                        <div class="panel-heading"><?php  _e( 'Countdown Settings', 'quentn-wp' )?></div>
                         <div class="panel-body">
                             <div class = "form-group">
                                 <p class="help-block">
-                                    <?php printf( __('You can use the shortcode %s in your page to make the countdown timer appear', 'quentn'), '<strong>[quentn_flipclock]</strong>' ); ?>
+                                    <?php printf( __('You can use the shortcode %s in your page to display the countdown timer at a point of your choice.', 'quentn-wp'), '<strong>[quentn_flipclock]</strong>' ); ?>
                                 </p>
-                                <label for="quentn_page_restrict_countdown_type"><?php _e('Select type', 'quentn')?></label>
+                                <label for="quentn_page_restrict_countdown_type"><?php _e('Select type', 'quentn-wp')?></label>
                                 <select  class = "form-control" name="quentn_page_restrict_countdown_type" id="quentn_page_restrict_countdown_type">
-                                    <option value="relative" <?php  selected('relative', $quentn_page_restrict_countdown_type); ?>><?php  _e( 'Relative', 'quentn' )?></option>
-                                    <option value="absolute" <?php  selected('absolute', $quentn_page_restrict_countdown_type); ?>><?php  _e( 'Absolute', 'quentn' )?></option>
+                                    <option value="relative" <?php  selected('relative', $quentn_page_restrict_countdown_type); ?>><?php  _e( 'Relative', 'quentn-wp' )?></option>
+                                    <option value="absolute" <?php  selected('absolute', $quentn_page_restrict_countdown_type); ?>><?php  _e( 'Absolute', 'quentn-wp' )?></option>
                                 </select>
                             </div>
 
 
                             <div class="countdown-type form-inline"  id="relative-div" style="display: <?=($quentn_page_restrict_countdown_type == 'relative')?'block':'none'?>">
                                 <div class="form-group">
-                                    <label for="quentn_page_restrict_hours"><?php _e('Hours', 'quentn')?></label>
+                                    <label for="quentn_page_restrict_hours"><?php _e('Hours', 'quentn-wp')?></label>
                                     <input id="quentn_page_restrict_hours" type="text" name="quentn_page_restrict_hours" class="form-control"  value="<?php echo $quentn_page_restrict_hours; ?>" >
                                 </div>
                                 <div class="form-group">
-                                    <label for="quentn_page_restrict_minutes"><?php _e('Minutes', 'quentn')?></label>
+                                    <label for="quentn_page_restrict_minutes"><?php _e('Minutes', 'quentn-wp')?></label>
                                     <input id="quentn_page_restrict_minutes" type="text" name="quentn_page_restrict_minutes" class="form-control" value="<?php echo $quentn_page_restrict_minutes; ?>" >
                                 </div>
                                 <div class="form-group">
-                                    <label for="quentn_page_restrict_seconds"><?php _e('Seconds', 'quentn')?></label>
+                                    <label for="quentn_page_restrict_seconds"><?php _e('Seconds', 'quentn-wp')?></label>
                                     <input id="quentn_page_restrict_seconds" type="text" name="quentn_page_restrict_seconds" class="form-control" value="<?php echo $quentn_page_restrict_seconds; ?>">
                                 </div>
                             </div>
 
                             <div class = "form-group" id="absolute-div" style=" position:relative; display: <?=($quentn_page_restrict_countdown_type == 'absolute')?'block':'none'?>">
                                 <div>
-                                    <label for = "quentn_page_restrict_datepicker" class = "control-label"><?php _e( 'Date', 'quentn' )?></label>
-                                    <input type = "text" class = "form-control" id = "quentn_page_restrict_datepicker" name="quentn_page_restrict_datepicker" value="<?php echo $quentn_page_restrict_absolute_date ?>"  placeholder = "<?php _e( 'Select date', 'quentn' )?>">
+                                    <label for = "quentn_page_restrict_datepicker" class = "control-label"><?php _e( 'Date', 'quentn-wp' )?></label>
+                                    <input type = "text" class = "form-control" id = "quentn_page_restrict_datepicker" name="quentn_page_restrict_datepicker" value="<?php echo $quentn_page_restrict_absolute_date ?>"  placeholder = "<?php _e( 'Select date', 'quentn-wp' )?>">
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <div class = "checkbox">
                                     <label><input type = "checkbox"><input type="checkbox" name="quentn_default_display_countdown_status" id="quentn_default_display_countdown_status" value="1" <?php checked( $quentn_page_restrict_default_countdown_status ); ?> ></label>
-                                    <small class="form-text text-muted"><?php  _e( 'Display countdown on top of page', 'quentn' )?></small>
+                                    <small class="form-text text-muted"><?php  _e( 'Display countdown on top of page', 'quentn-wp' )?></small>
                                     <p class="help-block">
-                                        <?php  _e( 'No countdown will be shown by default if this option is disabled', 'quentn' )?>
+                                        <?php  _e( 'If this option is disabled, no countdown is displayed.', 'quentn-wp' )?>
                                     </p>
                                 </div>
                             </div>
@@ -158,19 +158,19 @@ class Quentn_Wp_Page_Restrictions_Controller
 
             <div class="panel-group" id="quentn_page_redirection_type_panel" style="display: <?php echo (($quentn_post_restrict_meta)?'block':'none')?>">
                 <div class="panel panel-default">
-                    <div class="panel-heading"><?php  _e( 'Redirection Settings', 'quentn' )?></div>
+                    <div class="panel-heading"><?php  _e( 'Redirection Settings', 'quentn-wp' )?></div>
                     <div class="panel-body">
                         <div class = "form-group">
-                            <label for="quentn_page_redirection_type"><?php _e( 'Select restriction type', 'quentn' )?></label>
+                            <label for="quentn_page_redirection_type"><?php _e( 'Select restriction type', 'quentn-wp' )?></label>
                             <select  class = "form-control" name="quentn_page_redirection_type" id="quentn_page_redirection_type">
-                                <option value="restricted_message" <?php selected('restricted_message', $quentn_page_restrict_redirection_type);?>><?php _e( 'Message', 'quentn' )?></option>
-                                <option value="restricted_url" <?php selected('restricted_url', $quentn_page_restrict_redirection_type); ?>><?php _e( 'URL', 'quentn' )?></option>
+                                <option value="restricted_message" <?php selected('restricted_message', $quentn_page_restrict_redirection_type);?>><?php _e( 'Message', 'quentn-wp' )?></option>
+                                <option value="restricted_url" <?php selected('restricted_url', $quentn_page_restrict_redirection_type); ?>><?php _e( 'URL', 'quentn-wp' )?></option>
                             </select>
                         </div>
 
                         <div style="margin-top: 5px;">
                             <div  class="form-group redirection_type" id="forbidden_message_div" style="display: <?php echo ($quentn_page_restrict_redirection_type == 'restricted_message' )?'block':'none'?>">
-                                <label><?php _e( 'Message', 'quentn' )?></label>
+                                <label><?php _e( 'Message', 'quentn-wp' )?></label>
                                 <p>
                                     <?php
                                         wp_editor(
@@ -186,8 +186,8 @@ class Quentn_Wp_Page_Restrictions_Controller
                             </div>
                             <div class = "form-group redirection_type" id="redirect_url-div" style="display: <?php echo ( $quentn_page_restrict_redirection_type == 'restricted_url' ) ? 'block' : 'none'?>">
                                 <div>
-                                    <label for = "quentn_page_restrict_datepicker" class = "control-label"><?php _e( 'Redirect URL', 'quentn' )?></label>
-                                    <input type = "text" class = "form-control" id = "quentn_page_restrict_redirect_url" name="quentn_page_restrict_redirect_url" value="<?php echo isset( $quentn_page_restrict_redirect_url ) ? $quentn_page_restrict_redirect_url : ''?>"  placeholder = "<?php _e( 'Enter URL', 'quentn' )?>">
+                                    <label for = "quentn_page_restrict_datepicker" class = "control-label"><?php _e( 'Redirect URL', 'quentn-wp' )?></label>
+                                    <input type = "text" class = "form-control" id = "quentn_page_restrict_redirect_url" name="quentn_page_restrict_redirect_url" value="<?php echo isset( $quentn_page_restrict_redirect_url ) ? $quentn_page_restrict_redirect_url : ''?>"  placeholder = "<?php _e( 'Enter URL', 'quentn-wp' )?>">
                                 </div>
                             </div>
                         </div>

@@ -90,7 +90,7 @@ class Quentn_Wp_Restrict_Access
             }
         }
         else {
-            return ( $page_meta['error_message'] ) ? $page_meta['error_message'] : '<h3>' . __('Access denied', 'quentn' ) . '</h3>';
+            return ( $page_meta['error_message'] ) ? $page_meta['error_message'] : '<h3>' . __('Access denied', 'quentn-wp' ) . '</h3>';
         }
     }
 
@@ -131,15 +131,15 @@ class Quentn_Wp_Restrict_Access
     public function get_new_access() {
 
         $get_new_access = '';
-        //get email address if it is in url
-        if( isset( $_GET["qntn_wp"] ) ) {
+
+        if( isset( $_GET["qntn_wp"] ) ) { //get email address if it is in query string
             $get_new_access =   trim( $_GET["qntn_wp"] );
-        } elseif ( isset($_GET["qntn"] ) ) {
+        } elseif ( isset($_GET["qntn"] ) ) { //qntn is used when request is created from quentn, it will be in base64 and json encoded
             $qntn = json_decode( base64_decode( $_GET["qntn"] ), true  );
             if( isset( $qntn['email'] ) ) { //if there is email in query string
                 $get_new_access =   hash( 'sha256', trim( $qntn['email'] ) );
             }
-        } elseif ( isset( $_GET["email"] ) ) {
+        } elseif ( isset( $_GET["email"] ) ) { //if there is plain email address in url
             $email = str_replace(" ","+",trim( $_GET["email"] ) );
             $get_new_access =  hash( 'sha256', $email );
         }
@@ -249,10 +249,11 @@ class Quentn_Wp_Restrict_Access
         if( $quentn_expiry_page_inseconds > 86400 ) {
             $clock_face = 'DailyCounter';
         }
-
+        $get_locale =  substr( get_locale(),0, 2 );   // take first two elements from get_locale() i.e de, en
         echo  "<script>var qncountdown = {
             seconds: $quentn_expiry_page_inseconds,        
             clockFace: '".$clock_face."',
+            wpLang: '".$get_locale."',
             isRedirect: $is_redirect_url_set,
             redirect_url: '".$redirect_url."',
                                 

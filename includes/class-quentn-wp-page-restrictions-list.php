@@ -14,8 +14,8 @@ class Quentn_Wp_Page_Restrictions_List extends \WP_List_Table {
     public function __construct() {
 
         parent::__construct(array(
-            'singular' => __( 'Page', 'Quentn' ),
-            'plural'   => __( 'Pages', 'Quentn' ),
+            'singular' => __( 'Page', 'quentn-wp' ),
+            'plural'   => __( 'Pages', 'quentn-wp' ),
         ));
     }
 
@@ -67,9 +67,9 @@ class Quentn_Wp_Page_Restrictions_List extends \WP_List_Table {
     public function get_columns()
     {
         $columns = array(
-            'page_title'         => __( 'Page Title', 'quentn' ),
-            'restriction_type'   => __( 'Restriction Type', 'quentn' ),
-            'total_access_links' => __( 'Access Links', 'quentn' ),
+            'page_title'         => __( 'Page Title', 'quentn-wp' ),
+            'restriction_type'   => __( 'Restriction Type', 'quentn-wp' ),
+            'total_access_links' => __( 'Access Links', 'quentn-wp' ),
             'show_access'        => '',
         );
 
@@ -93,9 +93,9 @@ class Quentn_Wp_Page_Restrictions_List extends \WP_List_Table {
             case 'total_access_links':
                 return $item[$column_name];
             case 'show_access':
-                return sprintf( '<a href="?page=%s&page_id=%s">%s</a>', esc_attr( 'quentn-page-access-overview' ), absint( $item['page_id'] ), __( "Show Access", 'quentn' ));
+                return sprintf( '<a href="?page=%s&page_id=%s">%s</a>', esc_attr( 'quentn-page-access-overview' ), absint( $item['page_id'] ), __( "Show Access", 'quentn-wp' ));
             default:
-                return __( "no value", 'quentn' );
+                return __( "no value", 'quentn-wp' );
         }
     }
 
@@ -109,7 +109,7 @@ class Quentn_Wp_Page_Restrictions_List extends \WP_List_Table {
     public function column_page_title( $item ) {
         $title = '<strong>' . $item['page_title'] . '</strong>';
         $actions = array(
-            'show-access' => sprintf( '<a href="?page=%s&page_id=%s">%s</a>', esc_attr( 'quentn-page-access-overview' ), absint( $item['page_id'] ), __( "Show Access", 'quentn' ) )
+            'show-access' => sprintf( '<a href="?page=%s&page_id=%s">%s</a>', esc_attr( 'quentn-page-access-overview' ), absint( $item['page_id'] ), __( "Show Access", 'quentn-wp' ) )
         );
 
         return $title . $this->row_actions( $actions );
@@ -178,7 +178,7 @@ class Quentn_Wp_Page_Restrictions_List extends \WP_List_Table {
             //get meta of page
             $quentn_post_restrict_meta = get_post_meta( $restricted_page->ID, '_quentn_post_restrict_meta', true );
 
-            $restriction_type = ( isset( $quentn_post_restrict_meta['countdown'] ) && $quentn_post_restrict_meta['countdown'] ) ? __( 'CountDown', 'quentn' ): __( 'Access', 'quentn' );
+            $restriction_type = ( isset( $quentn_post_restrict_meta['countdown'] ) && $quentn_post_restrict_meta['countdown'] ) ? __( 'CountDown', 'quentn-wp' ): __( 'Access', 'quentn-wp' );
 
             $result[] = array(
                 "page_id"            => $restricted_page->ID,
@@ -216,7 +216,7 @@ class Quentn_Wp_Page_Restrictions_List extends \WP_List_Table {
      * @return void
      */
     public function no_items() {
-        _e( 'To create access restricted pages, please check the your page\'s settings', 'quentn' );
+        _e( 'To create access restricted pages, please check the your page\'s settings', 'quentn-wp' );
     }
 
     /**
@@ -248,7 +248,7 @@ class Quentn_Wp_Page_Restrictions_List extends \WP_List_Table {
  */
 function quentn_show_data_page_restrictions_list() {
     ?>
-    <h3><?php _e( 'List of Pages With Limited Access', 'quentn' ); ?></h3>
+    <h3><?php _e( 'List of Pages With Limited Access', 'quentn-wp' ); ?></h3>
     <?php
     $qntn_list_table = new Quentn_Wp_Page_Restrictions_List();
     $qntn_list_table->prepare_items();

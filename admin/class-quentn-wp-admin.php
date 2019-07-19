@@ -163,9 +163,17 @@ class Quentn_Wp_Admin {
         wp_enqueue_script('quentn.jquery.bootstrap-touchspin.js', plugin_dir_url( __FILE__ ) . 'js/jquery.bootstrap-touchspin.js', array( 'jquery' ), '', true );
 
 
+
+
+
+
         //bootstrap datetime picker
         wp_register_script('quentn.bootstrap.datetimepicker.min.js', plugin_dir_url( __FILE__ ) . 'js/bootstrap-datetimepicker.js', array( 'jquery' ), $this->version );
         wp_enqueue_script( 'quentn.bootstrap.datetimepicker.min.js' );
+
+        //bootstrap datetime picker german translation
+        wp_register_script('quentn.bootstrap.datetimepicker.de.js', plugin_dir_url( __FILE__ ) . 'js/bootstrap-datepicker.de.js', array( 'jquery') );
+        wp_enqueue_script( 'quentn.bootstrap.datetimepicker.de.js' );
 
         //add custom script file
         wp_register_script('quentn.admin.custom.js', plugin_dir_url( __FILE__ ) . 'js/main.js', array( 'jquery' ), $this->version );
@@ -174,10 +182,12 @@ class Quentn_Wp_Admin {
 
 
 
+
         //Localize the script with new data
         $translation_array = array(
-            'choose_quentn_tags'            =>  __( 'Choose Quentn Tags', 'quentn' ),
-            'delete_confirmation_message'   =>  __( 'Are you sure you want to delete these records?', 'quentn' ),
+            'choose_quentn_tags'            =>  __( 'Choose Quentn Tags', 'quentn-wp' ),
+            'delete_confirmation_message'   =>  __( 'Are you sure you want to delete?', 'quentn-wp' ),
+            'datepicker_lang'   =>  ( substr( get_locale(),0, 2 ) == 'de' ? 'de' : 'en' ) // if wp set in german lang then set datepicker lang in german, otherwise in english
         );
 
         wp_localize_script( 'quentn.admin.custom.js', 'wp_qntn', $translation_array );
@@ -194,15 +204,15 @@ class Quentn_Wp_Admin {
      */
     public function register_custom_menus() {
 
-        add_menu_page( " __( 'Quentn Plugin', 'quentn' )", __( 'Quentn', 'quentn' ), "manage_options", "quentn-dashboard", array( $this, 'quentn_dashboard' ), plugin_dir_url( __FILE__ ) . 'images/icon.png', 6);
+        add_menu_page( " __( 'Quentn Plugin', 'quentn-wp' )", __( 'Quentn', 'quentn-wp' ), "manage_options", "quentn-dashboard", array( $this, 'quentn_dashboard' ), plugin_dir_url( __FILE__ ) . 'images/icon.png', 6);
 
-        add_submenu_page( "quentn-dashboard", __( 'Quentn Dashboard', 'quentn' ),  __( 'Integration', 'quentn' ), "manage_options", "quentn-dashboard", array( $this, 'quentn_dashboard' ) );
+        add_submenu_page( "quentn-dashboard", __( 'Quentn Integration', 'quentn-wp' ),  __( 'Integration', 'quentn-wp' ), "manage_options", "quentn-dashboard", array( $this, 'quentn_dashboard' ) );
 
-        $hook_page_list = add_submenu_page("quentn-dashboard", __( 'Access Pages Restrictions', 'quentn'),   __('Access Restrictions', 'quentn'), "manage_options", "quentn-access-pages-restrictions", array( $this, 'restricted_pages_list' ) );
+        $hook_page_list = add_submenu_page("quentn-dashboard", __( 'Access Pages Restrictions', 'quentn-wp'),   __('Access Restrictions', 'quentn-wp'), "manage_options", "quentn-access-pages-restrictions", array( $this, 'restricted_pages_list' ) );
 
         add_action( "load-$hook_page_list", array( $this, 'restricted_pages_list_screen_option' ) );
 
-        $hook_access_overview = add_submenu_page("NULL", __( 'Quentn User Access', 'quentn'),   __('Access', 'quentn'), "manage_options", "quentn-page-access-overview", array( $this, 'access_restrictions_list' ) );
+        $hook_access_overview = add_submenu_page("NULL", __( 'Quentn User Access', 'quentn-wp'),   __('Access', 'quentn-wp'), "manage_options", "quentn-page-access-overview", array( $this, 'access_restrictions_list' ) );
 
         add_action( "load-$hook_access_overview", array( $this, 'access_overview_list_screen_option' ) );
 
@@ -225,22 +235,24 @@ class Quentn_Wp_Admin {
 
             //if a user access was deleted
             if ( $action == 'quentn-access-deleted' ) {
-                $this->notices[] = array( 'message' => __( 'Access has been deleted', 'quentn' ), 'type' => 'success' );
+                //$this->notices[] = array( 'message' => __( 'User accesses have been deleted', 'quentn-wp' ), 'type' => 'success' );
+                $this->notices[] = array( 'message' =>  sprintf( esc_html( _n( '%d user access is deleted', '%d user accesses are deleted', $_GET['deleted'], 'quentn-wp'  ) ), $_GET['deleted'] ), 'type' => 'success' );
+
             }
 
             //if direct access added successfully
             if ( $action == 'quentn-direct-access-add' ) {
-                $this->notices[] = array( 'message' => __( 'Access has been added successfully', 'quentn' ), 'type' => 'success' );
+                $this->notices[] = array( 'message' => __( 'User access has been added successfully', 'quentn-wp' ), 'type' => 'success' );
             }
 
             //if direct access added successfully
             if ( $action == 'quentn-direct-access-email-invalid' ) {
-                $this->notices[] = array( 'message' => __( 'Please Enter Valid Email Address', 'quentn' ), 'type' => 'error' );
+                $this->notices[] = array( 'message' => __( 'Please enter valid email address', 'quentn-wp' ), 'type' => 'error' );
             }
 
             //if quentn account is disconnected
             if ( $action == 'quentn-account-removed' ) {
-                $this->notices[] = array( 'message' => __( 'Quentn Account has been removed', 'quentn' ), 'type' => 'success' );
+                $this->notices[] = array( 'message' => __( 'Quentn account has been removed', 'quentn-wp' ), 'type' => 'success' );
             }
         }
 
@@ -332,13 +344,13 @@ class Quentn_Wp_Admin {
         $sections = array(
             array(
                 'id' => 'quentn_web_tracking_option',
-                'title' =>  __( 'Web Tracking Settings', 'quentn'),
+                'title' =>  __( 'Web Tracking Settings', 'quentn-wp'),
                 'callback' => '__return_false',
                 'page' => 'quentn-dashboard-web-tracking'
             ),
             array(
                 'id' => 'qnentn_tags_option',
-                'title' => __( 'Select Quentn Tags', 'quentn'),
+                'title' => __( 'Select Quentn Tags', 'quentn-wp'),
                 'callback' => '__return_false',
                 'page' => 'quentn-dashboard-tags'
             ),
@@ -368,7 +380,7 @@ class Quentn_Wp_Admin {
         $fields = array();
         $fields[] = array(
             'id'        => 'quentn_web_tracking_enabled',
-            'title'     =>  __( 'Web Tracking', 'quentn' ),
+            'title'     =>  __( 'Web Tracking', 'quentn-wp' ),
             'callback'  => array( $this, 'field_quentn_web_tracking' ),
             'page'      => 'quentn-dashboard-web-tracking',
             'section'   => 'quentn_web_tracking_option',
@@ -377,7 +389,7 @@ class Quentn_Wp_Admin {
         if( $this->is_confirmation_required_for_web_tracking() ) {
             $fields[] = array(
                 'id'        => 'quentn_web_tracking_consent_method',
-                'title'     => __('Consent Method', 'quentn'),
+                'title'     => __('Consent Method', 'quentn-wp'),
                 'callback'  => array( $this, 'field_quentn_consent_method' ),
                 'page'      => 'quentn-dashboard-web-tracking',
                 'section'   => 'quentn_web_tracking_option',
@@ -410,7 +422,7 @@ class Quentn_Wp_Admin {
                 'page'      => 'quentn-dashboard-tags',
                 'section'   => 'qnentn_tags_option',
                 'args'      => array(
-                    'label_for' => __('Please Select Tags', 'quentn'),
+                    'label_for' => __('Please Select Tags', 'quentn-wp'),
                     'role'      => $slug,
                     'terms'     => $qntn_terms,
                 )
@@ -450,8 +462,9 @@ class Quentn_Wp_Admin {
             ?>
             <div class="notice notice-warning quentn-cookie-notice is-dismissible">
                 <p>
-                    <?php  printf( __( 'You need to install the plugin %s to support Quentn cookies, You can download the plugin', 'quentn' ),'<i><b>Cookie Notice for GDPR</i></b>' ); ?>
-                    <a href="https://wordpress.org/plugins/cookie-notice/" target="_blank"><?php   _e( 'here', 'quentn' ) ; ?> </a>
+                    <?php  printf( esc_html__( 'You need to install the plugin %s to support Quentn cookies. You can download the plugin', 'quentn-wp' ),'<i><b>Cookie Notice for GDPR</i></b>' ); ?>
+
+                    <a href="https://wordpress.org/plugins/cookie-notice/" target="_blank"><?php   _e( 'here', 'quentn-wp' ) ; ?> </a>
                 </p>
             </div>
             <?php
@@ -502,8 +515,8 @@ class Quentn_Wp_Admin {
             ?>
             <div class="notice notice-warning quentn-member-plugin-notice is-dismissible">
                 <p>
-                    <?php  printf( __( 'It is recommended to install the plugin %s to support multiple user roles and content permissions control over which users (by role) have access to post content, You can download the plugin', 'quentn' ),'<i><b>Members</i></b>' ); ?>
-                    <a href="https://wordpress.org/plugins/members/" target="_blank"><?php   _e( 'here', 'quentn' ) ; ?> </a>
+                    <?php  printf( __( 'It is recommended to install the plugin %s to support multiple user roles and content permissions control over which users (by role) have access to post content, You can download the plugin', 'quentn-wp' ),'<i><b>Members</i></b>' ); ?>
+                    <a href="https://wordpress.org/plugins/members/" target="_blank"><?php   _e( 'here', 'quentn-wp' ) ; ?> </a>
                 </p>
             </div>
             <?php
@@ -761,9 +774,9 @@ class Quentn_Wp_Admin {
         $value = esc_attr( get_option( 'quentn_web_tracking_consent_method' ) );
         ?>
         <select name="quentn_web_tracking_consent_method" id="quentn_web_tracking_consent_method" <?php disabled(  ! get_option( 'quentn_web_tracking_enabled'  ) || ! $this->api_handler->is_connected_with_quentn() || ! $this->api_handler->is_web_tracking_enabled() || ! $this->is_domain_registered( $_SERVER['HTTP_HOST'], $this->api_handler->get_registered_domains() ) ); ?>>
-            <option value="confirm-by-server" <?php  selected( $value, 'confirm-by-server' ); ?>><?php _e( 'Confirm By Server', 'quentn' ) ?></option>
-            <option value="cookie-notice" <?php  selected( $value, 'cookie-notice' ); disabled( ! Helper::is_cookie_notice_plugin_enabled() ) ?>><?php _e( 'Cookie Notice', 'quentn' ) ?></option>
-            <option value="quentn-overlay" <?php  selected( $value, 'quentn-overlay' ); ?>><?php _e('Quentn Overlay', 'quentn' ) ?></option>
+            <option value="confirm-by-server" <?php  selected( $value, 'confirm-by-server' ); ?>><?php _e( 'Confirm By Server', 'quentn-wp' ) ?></option>
+            <option value="cookie-notice" <?php  selected( $value, 'cookie-notice' ); disabled( ! Helper::is_cookie_notice_plugin_enabled() ) ?>><?php _e( 'Cookie Notice', 'quentn-wp' ) ?></option>
+            <option value="quentn-overlay" <?php  selected( $value, 'quentn-overlay' ); ?>><?php _e('Quentn Overlay', 'quentn-wp' ) ?></option>
         </select>
         <?php
     }
@@ -787,7 +800,7 @@ class Quentn_Wp_Admin {
         ?>
         <input type="checkbox" class="form-control add-wp-qntn" value="1" name="quentn_add_remove_wp_user_from_host[<?=$args['role']?>][add]" data-role="<?=$args['role']?>" id="quentn_tags_add_wp_user<?=$args['role']?>"  <?php checked( $is_add_user_to_qntn_enabled); disabled( ! $this->api_handler->is_connected_with_quentn() ); ?>  >
         <?php
-        printf( __( 'Create or update Quentn contact if user receives role %s , with the following tags', 'quentn' ), ucfirst( $args['role'] ) );
+        printf( __( 'Create or update Quentn contact if user receives role %s , with the following tags', 'quentn-wp' ), ucfirst( $args['role'] ) );
     }
 
     /**
@@ -813,7 +826,7 @@ class Quentn_Wp_Admin {
         ?>
         <input type="checkbox" class="form-control" value="1" name="quentn_add_remove_wp_user_from_host[<?=$args['role']?>][remove]" id="quentn_tags_remove_wp_user<?=$args['role']?>" <?php checked( $is_delete_user_to_qntn_enabled); disabled( ! $this->api_handler->is_connected_with_quentn() || !$is_add_user_to_qntn_enabled);  ?>  >
         <?php
-        printf( __( 'Remove tags if user looses the role %s', 'quentn' ), ucfirst( $args['role'] ) );
+        printf( __( 'Remove tags if user looses the role %s', 'quentn-wp' ), ucfirst( $args['role'] ) );
     }
 
     /**

@@ -8,6 +8,7 @@
                 if (typeof qncountdown != "undefined") {
                     var clock = jQuery(o).FlipClock(qncountdown.seconds, {
                         clockFace: qncountdown.clockFace,
+                        language: qncountdown.wpLang,
                         countdown: true,
                         callbacks : {
                             stop : function () {

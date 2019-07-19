@@ -89,15 +89,15 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
     {
         $columns = array(
             'cb'            => "<input type='checkbox' />",
-            'email'         => __( 'Email', 'quentn' ),
-            'created_at'    => __( 'Created', 'quentn' ),
+            'email'         => __( 'Email', 'quentn-wp' ),
+            'created_at'    => __( 'Created', 'quentn-wp' ),
         );
 
         if( isset( $this->quentn_page_restriction_data['countdown'] ) && $this->quentn_page_restriction_data['countdown'] ) {
-            $columns['valid_until'] = __( 'Valid Until', 'quentn' );
+            $columns['valid_until'] = __( 'Valid Until', 'quentn-wp' );
         }
-        $columns['delete-access'] = __( 'Delete', 'quentn' );
-        $columns['view_access']       = __( 'View Access', 'quentn' );
+        $columns['delete-access'] = __( 'Delete', 'quentn-wp' );
+        $columns['view_access']       = __( 'View Access', 'quentn-wp' );
 
         return $columns;
     }
@@ -137,11 +137,11 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
                 $date_created = getdate( $item['created_at'] );
                 return $date_created['mday']." ".substr($date_created['month'], 0, 3)." ".$date_created['year']." ".$date_created['hours'].":".$date_created['minutes'].":".$date_created['seconds'];;
             case 'delete-access':
-                return  sprintf( __('<a href="?page=%s&action=%s&page_id=%s&email=%s&_wpnonce=%s" onclick="return confirm(\'%s\')" >%s</a>', 'quentn'), esc_attr( $_REQUEST['page'] ), 'qntn-delete', $page_id, trim($item['email']), $delete_nonce,__( "Are you sure to delete this record?", 'quentn' ),  __( "Delete", 'quentn' ) );
+                return  sprintf( '<a href="?page=%s&action=%s&page_id=%s&email=%s&_wpnonce=%s" onclick="return confirm(\'%s\')" >%s</a>', esc_attr( $_REQUEST['page'] ), 'qntn-delete', $page_id, trim($item['email']), $delete_nonce, __( "Are you sure you want to delete?", 'quentn-wp' ),  __( "Delete", 'quentn-wp' ) );
             case 'view_access':
-                return  sprintf( __("<input type='text' class='get_access_url' readonly  value='%s' /><button class='copy_access_url'>%s</button>", 'quentn'), get_page_link( $_GET['page_id'] ).'?qntn_wp='.$item['email_hash'], 'Copy URL');
+                return  sprintf( "<input type='text' class='get_access_url' readonly  value='%s' /><button class='copy_access_url'>%s</button>", get_page_link( $_GET['page_id'] ).'?qntn_wp='.$item['email_hash'], __( 'Copy URL' ) );
             default:
-                return __("no value", 'quentn');
+                return __( "no value", 'quentn-wp' );
         }
     }
 
@@ -155,7 +155,7 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
     public function column_page_id( $item ) {
         $delete_nonce = wp_create_nonce( 'qntn_delete_access' );
         $action = array(
-            'qntn-delete' => sprintf( __('<a href="?page=%s&action=%s&page_id=%s&email=%s&_wpnonce=%s">%s</a>', 'quentn'), esc_attr( $_REQUEST['page'] ), 'qntn-delete', absint( $item['page_id'] ), trim( $item['email'] ), $delete_nonce, __("Delete", 'quentn') ),
+            'qntn-delete' => sprintf( '<a href="?page=%s&action=%s&page_id=%s&email=%s&_wpnonce=%s">%s</a>', esc_attr( $_REQUEST['page'] ), 'qntn-delete', absint( $item['page_id'] ), trim( $item['email'] ), $delete_nonce, __("Delete", 'quentn-wp') ),
         );
         return $item['page_id']. $this->row_actions( $action );
     }
@@ -183,7 +183,7 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
      */
     public function get_bulk_actions() {
         $actions = array(
-            'quentn-bulk-delete-access' => __("Delete", 'quentn'),
+            'quentn-bulk-delete-access' => __("Delete", 'quentn-wp'),
         );
 
         return $actions;
@@ -241,9 +241,9 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
                 $quentn_expiry_page_inseconds = $result['created_at'] + $quentn_page_expirty_inseconds - time();
                 //set postfix text
                 if( $quentn_expiry_page_inseconds > 0 ) {
-                    $text_with_expiry_time = __( 'Time Left To Expire', 'quentn' );
+                    $text_with_expiry_time = __( 'Time Left To Expire', 'quentn-wp' );
                 } else {
-                    $text_with_expiry_time = __( 'Ago Page Has Expired', 'quentn' );
+                    $text_with_expiry_time = __( 'Ago Page Has Expired', 'quentn-wp' );
                 }
                 //add number of seconds left to current record array
                 $results[$key]['seconds'] = $quentn_expiry_page_inseconds;
@@ -260,13 +260,11 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
      *
      * @param int $page_id
      * @param string $email
-     * @return void
+     * @return int|bool
      */
     public function delete_restriction( $page_id, $email ) {
         global $wpdb;
-        $wpdb->delete(
-            $wpdb->prefix . QUENTN_TABLE_NAME, [ 'page_id' => $page_id, 'email' => $email ], [ '%d', '%s' ]
-        );
+         return $wpdb->delete( $wpdb->prefix . QUENTN_TABLE_NAME, [ 'page_id' => $page_id, 'email' => $email ], [ '%d', '%s' ] );
     }
 
     /**
@@ -291,7 +289,7 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
      * @return void
      */
     public function no_items() {
-        _e( 'No record avaliable.', 'quentn' );
+        _e( 'No record avaliable.', 'quentn-wp' );
     }
 
     /**
@@ -318,7 +316,7 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
     public function get_views(){
         $views = array();
 
-        $views['add_access'] = '<a href="#TB_inline?&width=400&height=250&inlineId=qntn-add-access" title="' . __( "Access Overview For Page", "quentn" ). ' ' . get_the_title($this->page_id).'" class="button action thickbox">'.__( 'Add Access', 'quentn' ).'</a>';
+        $views['add_access'] = '<a href="#TB_inline?&width=400&height=250&inlineId=qntn-add-access" title="' . __( "Access Overview For Page", "quentn-wp" ). ' ' . get_the_title($this->page_id).'" class="button action thickbox">'.__( 'Add Access', 'quentn-wp' ).'</a>';
 
         return $views;
     }
@@ -342,8 +340,8 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
                 die( 'Nope! Security check failed' );
             }
             else {
-                $this->delete_restriction( absint( $_GET['page_id'] ), str_replace(" ","+",trim( $_GET['email'] ) ) );
-                wp_redirect( esc_url_raw( remove_query_arg( ['action', 'email', '_wpnonce'], esc_url_raw(add_query_arg( ['page_id' => $this->page_id, 'update' => 'quentn-access-deleted' ] ) ) ) ) );
+                $num_records_deleted = $this->delete_restriction( absint( $_GET['page_id'] ), str_replace(" ","+",trim( $_GET['email'] ) ) );
+                wp_redirect( esc_url_raw( remove_query_arg( ['action', 'email', '_wpnonce'], esc_url_raw(add_query_arg( ['page_id' => $this->page_id, 'update' => 'quentn-access-deleted', 'deleted' => $num_records_deleted ] ) ) ) ) );
                 exit;
             }
         }
@@ -356,12 +354,15 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
             global $wpdb;
 
             $delete_restrict_pages_ids = esc_sql( $_REQUEST['quentn-bulk-delete-access'] );
-            $query =  "DELETE FROM ".$wpdb->prefix . QUENTN_TABLE_NAME." where CONCAT_WS('|', page_id, email) IN ('".implode("', '", $delete_restrict_pages_ids)."')";
 
-            $wpdb->query( $wpdb->query( $query ) );
-            //add and remove items from a query string
-            wp_redirect( esc_url_raw(remove_query_arg( ['action', 'action2', '_wpnonce', '_wp_http_referer', 'quentn-bulk-delete-access'], esc_url_raw(add_query_arg( ['page_id' => $this->page_id, 'update' => 'quentn-access-deleted' ] ) ) ) ) );
-            exit;
+            if( ! empty( $delete_restrict_pages_ids ) ) {
+                //delete multiple accesses
+                $query =  "DELETE FROM ".$wpdb->prefix . QUENTN_TABLE_NAME." where CONCAT_WS('|', page_id, email) IN ('".implode("', '", $delete_restrict_pages_ids)."')";
+                $wpdb->query( $wpdb->query( $query ) );
+                //add and remove items from a query string
+                wp_redirect( esc_url_raw(remove_query_arg( ['action', 'action2', '_wpnonce', '_wp_http_referer', 'quentn-bulk-delete-access'], esc_url_raw(add_query_arg( ['page_id' => $this->page_id, 'update' => 'quentn-access-deleted', 'deleted' => count( $delete_restrict_pages_ids ) ] ) ) ) ) );
+                exit;
+            }
         }
 
         //process when access is added in wp
@@ -403,10 +404,10 @@ function quentn_show_data_access_overview_list() {
 
     ?>
 
-    <h3><?php  printf( __( 'Access Overview For Page %s', 'quentn' ),  get_the_title($_REQUEST['page_id'] ) ); ?></h3>
+    <h3><?php  printf( __( 'Access Overview For Page %s', 'quentn-wp' ),  get_the_title($_REQUEST['page_id'] ) ); ?></h3>
 
     <form method="get">
-        <?php  $qntn_list_table->search_box(__('Search Email', 'quentn' ), "search_email_id");  ?>
+        <?php  $qntn_list_table->search_box(__('Search Email', 'quentn-wp' ), "search_email_id");  ?>
         <input name='page' value="quentn-page-access-overview" type="hidden">
         <input name='page_id' value="<?php echo $_REQUEST['page_id'] ?>" type="hidden">
         <?php  $qntn_list_table->display(); ?>
@@ -416,7 +417,7 @@ function quentn_show_data_access_overview_list() {
         <form method="get" name="frm-email-direct-access" id="frm-email-direct-access" >
             <table>
                 <tr>
-                    <td><?php _e('Email', 'quentn' ) ?></td>
+                    <td><?php _e('Email', 'quentn-wp' ) ?></td>
                     <td><input required type="email"  name='email_direct_access' id='email_direct_access' size='25'>
                         <input name='page' type="hidden" value="<?php echo $_REQUEST['page'] ?>">
                         <input name='page_id' type="hidden" value="<?php echo $_REQUEST['page_id'] ?>">

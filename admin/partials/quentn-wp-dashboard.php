@@ -7,15 +7,15 @@ if( isset($_GET['tab'])) {
 }
 ?>
 <div class="wrap">
-    <h1><?php _e( 'Quentn Options', 'quentn' ) ?></h1>
+    <h1><?php _e( 'Quentn Options', 'quentn-wp' ) ?></h1>
     <?php settings_errors(); ?>
 
     <form method="post" action="options.php">
         <!-- provides the styling for tabs. -->
         <h2 class="nav-tab-wrapper">
-            <a href="?page=quentn-dashboard&tab=quentn_host_connection" class="nav-tab <?php if ( $active_tab == 'quentn_host_connection' ) { echo 'nav-tab-active'; } ?>"><?php _e( 'Connect', 'quentn' ); ?></a>
-            <a href="?page=quentn-dashboard&tab=qnentn_tags_selection" class="nav-tab <?php if ( $active_tab == 'qnentn_tags_selection' ) { echo 'nav-tab-active'; } ?>"><?php _e( 'Roles', 'quentn' ); ?></a>
-            <a href="?page=quentn-dashboard&tab=qnentn_web_tracking_tab" class="nav-tab <?php if ( $active_tab == 'qnentn_web_tracking_tab' ) { echo 'nav-tab-active'; } ?>"><?php _e( 'Web Tracking', 'quentn' ); ?></a>
+            <a href="?page=quentn-dashboard&tab=quentn_host_connection" class="nav-tab <?php if ( $active_tab == 'quentn_host_connection' ) { echo 'nav-tab-active'; } ?>"><?php _e( 'Connect', 'quentn-wp' ); ?></a>
+            <a href="?page=quentn-dashboard&tab=qnentn_tags_selection" class="nav-tab <?php if ( $active_tab == 'qnentn_tags_selection' ) { echo 'nav-tab-active'; } ?>"><?php _e( 'Roles', 'quentn-wp' ); ?></a>
+            <a href="?page=quentn-dashboard&tab=qnentn_web_tracking_tab" class="nav-tab <?php if ( $active_tab == 'qnentn_web_tracking_tab' ) { echo 'nav-tab-active'; } ?>"><?php _e( 'Web Tracking', 'quentn-wp' ); ?></a>
         </h2>
         <?php
         $submit_button_attributes = array();
@@ -27,10 +27,10 @@ if( isset($_GET['tab'])) {
         <div class="bootstrap-qntn">
             <div class="alert alert-danger" style="margin-top: 10px">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                <span class="glyphicon glyphicon-hand-right"></span> <strong><?php  _e( 'You are not connected to Quentn', 'quentn' ) ?></strong>
+                <span class="glyphicon glyphicon-hand-right"></span> <strong><?php  _e( 'You are not connected to Quentn', 'quentn-wp' ) ?></strong>
                 <hr class="message-inner-separator">
                 <p>
-                    <?php  echo _e( 'Please connect a Quentn account to use this feature', 'quentn' )  ?>
+                    <?php  echo _e( 'Please connect a Quentn account to use this feature', 'quentn-wp' )  ?>
                 </p>
             </div>
         </div>
@@ -70,7 +70,7 @@ if( isset($_GET['tab'])) {
                         <div class="alert alert-danger">
                             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
                                 ×</button>
-                            <span class="glyphicon glyphicon-hand-right"></span> <strong><?php printf(__( "Could not find %s at the connected Quentn server.  Please add %s as tracked domain in order to use this feature.", 'quentn' ),"'".$_SERVER['HTTP_HOST']."''", "'".$_SERVER['HTTP_HOST']."''" ); ?></strong>
+                            <span class="glyphicon glyphicon-hand-right"></span> <strong><?php printf(__( "Could not find %s at the connected Quentn server.  Please add %s as tracked domain in order to use this feature.", 'quentn-wp' ),"'".$_SERVER['HTTP_HOST']."''", "'".$_SERVER['HTTP_HOST']."''" ); ?></strong>
                         </div>
                     </div>
                 </div>

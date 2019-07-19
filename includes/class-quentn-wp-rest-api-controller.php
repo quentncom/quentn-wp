@@ -236,6 +236,9 @@ class Quentn_Wp_Rest_Api
         $values = array();
         $place_holders = array();
         foreach ( $emails as $email ) {
+            if ( $email == "" ) { //email cannot be empty
+                continue;
+            }
             foreach ( $pages as $page ) {
                 array_push( $values, $page, $email, hash( 'sha256', $email ), time() );
                 $place_holders[] = "('%d', '%s', '%s', '%d')";
@@ -263,7 +266,7 @@ class Quentn_Wp_Rest_Api
             return  $error->get_error_messages();
         }
 
-        return rest_ensure_response( esc_html__( 'Permissions Timer Successfully Updated', 'quentn' ) );
+        return rest_ensure_response( esc_html__( 'Permissions Timer Successfully Updated', 'quentn-wp' ) );
     }
 
     /**
@@ -295,7 +298,7 @@ class Quentn_Wp_Rest_Api
         //delete permissions
         $query =  "DELETE FROM ".$wpdb->prefix . QUENTN_TABLE_NAME." where CONCAT_WS('|', page_id, email) IN ('".implode("','", $values)."')";
         $wpdb->query( $wpdb->query( $query ) );
-        return rest_ensure_response( esc_html__( 'Permissions Timer Successfully Updated', 'quentn' ) );
+        return rest_ensure_response( esc_html__( 'Permissions Timer Successfully Updated', 'quentn-wp' ) );
     }
 
     /**
@@ -417,7 +420,7 @@ class Quentn_Wp_Rest_Api
     public function quentn_validate_email_callback($value, $request, $param) {
 
         if ( ! filter_var( $value, FILTER_VALIDATE_EMAIL ) ) {
-            return new WP_Error( 'rest_invalid_param', esc_html__( 'There must be valid email address', 'quentn' ), array( 'status' => 400 ) );
+            return new WP_Error( 'rest_invalid_param', esc_html__( 'There must be valid email address', 'quentn-wp' ), array( 'status' => 400 ) );
         }
     }
 
@@ -470,7 +473,7 @@ class Quentn_Wp_Rest_Api
 
         //check time validation for request
         if( $request_body['vu'] <= time() ) {
-            return new WP_Error( 'Time Invalid', esc_html__( 'Time has expired', 'quentn' ), array( 'status' => 401 ) );
+            return new WP_Error( 'Time Invalid', esc_html__( 'Time has expired', 'quentn-wp' ), array( 'status' => 401 ) );
         }
 
 
@@ -481,7 +484,7 @@ class Quentn_Wp_Rest_Api
         }
 
         if ( $hash != $request_body['hash'] ) {
-            return new WP_Error( __( 'API key is not valid' ), esc_html__( 'Incorrect Api Key', 'quentn' ), array( 'status' => 401 ) );
+            return new WP_Error( __( 'API key is not valid' ), esc_html__( 'Incorrect Api Key', 'quentn-wp' ), array( 'status' => 401 ) );
         }
 
         return true;

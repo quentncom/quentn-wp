@@ -150,7 +150,7 @@ class Quentn_Wp_Api_Handler
                 if ( $this->quentn->test() ) {
                     $this->is_connected_with_quentn = true;
                 } else {
-                    $this->error_messages[] = __( 'Please connect a Quentn account to use this feature', 'quentn' );
+                    $this->error_messages[] = __( 'Please connect a Quentn account to use this feature', 'quentn-wp' );
                 }
             } catch ( Exception $e ) {
                 $this->error_messages[] = $e->getMessage();
@@ -214,7 +214,7 @@ class Quentn_Wp_Api_Handler
         }
 
         if( ! $this->is_web_tracking_enabled ) {
-            $this->error_messages[] = __( 'Tracking is not enabled from your quentn host', 'quentn' );
+            $this->error_messages[] = __( 'Tracking is not enabled from your quentn host', 'quentn-wp' );
         }
 
         return $this->is_web_tracking_enabled;

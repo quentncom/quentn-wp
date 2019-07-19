@@ -1,15 +1,13 @@
 jQuery(document).ready(function () {
 
-    //bootstrap datetimepicker
     jQuery('#quentn_page_restrict_datepicker').datetimepicker({
-
         weekStart: true,
         todayBtn:  true,
         autoclose: true,
         todayHighlight: true,
         startView: 2,
         forceParse: false,
-        showMeridian: true,
+        language : wp_qntn.datepicker_lang,
     });
 
     //dropdown to select quentn tags for wp user roles

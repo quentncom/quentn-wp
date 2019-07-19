@@ -18,18 +18,18 @@ if ( isset( $_GET['update'] ) and sanitize_key( $_GET['update'] == 'remove-quent
         <div class="col-sm-10" style="text-align: center">
           <div class="alert alert-success">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                <span class="glyphicon glyphicon-ok"></span><strong><?php  _e( ' You are connected to Quentn', 'quentn' ) ?></strong>
+                <span class="glyphicon glyphicon-ok"></span><strong><?php  _e( 'You are connected to Quentn', 'quentn-wp' ) ?></strong>
                 <hr class="message-inner-separator">
                 <p>
-                    <?php  echo __( 'You are connected to Quentn host ', 'quentn' ). get_option('quentn_base_url') ?>
+                    <?php  echo __( 'You are connected to Quentn host ', 'quentn-wp' ). get_option('quentn_base_url') ?>
                 </p>
             </div>
-            <a href="<?php echo $base_uri.$path."?".http_build_query($params) ?>" class="btn btn-primary btn-lg"><?php _e( 'Update Quentn account', 'quentn' ) ?></a>
-            <a href="<?php echo Helper::get_current_url().'&update=remove-quentn-account' ?>" class="btn btn-danger btn-lg"><?php _e( 'Remove Quentn account', 'quentn' ) ?></a>
+            <a href="<?php echo $base_uri.$path."?".http_build_query($params) ?>" class="btn btn-primary btn-lg"><?php _e( 'Update Quentn account', 'quentn-wp' ) ?></a>
+            <a href="<?php echo Helper::get_current_url().'&update=remove-quentn-account' ?>" class="btn btn-danger btn-lg"><?php _e( 'Remove Quentn account', 'quentn-wp' ) ?></a>
         </div>
     <?php } else { ?>
         <div class="col-sm-10" style="text-align: center">
-        <a href="<?php echo $base_uri.$path."?".http_build_query( $params ) ?>" class="btn btn-success btn-lg"><?php _e( 'Connect to Quentn', 'quentn' ) ?></a>
+        <a href="<?php echo $base_uri.$path."?".http_build_query( $params ) ?>" class="btn btn-success btn-lg"><?php _e( 'Connect to Quentn', 'quentn-wp' ) ?></a>
         </div>
     <?php } ?>
 
