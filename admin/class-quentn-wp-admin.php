@@ -515,7 +515,7 @@ class Quentn_Wp_Admin {
             ?>
             <div class="notice notice-warning quentn-member-plugin-notice is-dismissible">
                 <p>
-                    <?php  printf( __( 'It is recommended to install the plugin %s to support multiple user roles and content permissions control over which users (by role) have access to post content, You can download the plugin', 'quentn-wp' ),'<i><b>Members</i></b>' ); ?>
+                    <?php  printf( __( 'To create multiple user roles and define different permissions, you must install the plugin %s. You can download the plugin', 'quentn-wp' ),'<i><b>Members</i></b>' ); ?>
                     <a href="https://wordpress.org/plugins/members/" target="_blank"><?php   _e( 'here', 'quentn-wp' ) ; ?> </a>
                 </p>
             </div>
