@@ -216,7 +216,7 @@ class Quentn_Wp_Page_Restrictions_List extends \WP_List_Table {
      * @return void
      */
     public function no_items() {
-        _e( 'To create access restricted pages, please check the your page\'s settings', 'quentn-wp' );
+        _e( 'To create access restricted pages, please check your page\'s settings', 'quentn-wp' );
     }
 
     /**

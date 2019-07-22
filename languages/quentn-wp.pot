@@ -367,7 +367,7 @@ msgid "CountDown"
 msgstr ""
 
 #: includes/class-quentn-wp-page-restrictions-list.php:219
-msgid "To create access restricted pages, please check the your page's settings"
+msgid "To create access restricted pages, please check your page's settings"
 msgstr ""
 
 #: includes/class-quentn-wp-page-restrictions-list.php:251
