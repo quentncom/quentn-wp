@@ -17,9 +17,10 @@ access restrictions through Quentn.
 **Shortcode:** You can use the shortcode *[quentn_flipclock]* in your page to display the countdown timer at a point of your choice.
 
 **Redirection Settings:** Allows you to decide whether to display the message to the user or redirect to another page when user is not allowed to access the page.
-   
 
-##Connect to Quentn
+   
+## Connect to Quentn 
+
 
 You can connect your Wordpress plugin to your Quentn account.
     
