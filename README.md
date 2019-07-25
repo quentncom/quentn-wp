@@ -5,29 +5,29 @@ access restrictions through Quentn.
 
 ## Plugin Features 
     
-**Page Restriction:** Once the page restriction is activated, Page will only be accessible by invite users.
+**Page Restriction:** Once the page restriction is activated, the page will only be accessible by invited users.
 
 **Countdown:** Allows you to make the page accessible for a certain period of time.
 
-**Countdown Type:** You can choose countdown type absolute or relative. Using Absolute, the page will be accessible up to a specific date for all allowed users,
- while using relative page will accessible with respect to permission creation time.  
+**Countdown Type:** You can choose between absolute or relative for the countdown type. Using Absolute, the page will be accessible until a specific date for all allowed users,
+ while using relative, the page will be accessible for a certain time which starts when the permission has been created.  
 
-**Countdown Clock:** You can display countdown timer on top of the page.
+**Countdown Clock:** You can display a countdown timer on top of the page.
 
 **Shortcode:** You can use the shortcode *[quentn_flipclock]* in your page to display the countdown timer at a point of your choice.
 
-**Redirection Settings:** Allows you to decide whether to display the message to the  user or redirect to another page when user is not allowed to access the page.
+**Redirection Settings:** Allows you to decide whether to display the message to the user or redirect to another page when user is not allowed to access the page.
    
 
 ##Connect to Quentn
 
 You can connect your Wordpress plugin to your Quentn account.
     
-**Roles:** You can select for each user's role, whether to add to the Quentn account with mentioned tags if a user received that specific role. 
-You can also select if tags need to remove from the Quentn account if a user looses that role. 
+**Roles:** You can select for each user role, if the user should be added to Quentn in case he gets a role and which tags should be assigned to him.
+You can also select which tags should be removed when a user looses that role. 
 
-**Web Tracking:** You can add Quentn web tracking code to your Wordpress website also. 
+**Web Tracking:** You can add the Quentn web tracking embed code to the page header. 
 
 **Create User:** You can add new users to your Wordpress website through Quentn.
 
-**Grant/Revoke permissions:** You can grant/revoke permissions to the Wordpress pages through Quentn.
+**Grant/Revoke access permissions:** You can grant/revoke access permissions to the Wordpress pages through Quentn.
