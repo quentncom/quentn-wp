@@ -25,14 +25,27 @@
                     var clock = jQuery(o).FlipClock();
                 }
             });
-
         });
     };
 
 
     jQuery(document).ready(function () {
         document.quentn_flipclock();
+        if ( typeof qncountdown != "undefined" && ! qncountdown.isDisplayQuentnFlipclock ) {
+            window.setTimeout(function(){
+                if(qncountdown.is_redirect) {
+                    window.location = qncountdown.redirect_url
+                }
+                else {
+                    window.location.reload(false);
+                }
+            }, qncountdown.seconds * 1000 );
+        }
     });
 
 
+
+
 })( jQuery );
+
+

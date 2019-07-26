@@ -249,15 +249,23 @@ class Quentn_Wp_Restrict_Access
         if( $quentn_expiry_page_inseconds > 86400 ) {
             $clock_face = 'DailyCounter';
         }
+        global $post;
+        $is_display_quentn_flipclock = 0;
         $get_locale =  substr( get_locale(),0, 2 );   // take first two elements from get_locale() i.e de, en
+        if ( $quentn_post_restrict_meta['display_countdown_default_status'] || ( is_a( $post, 'WP_Post' ) &&  has_shortcode( $post->post_content, 'quentn_flipclock') ) ) {
+            $is_display_quentn_flipclock = 1;
+        }
+
         echo  "<script>var qncountdown = {
             seconds: $quentn_expiry_page_inseconds,        
             clockFace: '".$clock_face."',
             wpLang: '".$get_locale."',
             isRedirect: $is_redirect_url_set,
+            isDisplayQuentnFlipclock: $is_display_quentn_flipclock,
             redirect_url: '".$redirect_url."',
                                 
             };</script>";
+
 
         //if user set show clock on top of page
         if( $quentn_post_restrict_meta['display_countdown_default_status'] ) {
