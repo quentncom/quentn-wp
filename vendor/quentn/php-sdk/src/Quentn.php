@@ -110,7 +110,6 @@ class Quentn implements QuentnBase {
         //make call
         $response = $this->httpClient->request(strtoupper($method), $this->baseUrl . $endPoint, $request_arr);
 
-
         //get Body
         $body = $response->getBody();
         if (!empty($body)) {

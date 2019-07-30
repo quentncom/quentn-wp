@@ -1,0 +1,12 @@
+{
+    "require": {
+        "quentn/php-sdk": "1.0.*",
+        "mustache/mustache": "~2.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "QuentnWP\\": "",
+            "QuentnWP\\Inc\\": "inc"
+        }
+    }
+}
