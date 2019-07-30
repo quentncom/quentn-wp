@@ -296,6 +296,14 @@ msgstr ""
 msgid "Seconds"
 msgstr ""
 
+#: includes/class-quentn-wp-manage_meta_box.php:141
+msgid "Countdown starts when permission has been granted."
+msgstr ""
+
+#: includes/class-quentn-wp-manage_meta_box.php:146
+msgid "Countdown starts on the first visit. This works without access permission."
+msgstr ""
+
 #: includes/class-quentn-wp-manage_meta_box.php:140
 msgid "Date"
 msgstr ""

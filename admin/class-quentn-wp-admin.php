@@ -938,7 +938,22 @@ class Quentn_Wp_Admin {
     public function action_delete_site( $blog_id ) {
         switch_to_blog( $blog_id );
         $uninstall_handler = new Quentn_Wp_Uninstall();
-        $uninstall_handler->quentn_uninstall();
+        $uninstall_handler->uninstall();
+        restore_current_blog();
+    }
+
+    /**
+     * Hook handler for adding new site
+     *
+     * @since  1.0.0
+     * @access public
+     * @param int $blog_id Site id.
+     * @return void
+     */
+    public function quentn_add_new_site( $blog_id ) {
+        switch_to_blog( $blog_id );
+        $activator = new Quentn_Wp_Activator( false );
+        $activator->quentn_perform_activation();
         restore_current_blog();
     }
 

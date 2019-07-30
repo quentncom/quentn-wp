@@ -67,7 +67,7 @@ class Quentn_Wp_Activator {
      * @access public
      * @return void
      */
-    private function quentn_perform_activation() {
+    public function quentn_perform_activation() {
 
         global $wpdb;
         $table_name = $wpdb->prefix. QUENTN_TABLE_NAME;

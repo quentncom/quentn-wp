@@ -10,7 +10,7 @@ class Quentn_Wp_Restrict_Access
         if( ! is_admin() ) {
             add_filter( 'the_content', array($this, 'quentn_content_permission_check'));
         }
-        add_action('wp_head', array( $this, 'set_countdown_data' ) );
+        add_action('wp_head', array( $this, 'set_countdown_clock' ) );
     }
 
     /**
@@ -54,39 +54,33 @@ class Quentn_Wp_Restrict_Access
 
        $is_display_content = false;
 
-       //get list of all emails, from url and cookies, of current visitor
-       $get_access_emails = $this->get_access_emails();
+        //If page restriction is countdown then calculate expiry time
+        if ( isset( $page_meta['countdown'] ) && $page_meta['countdown'] ) {
+            if ( $this->calculate_expire_time() > 0) {
+                $is_display_content = true;
+            }
+        } else { //if it is not countdown then check its access from database
+            $get_access_emails = $this->get_access_emails();
+            if( $this->get_user_access( $get_access_emails ) ) {
+                $is_display_content = true;
+            }
+        }
 
-       if( ! empty($get_access_emails ) ) {
+        //return content if user is authorized
+        if( $is_display_content ) {
+            //set cookie if it is new email address
+            $get_access_email = $this->get_new_access();
+            if( $get_access_email != '' ) {
+                $this->set_cookie_data( $get_access_email );
+            }
+            return $content;
+        }
 
-           //if email address is authroized to visit the page, get its creation date, in case of multiple email addresses, latest creation date will be considered
-           if( $created_at = $this->get_user_access( $get_access_emails ) ) {
-
-               //if restriction type is countdown, then check if it is still valid
-               if( ! $page_meta['countdown'] || $this->calculate_expire_time( $created_at ) > 0  ) { //if restriction type is countdown, then check if it is still valid
-                       $is_display_content = true;
-               }
-
-               //set cookie if it is new email address
-               $get_access_email = $this->get_new_access();
-               if( $get_access_email != '') {
-                   $this->set_cookie_data( $get_access_email );
-               }
-           }
-       }
-
-       //return content if user is authorized
-       if( $is_display_content ) {
-           return $content;
-       }
-
-       //page user is not allowed, then redirect/display message
-        if( $page_meta['redirection_type'] == 'restricted_url' ) {
-            {
-                //todo avoid rest api call, need to find a better way
-                if ( strpos( Helper::get_current_url(), 'wp-json' ) === false ) {
-                    wp_redirect( $page_meta['redirect_url'] );
-                }
+        //page user is not allowed, then redirect/display message
+        if( $page_meta['redirection_type'] == 'restricted_url' && $page_meta['redirect_url'] != '') {
+            //todo avoid rest api call, need to find a better way
+            if ( strpos( Helper::get_current_url(), 'wp-json' ) === false ) {
+                wp_redirect( $page_meta['redirect_url'] );
             }
         }
         else {
@@ -116,9 +110,22 @@ class Quentn_Wp_Restrict_Access
 
             $cookie_saved_data = $this->get_json_cookie( 'qntn_wp_access' );
 
-            $get_access_emails = ( isset( $cookie_saved_data['access'][get_the_ID()] ) ) ?  $cookie_saved_data['access'][get_the_ID()] : [];
+            $get_access_emails = ( isset( $cookie_saved_data['access'][get_the_ID()] ) ) ?  $cookie_saved_data['access'][get_the_ID()] : array();
         }
         return $get_access_emails;
+    }
+
+
+    /**
+     * Check if user is first time visiting restricted page
+     *
+     * @since  1.0.0
+     * @access public
+     * @return bool
+     */
+
+    public function is_new_visitor() {
+        return ( ! isset( $this->get_json_cookie( 'qntn_wp_access' )['is_visited'][get_the_ID()] ) ) ?  true : false;
     }
 
     /**
@@ -147,39 +154,67 @@ class Quentn_Wp_Restrict_Access
         return $get_new_access;
     }
 
-
     /**
-     * Get email addresses to check access
+     * Set current time as starting time for first time visitor of page in quentn cookie
      *
      * @since  1.0.0
      * @access public
+     * @return void
+     */
+    public function set_visitor_cookie() {
+        //get the existing quentn cookie
+        $cookie_saved_data = $this->get_json_cookie('qntn_wp_access');
+
+        //set current time as starting time of visitor
+        $set_visited_time = array(
+            get_the_ID() => time(),
+        );
+
+        //if is_visited key is already set then just add current on into existing one
+        if ( isset( $cookie_saved_data['is_visited'] ) ) {
+            $set_visited_time = $set_visited_time + $cookie_saved_data['is_visited'];
+        }
+
+        $set_visitors_data['is_visited'] = $set_visited_time;
+
+        //merge all data into existing quentn cookie data
+        $set_cookie_data = array_merge($cookie_saved_data, $set_visitors_data);
+
+        //set cookie
+        $this->set_json_cookie('qntn_wp_access', $set_cookie_data);
+    }
+
+    /**
+     * Set cookie data for different pages with access email addresses
+     *
+     * @since  1.0.0
+     * @access public
+     * @param string $access_email emails need to add in existing quentn cookie
      * @return array
      */
     public function set_cookie_data( $access_email ) {
 
-        //get already saved cookie value
+        //get the existing quentn cookie
         $cookie_saved_data = $this->get_json_cookie('qntn_wp_access');
-        //check if cookie access is already set
-        if ( isset( $cookie_saved_data['access'] ) && ! empty($cookie_saved_data['access'] ) ) {
 
-            //check if current page has already some users access
-            if ( isset( $cookie_saved_data['access'][get_the_ID()] ) && ! empty( $cookie_saved_data['access'][get_the_ID()] ) ) {
-
-                //if there is existing access, then we will keep it, todo change it with array_merge
-                $set_cookie_data['access'] = $cookie_saved_data['access'];
-
-                //if current email address is not in access list, add it
-                if ( ! in_array( $_GET["qntn_wp"], array_values( $cookie_saved_data['access'][get_the_ID()] ) ) ) {
-                    $set_cookie_data['access'][get_the_ID()][] = $access_email;
-                }
-            } else { //in case access is there but no access for current page
-                $set_cookie_data['access'] = $cookie_saved_data['access'];
-                $set_cookie_data['access'][get_the_ID()] = [$access_email];
+        //if this page access is not created
+        if ( ! isset( $cookie_saved_data['access'][get_the_ID()] ) ) {
+            //if no access is created then add access key in array
+            if( ! isset( $cookie_saved_data['access'])) {
+                $cookie_saved_data['access'] = array();
             }
-        } else { //in case there is no access at all, set it
-            $set_cookie_data['access'][get_the_ID()] = [$access_email];
+
+            //add page id to access
+            $add_page_id = array(
+                get_the_ID() => [$access_email],
+            );
+            $cookie_saved_data['access'] = $cookie_saved_data['access'] +  $add_page_id;
+
+        } elseif ( ! in_array( $access_email, $cookie_saved_data['access'][get_the_ID()] ) ) { //if page is set, then add new value only if not exist
+            $cookie_saved_data['access'][get_the_ID()][] = $access_email;
+
         }
-        $this->set_json_cookie('qntn_wp_access', $set_cookie_data);
+        $this->set_json_cookie('qntn_wp_access', $cookie_saved_data);
     }
 
     /**
@@ -215,8 +250,7 @@ class Quentn_Wp_Restrict_Access
      * @access public
      * @return void
      */
-    public function set_countdown_data() {
-
+    public function set_countdown_clock() {
         //if status is not avtive, return content
         if( ! $quentn_post_restrict_meta = $this->get_quentn_post_restrict_meta() ) {
             return;
@@ -292,60 +326,89 @@ class Quentn_Wp_Restrict_Access
      * Calculate page expiry time
      *
      * @since  1.0.0
-     * @access protected
-     * @return mixed
+     * @access public
+     * @return int|bool
      */
-    protected function calculate_expire_time( $created_at = false ){
+    public function calculate_expire_time(){
 
         $return = -1;
-        if( ! $created_at ) {
+        $quentn_page_restrict_meta = $this->get_quentn_post_restrict_meta();
+        //if page is countdown and countdown start from first visit
+        if ( isset( $quentn_page_restrict_meta['access_mode'] ) && isset( $quentn_page_restrict_meta['countdown_type'] ) && $quentn_page_restrict_meta['access_mode'] == 'first_visit_mode' && $quentn_page_restrict_meta['countdown_type'] == 'relative') {
+            //create cookie if new visitor
+            if( $this->is_new_visitor() ) {
+                $this->set_visitor_cookie();
+            }
+            //get starting time
+            $created_at =  $this->get_json_cookie( 'qntn_wp_access' )['is_visited'][get_the_ID()];
+        } else { //countdown is not stat from fist time visit but permission granted, then get starting point from database
             $get_access_emails = $this->get_access_emails();
-            $created_at = $this->get_user_access($get_access_emails);
+            $created_at = $this->get_user_access( $get_access_emails ); //check if user is authorised to visit the page
         }
 
-        $quentn_page_restrict_meta = $this->get_quentn_post_restrict_meta();
+        //if user is authorised to vist the page, and page restriction type is countdown, then calculate expiry time
         if( $created_at && $quentn_page_restrict_meta['countdown'] ) {
-            //get page restriction type, i.e relative or absolute
-            $quentn_page_restrict_type = (array_key_exists('countdown_type', $quentn_page_restrict_meta))?$quentn_page_restrict_meta['countdown_type']:'';
+
             //if page restriction type is absolute
-            if($quentn_page_restrict_type == 'absolute' ) {
+            if( $quentn_page_restrict_meta['countdown_type'] == 'absolute' ) {
                 //get absolute expiry date
-                $quentn_page_restrict_absolute_date = (array_key_exists('absolute_date', $quentn_page_restrict_meta))?$quentn_page_restrict_meta['absolute_date']:'';
-                if( $quentn_page_restrict_absolute_date != '' ) {
-
-                    /*==== getting timezone set in admin settings=== */
-                    //if time zone is selected by region by admin, then follow it
-                    $timezone_string = get_option('timezone_string');
-                    $utc_difference = 0;
-                    if ( ! empty($timezone_string ) ) {
-                        date_default_timezone_set($timezone_string);
-                    }else {
-                        //if timezone is not selected by region but with UTC difference like +1, -1.5 then set UTC as default and calculate difference in seconds
-                        date_default_timezone_set("UTC");
-                        $utc_difference = get_option('gmt_offset')*3600;
-                    }
-
-                    $timestamp = strtotime( $quentn_page_restrict_absolute_date );
-                    $current_time = time() + $utc_difference;
-                    $return = $timestamp - $current_time;
+                if ( isset( $quentn_page_restrict_meta['absolute_date'] ) && strtotime( $quentn_page_restrict_meta['absolute_date']) !== false ) {
+                    $return = $this->calculate_absolute_page_expire_time( $quentn_page_restrict_meta['absolute_date'] );
                 }
-            } elseif( $quentn_page_restrict_type == 'relative' ) {
-
-                //if page restriction type is relative, then we will add relative time set depends on access creation date
-                $hours =   ( array_key_exists( 'hours', $quentn_page_restrict_meta ) ) ? $quentn_page_restrict_meta['hours'] : 0;
-                $minutes = ( array_key_exists( 'minutes', $quentn_page_restrict_meta ) ) ? $quentn_page_restrict_meta['minutes'] : 0;
-                $seconds = ( array_key_exists( 'seconds', $quentn_page_restrict_meta ) ) ? $quentn_page_restrict_meta['seconds'] : 0;
-
-                //convert hours, minutes into seconds
-                $quentn_page_expirty_inseconds = $hours * 3600 + $minutes * 60 + $seconds;
-
-                //add relative expirty time set e.g page is valid for 1 hour , take user creation time, then subtract current time to get time left for page expiry
-                $return = $created_at + $quentn_page_expirty_inseconds - time();
+            } elseif( $quentn_page_restrict_meta['countdown_type'] == 'relative' ) { //if page restriction type is relative, then we will add relative time set depends on access creation date
+                $return = $this->calculate_relative_page_expire_time( $created_at );
             }
         }
         return $return;
     }
 
+    /**
+     * Calculate page expiry time if its countdown type is absolute
+     *
+     * @since  1.0.0
+     * @access public
+     * @return int
+     */
+    public function calculate_absolute_page_expire_time ( $expiry_date ) {
+
+        /*==== getting timezone set in admin settings=== */
+        //if time zone is selected by region by admin, then follow it
+        $timezone_string = get_option('timezone_string');
+        $utc_difference = 0;
+        if ( ! empty($timezone_string ) ) {
+            date_default_timezone_set($timezone_string);
+        }else {
+            //if timezone is not selected by region but with UTC difference like +1, -1.5 then set UTC as default and calculate difference in seconds
+            date_default_timezone_set("UTC");
+            $utc_difference = get_option('gmt_offset')*3600;
+        }
+
+        $timestamp = strtotime( $expiry_date );
+        $current_time = time() + $utc_difference;
+        return  $timestamp - $current_time;
+    }
+
+    /**
+     * Calculate page expiry time if its countdown type is relative
+     *
+     * @since  1.0.0
+     * @access public
+     * @param int $created_at starting time since to calculate expiry time
+     * @return int
+     */
+    public function calculate_relative_page_expire_time ( $created_at ) {
+        $quentn_page_restrict_meta = $this->get_quentn_post_restrict_meta();
+
+        $hours =   ( array_key_exists( 'hours', $quentn_page_restrict_meta ) ) ? $quentn_page_restrict_meta['hours'] : 0;
+        $minutes = ( array_key_exists( 'minutes', $quentn_page_restrict_meta ) ) ? $quentn_page_restrict_meta['minutes'] : 0;
+        $seconds = ( array_key_exists( 'seconds', $quentn_page_restrict_meta ) ) ? $quentn_page_restrict_meta['seconds'] : 0;
+
+        //convert hours, minutes into seconds
+        $quentn_page_expirty_inseconds = $hours * 3600 + $minutes * 60 + $seconds;
+
+        //add relative expirty time set e.g page is valid for 1 hour , take user creation time, then subtract current time to get time left for page expiry
+        return  $created_at + $quentn_page_expirty_inseconds - time();
+    }
     /**
      * Sets a cookie
      *

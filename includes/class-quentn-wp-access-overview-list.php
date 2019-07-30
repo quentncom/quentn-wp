@@ -93,7 +93,8 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
             'created_at'    => __( 'Created', 'quentn-wp' ),
         );
 
-        if( isset( $this->quentn_page_restriction_data['countdown'] ) && $this->quentn_page_restriction_data['countdown'] ) {
+        //display valid_until field only when page restriction is countdown and countdown is not start from  'first time visit'
+        if( isset( $this->quentn_page_restriction_data['countdown'] ) && $this->quentn_page_restriction_data['countdown'] && ( ! isset( $this->quentn_page_restriction_data['access_mode'] ) || $this->quentn_page_restriction_data['access_mode'] != 'first_visit_mode' )  ) {
             $columns['valid_until'] = __( 'Valid Until', 'quentn-wp' );
         }
         $columns['delete-access'] = __( 'Delete', 'quentn-wp' );

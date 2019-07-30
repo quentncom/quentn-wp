@@ -164,6 +164,11 @@ class Quentn_Wp {
              */
             require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-quentn-wp-manage_meta_box.php';
 
+            /**
+             * The class responsible to handle installation/activation of plugin
+             */
+            require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-quentn-wp-activator.php';
+
         }
 		$this->loader = new Quentn_Wp_Loader();
 
@@ -208,6 +213,7 @@ class Quentn_Wp {
 
         //Add/Delete user to quentn when user is created/deleted in wp
         if ( is_multisite() ) {
+            $this->loader->add_action( 'wpmu_new_blog', $plugin_admin, 'quentn_add_new_site', 7 );
             $this->loader->add_action( 'wpmu_activate_user', $plugin_admin, 'quentn_add_user' );
             $this->loader->add_action( 'add_user_to_blog', $plugin_admin, 'quentn_add_user' );
             $this->loader->add_action( 'remove_user_from_blog', $plugin_admin, 'quentn_delete_user' );

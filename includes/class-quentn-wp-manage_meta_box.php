@@ -68,6 +68,7 @@ class Quentn_Wp_Page_Restrictions_Controller
         $quentn_page_restrict_hours = 0;
         $quentn_page_restrict_minutes = 0;
         $quentn_page_restrict_seconds = 0;
+        $quentn_page_access_mode = '';
         $quentn_page_restrict_absolute_date = '';
         $quentn_page_restrict_default_countdown_status = '';
         $quentn_page_restrict_redirection_type =  '';
@@ -76,17 +77,18 @@ class Quentn_Wp_Page_Restrictions_Controller
 
         // If we're editing access, overwrite the defaults with current one's
         if( $quentn_post_restrict_meta ) {
-            $quentn_page_restrict_status = array_key_exists( 'status', $quentn_post_restrict_meta  ) ? $quentn_post_restrict_meta['status'] : '';
-            $quentn_page_restrict_countdown = array_key_exists( 'countdown', $quentn_post_restrict_meta  ) ? $quentn_post_restrict_meta['countdown'] : '';
-            $quentn_page_restrict_countdown_type = array_key_exists( 'countdown_type', $quentn_post_restrict_meta  ) ? $quentn_post_restrict_meta['countdown_type'] : '';
-            $quentn_page_restrict_hours = array_key_exists( 'hours', $quentn_post_restrict_meta  ) ? $quentn_post_restrict_meta['hours'] : '';
-            $quentn_page_restrict_minutes = array_key_exists( 'minutes', $quentn_post_restrict_meta  ) ? $quentn_post_restrict_meta['minutes'] : '';
-            $quentn_page_restrict_seconds = array_key_exists( 'seconds', $quentn_post_restrict_meta  ) ? $quentn_post_restrict_meta['seconds'] : '';
-            $quentn_page_restrict_absolute_date = array_key_exists( 'absolute_date', $quentn_post_restrict_meta  ) ? $quentn_post_restrict_meta['absolute_date'] : '';
-            $quentn_page_restrict_default_countdown_status = array_key_exists( 'display_countdown_default_status', $quentn_post_restrict_meta  ) ? $quentn_post_restrict_meta['display_countdown_default_status'] : '';
-            $quentn_page_restrict_redirection_type = array_key_exists( 'redirection_type', $quentn_post_restrict_meta  ) ? $quentn_post_restrict_meta['redirection_type'] : '';
-            $quentn_page_restrict_redirect_url = array_key_exists( 'redirect_url', $quentn_post_restrict_meta  ) ? $quentn_post_restrict_meta['redirect_url'] : '';
-            $quentn_page_restrict_error_message = array_key_exists( 'error_message', $quentn_post_restrict_meta  ) ? $quentn_post_restrict_meta['error_message'] : '';
+            $quentn_page_restrict_status                    = array_key_exists( 'status', $quentn_post_restrict_meta  ) ? $quentn_post_restrict_meta['status'] : '';
+            $quentn_page_restrict_countdown                 = array_key_exists( 'countdown', $quentn_post_restrict_meta  ) ? $quentn_post_restrict_meta['countdown'] : '';
+            $quentn_page_restrict_countdown_type            = array_key_exists( 'countdown_type', $quentn_post_restrict_meta  ) ? $quentn_post_restrict_meta['countdown_type'] : '';
+            $quentn_page_restrict_hours                     = array_key_exists( 'hours', $quentn_post_restrict_meta  ) ? $quentn_post_restrict_meta['hours'] : 0;
+            $quentn_page_restrict_minutes                   = array_key_exists( 'minutes', $quentn_post_restrict_meta  ) ? $quentn_post_restrict_meta['minutes'] : 0;
+            $quentn_page_restrict_seconds                   = array_key_exists( 'seconds', $quentn_post_restrict_meta  ) ? $quentn_post_restrict_meta['seconds'] : 0;
+            $quentn_page_access_mode                        = array_key_exists( 'access_mode', $quentn_post_restrict_meta  ) ? $quentn_post_restrict_meta['access_mode'] : '';
+            $quentn_page_restrict_absolute_date             = array_key_exists( 'absolute_date', $quentn_post_restrict_meta  ) ? $quentn_post_restrict_meta['absolute_date'] : '';
+            $quentn_page_restrict_default_countdown_status  = array_key_exists( 'display_countdown_default_status', $quentn_post_restrict_meta  ) ? $quentn_post_restrict_meta['display_countdown_default_status'] : '';
+            $quentn_page_restrict_redirection_type          = array_key_exists( 'redirection_type', $quentn_post_restrict_meta  ) ? $quentn_post_restrict_meta['redirection_type'] : '';
+            $quentn_page_restrict_redirect_url              = array_key_exists( 'redirect_url', $quentn_post_restrict_meta  ) ? $quentn_post_restrict_meta['redirect_url'] : '';
+            $quentn_page_restrict_error_message             = array_key_exists( 'error_message', $quentn_post_restrict_meta  ) ? $quentn_post_restrict_meta['error_message'] : '';
         }
 
         ?>
@@ -120,19 +122,31 @@ class Quentn_Wp_Page_Restrictions_Controller
                             </div>
 
 
-                            <div class="countdown-type form-inline"  id="relative-div" style="display: <?=($quentn_page_restrict_countdown_type == 'relative')?'block':'none'?>">
-                                <div class="form-group">
+                            <div class="form-inline"  id="relative-div" style="display: <?php echo ($quentn_page_restrict_countdown_type == 'relative') ? 'block' : 'none'?>">
+                                <div class="countdown-type form-group">
                                     <label for="quentn_page_restrict_hours"><?php _e('Hours', 'quentn-wp')?></label>
                                     <input id="quentn_page_restrict_hours" type="text" name="quentn_page_restrict_hours" class="form-control"  value="<?php echo $quentn_page_restrict_hours; ?>" >
                                 </div>
-                                <div class="form-group">
+                                <div class="countdown-type form-group">
                                     <label for="quentn_page_restrict_minutes"><?php _e('Minutes', 'quentn-wp')?></label>
                                     <input id="quentn_page_restrict_minutes" type="text" name="quentn_page_restrict_minutes" class="form-control" value="<?php echo $quentn_page_restrict_minutes; ?>" >
                                 </div>
-                                <div class="form-group">
+                                <div class="countdown-type form-group">
                                     <label for="quentn_page_restrict_seconds"><?php _e('Seconds', 'quentn-wp')?></label>
                                     <input id="quentn_page_restrict_seconds" type="text" name="quentn_page_restrict_seconds" class="form-control" value="<?php echo $quentn_page_restrict_seconds; ?>">
                                 </div>
+
+                                <div class="form-check" style="margin-top: 10px">
+                                    <input type="radio" class="form-check-input" name="access_mode" value="permission_granted_mode" checked  >
+                                    <?php  _e( 'Countdown starts when permission has been granted.', 'quentn-wp' ) ?>
+                                </div>
+
+                                <div class="form-check">
+                                        <input type="radio" class="form-check-input" name="access_mode" value="first_visit_mode" <?php checked( $quentn_page_access_mode, 'first_visit_mode' ); ?>>
+                                        <?php  _e( 'Countdown starts on the first visit. This works without access permission.', 'quentn-wp' ) ?>
+                                </div>
+
+
                             </div>
 
                             <div class = "form-group" id="absolute-div" style=" position:relative; display: <?=($quentn_page_restrict_countdown_type == 'absolute')?'block':'none'?>">
@@ -243,6 +257,7 @@ class Quentn_Wp_Page_Restrictions_Controller
         $q_hours = ( ! empty( $_POST['quentn_page_restrict_hours'] ) && filter_var( $_POST['quentn_page_restrict_hours'], FILTER_VALIDATE_INT ) ) ? sanitize_text_field( $_POST['quentn_page_restrict_hours'] ) : 0;
         $q_minutes = ( ! empty( $_POST['quentn_page_restrict_minutes'] ) && filter_var( $_POST['quentn_page_restrict_minutes'], FILTER_VALIDATE_INT ) ) ? sanitize_text_field( $_POST['quentn_page_restrict_minutes'] ) : 0;
         $q_seconds = ( ! empty( $_POST['quentn_page_restrict_seconds'] ) && filter_var( $_POST['quentn_page_restrict_seconds'], FILTER_VALIDATE_INT ) ) ? sanitize_text_field( $_POST['quentn_page_restrict_seconds'] ) : 0;
+        $access_mode = sanitize_text_field ( $_POST['access_mode'] );
         $q_absolute_date = sanitize_text_field ( $_POST['quentn_page_restrict_datepicker'] );
         $q_default_countdown_status = sanitize_text_field( $_POST['quentn_default_display_countdown_status'] );
         $q_redirection_type = sanitize_text_field( $_POST['quentn_page_redirection_type'] );
@@ -271,6 +286,7 @@ class Quentn_Wp_Page_Restrictions_Controller
             $quentn_restrict_post_meta['hours'] = $q_hours;
             $quentn_restrict_post_meta['minutes'] = $q_minutes;
             $quentn_restrict_post_meta['seconds'] =  $q_seconds;
+            $quentn_restrict_post_meta['access_mode'] =  $access_mode;
             $quentn_restrict_post_meta['absolute_date'] =  $q_absolute_date;
             $quentn_restrict_post_meta['display_countdown_default_status'] = $q_default_countdown_status;
             $quentn_restrict_post_meta['redirection_type'] = $q_redirection_type;
