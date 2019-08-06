@@ -32,7 +32,8 @@ if ( ! defined( 'WPINC' ) ) {
 
 define( "QUENTN_WP_PLUGIN_DIR", plugin_dir_path( __FILE__ ) );
 define( "QUENTN_WP_PLUGIN_URL", plugin_dir_url(  __FILE__ ) );
-define( "QUENTN_TABLE_NAME", 'qntn_restrictions' );
+define( "TABLE_QUENTN_RESTRICTIONS", 'qntn_restrictions' );
+define( "TABLE_QUENTN_USER_DATA", 'qntn_user_data' );
 define( 'QUENTN_WP_VERSION', '1.0.0' );
 
 /**

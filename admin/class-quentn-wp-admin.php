@@ -240,6 +240,15 @@ class Quentn_Wp_Admin {
 
             }
 
+            //if a user data was deleted
+            if ( $action == 'quentn-user-data-deleted' ) {
+                if ( $_GET['deleted'] ) {
+                    $this->notices[] = array( 'message' => __( 'Data is deleted successfully', 'quentn-wp' ), 'type' => 'success' );
+                }
+                else {
+                    $this->notices[] = array( 'message' => sprintf( __( 'There is no data found with the email address %s', 'quentn-wp' ), $_GET['email'] ), 'type' => 'success' );
+                }
+            }
             //if direct access added successfully
             if ( $action == 'quentn-direct-access-add' ) {
                 $this->notices[] = array( 'message' => __( 'User access has been added successfully', 'quentn-wp' ), 'type' => 'success' );
@@ -308,7 +317,6 @@ class Quentn_Wp_Admin {
 
         add_screen_option( $option, $args );
     }
-
 
 
     /**

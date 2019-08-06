@@ -246,7 +246,7 @@ class Quentn_Wp_Rest_Api
         }
 
         //insert into database
-        $query = "INSERT INTO ".$wpdb->prefix . QUENTN_TABLE_NAME." ( page_id, email, email_hash, created_at ) VALUES ";
+        $query = "INSERT INTO ".$wpdb->prefix . TABLE_QUENTN_RESTRICTIONS." ( page_id, email, email_hash, created_at ) VALUES ";
         $query .= implode(', ', $place_holders);
         $wpdb->query( $wpdb->prepare( "$query ON DUPLICATE KEY UPDATE created_at= ".time(), $values) );
 
@@ -296,7 +296,7 @@ class Quentn_Wp_Rest_Api
         }
 
         //delete permissions
-        $query =  "DELETE FROM ".$wpdb->prefix . QUENTN_TABLE_NAME." where CONCAT_WS('|', page_id, email) IN ('".implode("','", $values)."')";
+        $query =  "DELETE FROM ".$wpdb->prefix . TABLE_QUENTN_RESTRICTIONS." where CONCAT_WS('|', page_id, email) IN ('".implode("','", $values)."')";
         $wpdb->query( $wpdb->query( $query ) );
         return rest_ensure_response( esc_html__( 'Permissions Timer Successfully Updated', 'quentn-wp' ) );
     }

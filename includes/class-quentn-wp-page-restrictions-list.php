@@ -199,7 +199,7 @@ class Quentn_Wp_Page_Restrictions_List extends \WP_List_Table {
     public function access_links_count( $page_ids ) {
         global $wpdb;
 
-        $sql = "SELECT page_id, COUNT(*) as totoal_access FROM ". $wpdb->prefix . QUENTN_TABLE_NAME. " where page_id IN (".implode(",",$page_ids).")  GROUP BY page_id";
+        $sql = "SELECT page_id, COUNT(*) as totoal_access FROM ". $wpdb->prefix . TABLE_QUENTN_RESTRICTIONS. " where page_id IN (".implode(",",$page_ids).")  GROUP BY page_id";
 
         $rows = $wpdb->get_results( $sql );
         $pages = array();

@@ -2,6 +2,7 @@
 
 class Quentn_Wp_Restrict_Access
 {
+    private $replacements = array();
     /**
      * Initialize the class and set its properties.
      */
@@ -47,6 +48,94 @@ class Quentn_Wp_Restrict_Access
      */
      public function quentn_content_permission_check( $content ) {
 
+
+         $m = new Mustache_Engine;
+
+         //get replacement values from url
+         $get_url_values = $_GET;
+         unset( $get_url_values['qntn'] );
+         if( ! empty( $get_url_values ) ) {
+             $this->set_replacement_values( $get_url_values );
+         }
+
+        //-wp user if logged in then we will get replacement values from wp user object
+         $current_user = wp_get_current_user();
+         if( $current_user->ID ) {
+             $set_replace_values = array();
+             if( $current_user->first_name != '' ) {
+                 $set_replace_values['first_name'] = $current_user->first_name;
+             }
+             if( $current_user->last_name != '' ) {
+                 $set_replace_values['last_name'] = $current_user->last_name;
+             }
+             if( $current_user->user_email != '' ) {
+                 $set_replace_values['email'] = $current_user->user_email;
+             }
+
+             if( ! empty( $set_replace_values ) ) {
+                 $this->set_replacement_values( $set_replace_values );
+             }
+
+         }
+
+         //if replacement values send by quentn
+         if( $_GET['qntn'] ) {
+             //decode quentn values
+             $qntn_values = json_decode( base64_decode( $_GET['qntn'] ), true  );
+
+             //add quentn values in replacement values
+             if( ! empty( $qntn_values ) ) {
+                 $this->set_replacement_values( $qntn_values );
+             }
+
+             //if quentn values have additional data along with email address, then add it into cookies and save it in database
+             if( isset( $qntn_values['email'] ) && count($qntn_values) > 1 ) {
+                 $email = $qntn_values['email'];
+                 unset( $qntn_values['email'] );
+                 //set cookie
+                 $this->set_quentn_user_data_cookie( $email, $qntn_values );
+                 global $wpdb;
+                 //add it in database
+                 $wpdb->replace( $wpdb->prefix . TABLE_QUENTN_USER_DATA,['email' => $email, 'fields' => serialize( $qntn_values )], ['%s', '%s'] );
+
+             }
+         } else { //if no qntn values in url
+             $valid_email_in_url = '';
+             $quentn_cookie = $this->get_json_cookie( 'qntn_wp_access' );
+             $user_data = array();
+             //try to find if there is any valid email address in the url
+             foreach ( $_GET as $value ) {
+                 if ( filter_var( str_replace(" ","+",trim( $value ) ), FILTER_VALIDATE_EMAIL ) ) {
+                      $valid_email_in_url = $value;
+                      break;
+                 }
+             }
+             //if there is valid email address in the url
+             if( $valid_email_in_url != '' ) {
+                 $url_email_hash = hash( 'sha256', trim( $valid_email_in_url ) );
+                 //then try to find this email data in the cookie
+                 if ( array_key_exists( $url_email_hash, $quentn_cookie['qntn_user_data'] ) ) {
+                     $user_data = $quentn_cookie['qntn_user_data'][$url_email_hash];
+                     //decode cookie data
+                     $user_data = array_map( array( $this, 'decode_cookie_values' ), $user_data);
+                 }else { //if there is valid email in url and no data found in cookie for that email address, try to find it in database
+                     global $wpdb;
+                     $table_qntn_user_data = $wpdb->prefix. TABLE_QUENTN_USER_DATA;
+                     $user_data = $wpdb->get_results( "SELECT fields FROM ".$table_qntn_user_data. " WHERE email ='".$valid_email_in_url."'" );
+                     $user_data =  unserialize( $user_data[0]->fields );
+                 }
+             } elseif ( isset( $quentn_cookie['qntn_user_data'] ) ) { //if not valid email address in the url then get latest data from cookie saved
+                 $user_data = end($quentn_cookie['qntn_user_data']);
+                 $user_data = array_map( array( $this, 'decode_cookie_values' ), $user_data);
+             }
+             //if we have user data then add it in replacement values
+             if(! empty( $user_data ) ) {
+                 $this->set_replacement_values( $user_data );
+             }
+         }
+
+         $content = $m->render($content, $this->get_replacement_values());
+
         //if status is not avtive, return content
         if( ! $page_meta = $this->get_quentn_post_restrict_meta() ) {
             return $content;
@@ -86,6 +175,57 @@ class Quentn_Wp_Restrict_Access
         else {
             return ( $page_meta['error_message'] ) ? $page_meta['error_message'] : '<h3>' . __('Access denied', 'quentn-wp' ) . '</h3>';
         }
+    }
+
+    /**
+     * Set replacement value within the page content
+     *
+     * @since  1.0.0
+     * @access public
+     * @param  array $user_data
+     * @return array
+     */
+    public function set_replacement_values( array $user_data ) {
+        foreach ( $user_data as $key=>$value ) {
+            if ( ! array_key_exists( $key, $this->replacements ) ) {
+                $this->replacements[$key] = $value;
+            }
+        }
+    }
+
+    /**
+     * Get replacement value
+     *
+     * @since  1.0.0
+     * @access public
+     * @return array
+     */
+    public function get_replacement_values() {
+        return $this->replacements;
+    }
+
+    /**
+     * Encode value to save in cookie
+     *
+     * @since  1.0.0
+     * @access public
+     * @param string $val value to be encoded
+     * @return string
+     */
+    public function encode_cookie_values( $val ) {
+         return base64_encode( $val );
+    }
+
+    /**
+     * Decode value get from cookie
+     *
+     * @since  1.0.0
+     * @access public
+     * @param string $val value to be decoded
+     * @return string
+     */
+    public function decode_cookie_values( $val ) {
+         return base64_decode( $val );
     }
 
     /**
@@ -184,6 +324,38 @@ class Quentn_Wp_Restrict_Access
         $this->set_json_cookie('qntn_wp_access', $set_cookie_data);
     }
 
+
+    public function set_quentn_user_data_cookie( $access_email, $data ) {
+
+        //get the existing quentn cookie
+        $cookie_saved_data = $this->get_json_cookie('qntn_wp_access');
+        $data = array_map( array( $this, 'encode_cookie_values' ), $data);
+        $email_hash_key = hash( 'sha256', trim( $access_email ) );
+
+        //if this page access is not created
+        if ( ! isset( $cookie_saved_data['qntn_user_data'][$email_hash_key] ) ) {
+
+            //if no access is created then add access key in array
+            if( ! isset( $cookie_saved_data['qntn_user_data'])) {
+
+                $cookie_saved_data['qntn_user_data'] = array();
+            }
+
+            //add page id to access
+
+            $add_page_id = array(
+                $email_hash_key => $data,
+            );
+            $cookie_saved_data['qntn_user_data'] = $cookie_saved_data['qntn_user_data'] + $add_page_id;
+
+        } else {
+
+            $cookie_saved_data['qntn_user_data'][$email_hash_key] = $data;
+        }
+
+        $this->set_json_cookie('qntn_wp_access', $cookie_saved_data);
+    }
+
     /**
      * Set cookie data for different pages with access email addresses
      *
@@ -235,7 +407,7 @@ class Quentn_Wp_Restrict_Access
         $emails = implode( "','",$emails );
         global $wpdb;
         //if email address is authroized to visit the page, get its creation date, in case of multiple email addresses, latest creation date will be considered
-        $sql = "SELECT created_at FROM ".$wpdb->prefix . QUENTN_TABLE_NAME. " where page_id='".  $page_id."' and email_hash in ('".$emails."') order by created_at DESC LIMIT 1";
+        $sql = "SELECT created_at FROM ".$wpdb->prefix . TABLE_QUENTN_RESTRICTIONS. " where page_id='".  $page_id."' and email_hash in ('".$emails."') order by created_at DESC LIMIT 1";
         $qntn_access = $wpdb->get_row( $sql );
         if ( ! $qntn_access ) {
             return false;

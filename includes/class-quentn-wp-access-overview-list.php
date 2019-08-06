@@ -201,7 +201,7 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
      */
     public function get_quentn_restrictions( $per_page = 5, $page_number = 1, $page_id ) {
         global $wpdb;
-        $sql = "SELECT * FROM " . $wpdb->prefix . QUENTN_TABLE_NAME. " where page_id='". $page_id."'";
+        $sql = "SELECT * FROM " . $wpdb->prefix . TABLE_QUENTN_RESTRICTIONS. " where page_id='". $page_id."'";
         //set search
         if ( ! empty( $_REQUEST['s'] ) ) {
             $sql .= " and email LIKE '%" . $_REQUEST['s']."%'";
@@ -265,7 +265,7 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
      */
     public function delete_restriction( $page_id, $email ) {
         global $wpdb;
-         return $wpdb->delete( $wpdb->prefix . QUENTN_TABLE_NAME, [ 'page_id' => $page_id, 'email' => $email ], [ '%d', '%s' ] );
+         return $wpdb->delete( $wpdb->prefix . TABLE_QUENTN_RESTRICTIONS, [ 'page_id' => $page_id, 'email' => $email ], [ '%d', '%s' ] );
     }
 
     /**
@@ -275,7 +275,7 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
      */
     public function record_count($page_id) {
         global $wpdb;
-        $sql = "SELECT COUNT(*) FROM ".$wpdb->prefix . QUENTN_TABLE_NAME. " where page_id='".$page_id."'";
+        $sql = "SELECT COUNT(*) FROM ".$wpdb->prefix . TABLE_QUENTN_RESTRICTIONS. " where page_id='".$page_id."'";
         if ( ! empty( $_REQUEST['s'] ) ) {
             $sql .= " and email LIKE '%".$_REQUEST['s']."%'";
         }
@@ -340,11 +340,11 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
             if ( ! wp_verify_nonce( $nonce, 'qntn_delete_access' ) ) {
                 die( 'Nope! Security check failed' );
             }
-            else {
-                $num_records_deleted = $this->delete_restriction( absint( $_GET['page_id'] ), str_replace(" ","+",trim( $_GET['email'] ) ) );
-                wp_redirect( esc_url_raw( remove_query_arg( ['action', 'email', '_wpnonce'], esc_url_raw(add_query_arg( ['page_id' => $this->page_id, 'update' => 'quentn-access-deleted', 'deleted' => $num_records_deleted ] ) ) ) ) );
-                exit;
-            }
+
+            $num_records_deleted = $this->delete_restriction( absint( $_GET['page_id'] ), str_replace(" ","+",trim( $_GET['email'] ) ) );
+            wp_redirect( esc_url_raw( remove_query_arg( ['action', 'email', '_wpnonce'], esc_url_raw(add_query_arg( ['page_id' => $this->page_id, 'update' => 'quentn-access-deleted', 'deleted' => $num_records_deleted ] ) ) ) ) );
+            exit;
+
         }
 
         // If the delete bulk action is triggered
@@ -358,10 +358,11 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
 
             if( ! empty( $delete_restrict_pages_ids ) ) {
                 //delete multiple accesses
-                $query =  "DELETE FROM ".$wpdb->prefix . QUENTN_TABLE_NAME." where CONCAT_WS('|', page_id, email) IN ('".implode("', '", $delete_restrict_pages_ids)."')";
-                $wpdb->query( $wpdb->query( $query ) );
+                $query =  "DELETE FROM ".$wpdb->prefix . TABLE_QUENTN_RESTRICTIONS." where CONCAT_WS('|', page_id, email) IN ('".implode("', '", $delete_restrict_pages_ids)."')";
+                //$wpdb->query( $wpdb->query( $query ) );
+                $num_records_deleted = $wpdb->query( $query );
                 //add and remove items from a query string
-                wp_redirect( esc_url_raw(remove_query_arg( ['action', 'action2', '_wpnonce', '_wp_http_referer', 'quentn-bulk-delete-access'], esc_url_raw(add_query_arg( ['page_id' => $this->page_id, 'update' => 'quentn-access-deleted', 'deleted' => count( $delete_restrict_pages_ids ) ] ) ) ) ) );
+                wp_redirect( esc_url_raw(remove_query_arg( ['action', 'action2', '_wpnonce', '_wp_http_referer', 'quentn-bulk-delete-access'], esc_url_raw(add_query_arg( ['page_id' => $this->page_id, 'update' => 'quentn-access-deleted', 'deleted' => $num_records_deleted ] ) ) ) ) );
                 exit;
             }
         }
@@ -380,7 +381,7 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
                 exit;
             }
             //add/update access, if email address already exist, then only its creation date will be updated
-            $wpdb->replace( $wpdb->prefix . QUENTN_TABLE_NAME,['page_id' => $this->page_id, 'email' => $email, 'email_hash' => hash( 'sha256', $email ), 'created_at' => time()], ['%d', '%s', '%s', '%d'] );
+            $wpdb->replace( $wpdb->prefix . TABLE_QUENTN_RESTRICTIONS,['page_id' => $this->page_id, 'email' => $email, 'email_hash' => hash( 'sha256', $email ), 'created_at' => time()], ['%d', '%s', '%s', '%d'] );
         }
 
     }
@@ -428,7 +429,7 @@ function quentn_show_data_access_overview_list() {
                 </tr>
                 <tr>
                     <td colspan="2">
-                        <input type="submit" value="Add Access" class="button action" id="submit_email">
+                        <input type="submit" value="<?php __('Add Access', 'quentn-wp' ) ?>" class="button action" id="submit_email">
                     </td>
                 </tr>
             </table>

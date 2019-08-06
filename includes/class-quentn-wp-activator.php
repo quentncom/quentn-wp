@@ -70,9 +70,10 @@ class Quentn_Wp_Activator {
     public function quentn_perform_activation() {
 
         global $wpdb;
-        $table_name = $wpdb->prefix. QUENTN_TABLE_NAME;
+        $table_qntn_restriction = $wpdb->prefix. TABLE_QUENTN_RESTRICTIONS;
+        $table_qntn_user_data = $wpdb->prefix. TABLE_QUENTN_USER_DATA;
 
-        $sql = "CREATE TABLE IF NOT EXISTS $table_name (
+        $sql_create_table_restrictions = "CREATE TABLE IF NOT EXISTS $table_qntn_restriction (
           page_id mediumint(10) unsigned NOT NULL,
           email varchar(255) NOT NULL,
           email_hash varchar(255),
@@ -80,12 +81,19 @@ class Quentn_Wp_Activator {
           PRIMARY KEY  (page_id, email)
         )";
 
+        $sql_create_table_user_data = "CREATE TABLE IF NOT EXISTS $table_qntn_user_data (
+          email varchar(255) NOT NULL,
+          fields mediumtext NOT NULL ,                
+          PRIMARY KEY  (email)
+        )";
+
         require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-        dbDelta($sql);
-        update_option("quentn_db_version", '1.0');
+        dbDelta( $sql_create_table_restrictions );
+        dbDelta( $sql_create_table_user_data );
+        update_option( "quentn_db_version", '1.0' );
         //add unique id for quentn
-        if ( ! get_option("quentn_unique_id" ) ) {
-            add_option("quentn_unique_id", uniqid(), '', 'no');
+        if ( ! get_option( "quentn_unique_id" ) ) {
+            add_option( "quentn_unique_id", uniqid(), '', 'no' );
         }
         // flush rewrite rules
         flush_rewrite_rules();

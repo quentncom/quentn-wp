@@ -10,16 +10,16 @@ if( isset($_GET['tab'])) {
     <h1><?php _e( 'Quentn Options', 'quentn-wp' ) ?></h1>
     <?php settings_errors(); ?>
 
-    <form method="post" action="options.php">
         <!-- provides the styling for tabs. -->
         <h2 class="nav-tab-wrapper">
             <a href="?page=quentn-dashboard&tab=quentn_host_connection" class="nav-tab <?php if ( $active_tab == 'quentn_host_connection' ) { echo 'nav-tab-active'; } ?>"><?php _e( 'Connect', 'quentn-wp' ); ?></a>
             <a href="?page=quentn-dashboard&tab=qnentn_tags_selection" class="nav-tab <?php if ( $active_tab == 'qnentn_tags_selection' ) { echo 'nav-tab-active'; } ?>"><?php _e( 'Roles', 'quentn-wp' ); ?></a>
             <a href="?page=quentn-dashboard&tab=qnentn_web_tracking_tab" class="nav-tab <?php if ( $active_tab == 'qnentn_web_tracking_tab' ) { echo 'nav-tab-active'; } ?>"><?php _e( 'Web Tracking', 'quentn-wp' ); ?></a>
+            <a href="?page=quentn-dashboard&tab=qnentn_delete_user_data" class="nav-tab <?php if ( $active_tab == 'qnentn_delete_user_data' ) { echo 'nav-tab-active'; } ?>"><?php _e( 'Delete User Data', 'quentn-wp' ); ?></a>
         </h2>
         <?php
         $submit_button_attributes = array();
-        if( ! $this->api_handler->is_connected_with_quentn() ) {
+        if( $active_tab != "qnentn_delete_user_data" && ! $this->api_handler->is_connected_with_quentn() ) {
             $submit_button_attributes =  array(
                 'disabled' => true
             );
@@ -38,10 +38,13 @@ if( isset($_GET['tab'])) {
         }
         //display quentn tags selection options for wp user roles
         if ( $active_tab == "qnentn_tags_selection" ) {
+            echo '<form method="post" action="options.php">';
             settings_fields( "quentn_tags_options_group" );
             do_settings_sections( "quentn-dashboard-tags" );
             submit_button( NULL, 'primary', 'submit', true, $submit_button_attributes );
+            echo '</form>';
         } elseif ( $active_tab == "qnentn_web_tracking_tab" ) { //display web tracking options
+            echo '<form method="post" action="options.php">';
             if( get_option('quentn_web_tracking_enabled') ) {
                 update_option("quentn_web_tracking_code", $this->get_quentn_web_tracking_code() );
             } else { //if web tracking option is disabled, we will delete previously saved tracking code
@@ -79,9 +82,12 @@ if( isset($_GET['tab'])) {
             settings_fields("web_tracking_options_group");
             do_settings_sections("quentn-dashboard-web-tracking");
             submit_button( NULL, 'primary', 'submit', true, $submit_button_attributes );
+            echo '</form>';
         } elseif ( $active_tab == "quentn_host_connection" ) {
             require_once QUENTN_WP_PLUGIN_DIR . '/admin/partials/quentn-wp-connect.php';
         }
+        elseif ( $active_tab == "qnentn_delete_user_data" ) {
+            require_once QUENTN_WP_PLUGIN_DIR . '/admin/partials/quentn-delete_user_data.php';
+        }
         ?>
-    </form>
 </div>
