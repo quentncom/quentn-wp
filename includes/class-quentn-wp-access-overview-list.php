@@ -322,7 +322,6 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
         return $views;
     }
 
-
     /**
      * process actions
      *
@@ -429,7 +428,7 @@ function quentn_show_data_access_overview_list() {
                 </tr>
                 <tr>
                     <td colspan="2">
-                        <input type="submit" value="<?php __('Add Access', 'quentn-wp' ) ?>" class="button action" id="submit_email">
+                        <input type="submit" value="<?php _e('Add Access', 'quentn-wp' ) ?>" class="button action" id="submit_email">
                     </td>
                 </tr>
             </table>
