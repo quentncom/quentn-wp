@@ -242,9 +242,9 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
                 $quentn_expiry_page_inseconds = $result['created_at'] + $quentn_page_expirty_inseconds - time();
                 //set postfix text
                 if( $quentn_expiry_page_inseconds > 0 ) {
-                    $text_with_expiry_time = __( 'Time Left To Expire', 'quentn-wp' );
+                    $text_with_expiry_time = __( 'Remaining time until expiration', 'quentn-wp' );
                 } else {
-                    $text_with_expiry_time = __( 'Ago Page Has Expired', 'quentn-wp' );
+                    $text_with_expiry_time = __( 'Ago page has expired', 'quentn-wp' );
                 }
                 //add number of seconds left to current record array
                 $results[$key]['seconds'] = $quentn_expiry_page_inseconds;
@@ -290,7 +290,7 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
      * @return void
      */
     public function no_items() {
-        _e( 'No record avaliable.', 'quentn-wp' );
+        _e( 'No record avaliable', 'quentn-wp' );
     }
 
     /**

@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Quentn wp 1.0\n"
-"POT-Creation-Date: 2019-07-17 17:19+0200\n"
-"PO-Revision-Date: 2019-07-29 16:58+0200\n"
+"Project-Id-Version: Quentn wp\n"
+"POT-Creation-Date: 2019-08-07 17:34+0200\n"
+"PO-Revision-Date: 2019-08-08 13:26+0200\n"
 "Language-Team: Quentn GmbH\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -10,125 +10,161 @@ msgstr ""
 "X-Generator: Poedit 2.2.3\n"
 "X-Poedit-Basepath: ..\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Poedit-KeywordsList: __;_e;esc_html__;esc_html_e\n"
+"X-Poedit-KeywordsList: __;_e;_n;esc_html__;esc_html_e\n"
 "Last-Translator: \n"
 "Language: de\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: vendor\n"
+"X-Poedit-SearchPathExcluded-1: .git\n"
 
-#: admin/class-quentn-wp-admin.php:179
+#: admin/class-quentn-wp-admin.php:188
 msgid "Choose Quentn Tags"
 msgstr "Wählen Sie ein Quentn-Tag"
 
-#: admin/class-quentn-wp-admin.php:180
+#: admin/class-quentn-wp-admin.php:189
+#: includes/class-quentn-wp-access-overview-list.php:141
 msgid "Are you sure you want to delete?"
 msgstr "Wollen Sie wirklich löschen?"
 
-#: admin/class-quentn-wp-admin.php:197
+#: admin/class-quentn-wp-admin.php:207
 msgid "Quentn"
 msgstr "Quentn"
 
-#: admin/class-quentn-wp-admin.php:199
+#: admin/class-quentn-wp-admin.php:209
 msgid "Quentn Integration"
 msgstr "Quentn Integration"
 
-#: admin/class-quentn-wp-admin.php:199
+#: admin/class-quentn-wp-admin.php:209
 msgid "Integration"
 msgstr "Integration"
 
-#: admin/class-quentn-wp-admin.php:201
+#: admin/class-quentn-wp-admin.php:211
 msgid "Access Pages Restrictions"
 msgstr "Zugangsberechtigungen für Seite"
 
-#: admin/class-quentn-wp-admin.php:201
+#: admin/class-quentn-wp-admin.php:211
 msgid "Access Restrictions"
 msgstr "Zugangsberechtigungen"
 
-#: admin/class-quentn-wp-admin.php:205
+#: admin/class-quentn-wp-admin.php:215
 msgid "Quentn User Access"
 msgstr "Quentn Nutzer Zugriff"
 
-#: admin/class-quentn-wp-admin.php:205
+#: admin/class-quentn-wp-admin.php:215
 #: includes/class-quentn-wp-page-restrictions-list.php:181
 msgid "Access"
 msgstr "Zugang"
 
-#: admin/class-quentn-wp-admin.php:235
-msgid "User access has been added successfully"
-msgstr "Der Benutzerzugriff wurde erfolgreich hinzugefügt."
+#: admin/class-quentn-wp-admin.php:239
+#, php-format
+msgid "%d user access is deleted"
+msgstr "%d benutzerkonto ist gelöscht"
 
-#: admin/class-quentn-wp-admin.php:240
+#: admin/class-quentn-wp-admin.php:239
+#, php-format
+msgid "%d user accesses are deleted"
+msgstr "%d benutzerkonto wurde gelöscht"
+
+#: admin/class-quentn-wp-admin.php:246
+msgid "Data is deleted successfully"
+msgstr "Die Daten wurden erfolgreich gelöscht"
+
+#: admin/class-quentn-wp-admin.php:249
+#, php-format
+msgid "There is no data found with the email address %s"
+msgstr "Die E-Mail-Adresse %s konnte nicht gefunden werden"
+
+#: admin/class-quentn-wp-admin.php:254
+msgid "User access has been added successfully"
+msgstr "Der Benutzerzugriff wurde erfolgreich hinzugefügt"
+
+#: admin/class-quentn-wp-admin.php:259
 msgid "Please enter valid email address"
 msgstr "Bitte geben Sie eine gültige E-Mail-Adresse ein"
 
-#: admin/class-quentn-wp-admin.php:245
+#: admin/class-quentn-wp-admin.php:264
 msgid "Quentn account has been removed"
 msgstr "Quentn Account wurde entfernt"
 
-#: admin/class-quentn-wp-admin.php:337
+#: admin/class-quentn-wp-admin.php:355
 msgid "Web Tracking Settings"
 msgstr "Web Tracking Einstellungen"
 
-#: admin/class-quentn-wp-admin.php:343
+#: admin/class-quentn-wp-admin.php:361
 msgid "Select Quentn Tags"
 msgstr "Quentn Tag auswählen"
 
-#: admin/class-quentn-wp-admin.php:373
-#: admin/partials/quentn-wp-dashboard.php:18
+#: admin/class-quentn-wp-admin.php:391
+#: admin/partials/quentn-wp-dashboard.php:17
 msgid "Web Tracking"
 msgstr "Web Tracking"
 
-#: admin/class-quentn-wp-admin.php:382
+#: admin/class-quentn-wp-admin.php:400
 msgid "Consent Method"
 msgstr "Art der Einverständniserklärung"
 
-#: admin/class-quentn-wp-admin.php:415
+#: admin/class-quentn-wp-admin.php:433
 msgid "Please Select Tags"
 msgstr "Wählen Sie ein Tag"
 
-#: admin/class-quentn-wp-admin.php:455
+#: admin/class-quentn-wp-admin.php:473
 #, php-format
 msgid "You need to install the plugin %s to support Quentn cookies. You can download the plugin"
 msgstr "Sie müssen das Plugin %s installieren, um Quentn Cookies zu unterstützen. Um das Plugin herunterzuladen, klicken Sie"
 
-#: admin/class-quentn-wp-admin.php:457 admin/class-quentn-wp-admin.php:509
+#: admin/class-quentn-wp-admin.php:475 admin/class-quentn-wp-admin.php:527
 msgid "here"
 msgstr "hier"
 
-#: admin/class-quentn-wp-admin.php:508
+#: admin/class-quentn-wp-admin.php:526
 #, php-format
 msgid "To create multiple user roles and define different permissions, you must install the plugin %s. You can download the plugin"
 msgstr "Um mehrere Benutzerrollen anzulegen und verschiedene Berechtigungen zu definieren, müssen Sie das Plugin %s installieren. Um das Plugin herunterzuladen, klicken Sie"
 
-#: admin/class-quentn-wp-admin.php:767
+#: admin/class-quentn-wp-admin.php:785
 msgid "Confirm By Server"
 msgstr "Vom Server bestätigt"
 
-#: admin/class-quentn-wp-admin.php:768
+#: admin/class-quentn-wp-admin.php:786
 msgid "Cookie Notice"
 msgstr "Cookie-Hinweis"
 
-#: admin/class-quentn-wp-admin.php:769
+#: admin/class-quentn-wp-admin.php:787
 msgid "Quentn Overlay"
 msgstr "Quentn Overlay"
 
-#: admin/class-quentn-wp-admin.php:793
+#: admin/class-quentn-wp-admin.php:811
 #, php-format
 msgid "Create or update Quentn contact if user receives role %s , with the following tags"
 msgstr "Neuen Kontakt mit folgendem/n Tag(s) anlegen oder aktualisieren, wenn Nutzer die Rolle %s erhält"
 
-#: admin/class-quentn-wp-admin.php:819
+#: admin/class-quentn-wp-admin.php:837
 #, php-format
 msgid "Remove tags if user looses the role %s"
 msgstr "Tag(s) entfernen, wenn Nutzer Rolle %s verliert"
+
+#: admin/partials/quentn-delete_user_data.php:22
+#: admin/partials/quentn-delete_user_data.php:24
+#: includes/class-quentn-wp-access-overview-list.php:92
+#: includes/class-quentn-wp-access-overview-list.php:421
+msgid "Email"
+msgstr "E-Mail"
+
+#: admin/partials/quentn-delete_user_data.php:33
+#: includes/class-quentn-wp-access-overview-list.php:100
+#: includes/class-quentn-wp-access-overview-list.php:141
+#: includes/class-quentn-wp-access-overview-list.php:159
+#: includes/class-quentn-wp-access-overview-list.php:187
+msgid "Delete"
+msgstr "löschen"
 
 #: admin/partials/quentn-wp-connect.php:21
 msgid "You are connected to Quentn"
 msgstr "Sie sind mit Quentn verbunden"
 
 #: admin/partials/quentn-wp-connect.php:24
-msgid "You are connected to Quentn host "
-msgstr "Sie sind mit folgendem Quentn Host verbunden"
+msgid "You are connected to Quentn host %s"
+msgstr "Sie sind mit folgendem Quentn Host verbunden %s"
 
 #: admin/partials/quentn-wp-connect.php:27
 msgid "Update Quentn account"
@@ -146,13 +182,17 @@ msgstr "Verbinde mit Quentn"
 msgid "Quentn Options"
 msgstr "Quentn Optionen"
 
-#: admin/partials/quentn-wp-dashboard.php:16
+#: admin/partials/quentn-wp-dashboard.php:15
 msgid "Connect"
 msgstr "Verbinden"
 
-#: admin/partials/quentn-wp-dashboard.php:17
+#: admin/partials/quentn-wp-dashboard.php:16
 msgid "Roles"
 msgstr "Rollen"
+
+#: admin/partials/quentn-wp-dashboard.php:18
+msgid "Delete User Data"
+msgstr "Nutzerdaten löschen"
 
 #: admin/partials/quentn-wp-dashboard.php:30
 msgid "You are not connected to Quentn"
@@ -163,136 +203,121 @@ msgstr "Sie sind nicht mit Quentn verbunden"
 msgid "Please connect a Quentn account to use this feature"
 msgstr "Bitte verbinden Sie Ihren Quentn Account, um diese Funktion zu nutzen"
 
-#: admin/partials/quentn-wp-dashboard.php:73
+#: admin/partials/quentn-wp-dashboard.php:76
 #, php-format
-msgid "Could not find %s at the connected Quentn server.  Please add %s as tracked domain in order to use this feature."
+msgid "Could not find %s at the connected Quentn server. Please add %s as tracked domain in order to use this feature."
 msgstr "%s konnte auf dem verbundenen Quentn Server nicht gefunden werden. Bitte fügen Sie %s als Domain hinzu, um diese Funktion zu nutzen."
-
-#: includes/class-quentn-wp-access-overview-list.php:92
-#: includes/class-quentn-wp-access-overview-list.php:422
-msgid "Email"
-msgstr "E-Mail"
 
 #: includes/class-quentn-wp-access-overview-list.php:93
 msgid "Created"
 msgstr "Erstellt"
 
-#: includes/class-quentn-wp-access-overview-list.php:97
+#: includes/class-quentn-wp-access-overview-list.php:98
 msgid "Valid Until"
 msgstr "gültig bis"
 
-#: includes/class-quentn-wp-access-overview-list.php:99
-#: includes/class-quentn-wp-access-overview-list.php:140
-#: includes/class-quentn-wp-access-overview-list.php:158
-#: includes/class-quentn-wp-access-overview-list.php:186
-msgid "Delete"
-msgstr "löschen"
-
-#: includes/class-quentn-wp-access-overview-list.php:100
+#: includes/class-quentn-wp-access-overview-list.php:101
 msgid "View Access"
 msgstr "Zugriff anzeigen"
 
-#: includes/class-quentn-wp-access-overview-list.php:140
-msgid "Are you sure to delete this record?"
-msgstr "Wollen Sie diesen Datensatz wirklich löschen?\""
-
-#: includes/class-quentn-wp-access-overview-list.php:142
+#: includes/class-quentn-wp-access-overview-list.php:143
 msgid "Copy URL"
 msgstr "URL kopieren"
 
-#: includes/class-quentn-wp-access-overview-list.php:144
+#: includes/class-quentn-wp-access-overview-list.php:145
 #: includes/class-quentn-wp-page-restrictions-list.php:98
 msgid "no value"
 msgstr "kein Wert"
 
-#: includes/class-quentn-wp-access-overview-list.php:244
-msgid "Time Left To Expire"
-msgstr "Verbleibende Zeit bis Ablauf"
+#: includes/class-quentn-wp-access-overview-list.php:245
+msgid "Remaining time until expiration"
+msgstr "Verbleibende Zeit bis zum Ablauf"
 
-#: includes/class-quentn-wp-access-overview-list.php:246
-msgid "Page access has been expired"
-msgstr "Die Zugriffsberechtigung für die Seite ist abgelaufen"
+#: includes/class-quentn-wp-access-overview-list.php:247
+msgid "Ago page has expired"
+msgstr "%s seit Ablauf"
 
-#: includes/class-quentn-wp-access-overview-list.php:294
-msgid "No record avaliable."
+#: includes/class-quentn-wp-access-overview-list.php:293
+msgid "No record avaliable"
 msgstr "Kein Datensatz verfügbar"
 
-#: includes/class-quentn-wp-access-overview-list.php:321
+#: includes/class-quentn-wp-access-overview-list.php:320
 msgid "Access Overview For Page"
 msgstr "Zugriffsübersicht für die Seite"
 
-#: includes/class-quentn-wp-access-overview-list.php:321
+#: includes/class-quentn-wp-access-overview-list.php:320
+#: includes/class-quentn-wp-access-overview-list.php:431
 msgid "Add Access"
 msgstr "Zugriff hinzufügen"
 
-#: includes/class-quentn-wp-access-overview-list.php:409
+#: includes/class-quentn-wp-access-overview-list.php:408
 #, php-format
 msgid "Access Overview For Page %s"
 msgstr "Zugriffsübersicht für die Seite %s"
 
-#: includes/class-quentn-wp-access-overview-list.php:412
+#: includes/class-quentn-wp-access-overview-list.php:411
 msgid "Search Email"
 msgstr "Suche E-Mail"
 
 #: includes/class-quentn-wp-api-handler.php:217
 msgid "Tracking is not enabled from your quentn host"
-msgstr "Das Tracking ist von Ihrem Quentn-Host aus nicht aktiviert."
+msgstr "Das Tracking ist von Ihrem Quentn-Host aus nicht aktiviert"
 
 #: includes/class-quentn-wp-manage_meta_box.php:30
 msgid "Quentn Page Restriction"
 msgstr "Quentn Seitenzugriffsbeschränkung"
 
-#: includes/class-quentn-wp-manage_meta_box.php:96
+#: includes/class-quentn-wp-manage_meta_box.php:98
 msgid "Activate page Restriction"
 msgstr "Zugriffsbeschränkung aktivieren"
 
-#: includes/class-quentn-wp-manage_meta_box.php:97
-#: includes/class-quentn-wp-manage_meta_box.php:104
+#: includes/class-quentn-wp-manage_meta_box.php:99
+#: includes/class-quentn-wp-manage_meta_box.php:106
 msgid "Help"
 msgstr "Hilfe"
 
-#: includes/class-quentn-wp-manage_meta_box.php:97
+#: includes/class-quentn-wp-manage_meta_box.php:99
 msgid "Page will only be accessible by invite users"
 msgstr "Seite wird nur für eingeladene Benutzer angezeigt"
 
-#: includes/class-quentn-wp-manage_meta_box.php:103
+#: includes/class-quentn-wp-manage_meta_box.php:105
 msgid "Use Countdown"
 msgstr "Countdown benutzen"
 
-#: includes/class-quentn-wp-manage_meta_box.php:104
+#: includes/class-quentn-wp-manage_meta_box.php:106
 msgid "Page will only be accessible for a certain period of time"
 msgstr "Seite wird nur für einen bestimmten Zeitraum angezeigt"
 
-#: includes/class-quentn-wp-manage_meta_box.php:109
+#: includes/class-quentn-wp-manage_meta_box.php:111
 msgid "Countdown Settings"
 msgstr "Countdown Einstellungen"
 
-#: includes/class-quentn-wp-manage_meta_box.php:113
+#: includes/class-quentn-wp-manage_meta_box.php:115
 #, php-format
 msgid "You can use the shortcode %s in your page to display the countdown timer at a point of your choice."
 msgstr "Sie können den Short-Code %s auf Ihrer Seite verwenden, um den Countdown-Timer an einer Stelle Ihrer Wahl anzeigen zu lassen."
 
-#: includes/class-quentn-wp-manage_meta_box.php:115
+#: includes/class-quentn-wp-manage_meta_box.php:117
 msgid "Select type"
 msgstr "Typ auswählen"
 
-#: includes/class-quentn-wp-manage_meta_box.php:117
+#: includes/class-quentn-wp-manage_meta_box.php:119
 msgid "Relative"
 msgstr "Relativ"
 
-#: includes/class-quentn-wp-manage_meta_box.php:118
+#: includes/class-quentn-wp-manage_meta_box.php:120
 msgid "Absolute"
 msgstr "Absolut"
 
-#: includes/class-quentn-wp-manage_meta_box.php:125
+#: includes/class-quentn-wp-manage_meta_box.php:127
 msgid "Hours"
 msgstr "Stunden"
 
-#: includes/class-quentn-wp-manage_meta_box.php:129
+#: includes/class-quentn-wp-manage_meta_box.php:131
 msgid "Minutes"
 msgstr "Minuten"
 
-#: includes/class-quentn-wp-manage_meta_box.php:133
+#: includes/class-quentn-wp-manage_meta_box.php:135
 msgid "Seconds"
 msgstr "Sekunden"
 
@@ -304,44 +329,44 @@ msgstr "Countdown startet sobald der Zugriff gewährt wird."
 msgid "Countdown starts on the first visit. This works without access permission."
 msgstr "Countdown startet beim ersten Besuch. Eine Zugriffsberechtigung ist nicht nötig."
 
-#: includes/class-quentn-wp-manage_meta_box.php:140
+#: includes/class-quentn-wp-manage_meta_box.php:154
 msgid "Date"
 msgstr "Datum"
 
-#: includes/class-quentn-wp-manage_meta_box.php:141
+#: includes/class-quentn-wp-manage_meta_box.php:155
 msgid "Select date"
 msgstr "Datum auswählen"
 
-#: includes/class-quentn-wp-manage_meta_box.php:148
+#: includes/class-quentn-wp-manage_meta_box.php:162
 msgid "Display countdown on top of page"
 msgstr "Countdown am Seitenanfang anzeigen"
 
-#: includes/class-quentn-wp-manage_meta_box.php:150
+#: includes/class-quentn-wp-manage_meta_box.php:164
 msgid "If this option is disabled, no countdown is displayed."
 msgstr "Wenn diese Option deaktiviert ist, wird kein Countdown angezeigt."
 
-#: includes/class-quentn-wp-manage_meta_box.php:161
+#: includes/class-quentn-wp-manage_meta_box.php:175
 msgid "Redirection Settings"
 msgstr "Weiterleitung Einstellungen"
 
-#: includes/class-quentn-wp-manage_meta_box.php:164
+#: includes/class-quentn-wp-manage_meta_box.php:178
 msgid "Select restriction type"
 msgstr "Weiterleitung bei unautorisiertem Zugriff"
 
-#: includes/class-quentn-wp-manage_meta_box.php:166
-#: includes/class-quentn-wp-manage_meta_box.php:173
+#: includes/class-quentn-wp-manage_meta_box.php:180
+#: includes/class-quentn-wp-manage_meta_box.php:187
 msgid "Message"
 msgstr "Nachricht"
 
-#: includes/class-quentn-wp-manage_meta_box.php:167
+#: includes/class-quentn-wp-manage_meta_box.php:181
 msgid "URL"
 msgstr "URL"
 
-#: includes/class-quentn-wp-manage_meta_box.php:189
+#: includes/class-quentn-wp-manage_meta_box.php:203
 msgid "Redirect URL"
 msgstr "An diese URL weiterleiten"
 
-#: includes/class-quentn-wp-manage_meta_box.php:190
+#: includes/class-quentn-wp-manage_meta_box.php:204
 msgid "Enter URL"
 msgstr "URL eingeben"
 
@@ -371,42 +396,42 @@ msgid "Show Access"
 msgstr "Zugriff anzeigen"
 
 #: includes/class-quentn-wp-page-restrictions-list.php:181
-msgid "Countdown"
+msgid "CountDown"
 msgstr "Countdown"
 
 #: includes/class-quentn-wp-page-restrictions-list.php:219
-msgid "To create access restricted pages, please check your page's settings"
+msgid "To create access restricted pages, please check your page's settings."
 msgstr "Um zugriffsbeschränkte Seiten zu erstellen, überprüfen Sie bitte die Einstellungen Ihrer Seite."
 
 #: includes/class-quentn-wp-page-restrictions-list.php:251
 msgid "List of Pages With Limited Access"
 msgstr "Liste aller zugriffslimitierten Seiten"
 
-#: includes/class-quentn-wp-rest-api-controller.php:257
-msgid "Error Creating User "
-msgstr "Fehler bei der Benutzererstellung"
+#: includes/class-quentn-wp-rest-api-controller.php:260
+msgid "Error Creating User %s"
+msgstr "Fehler bei der Benutzererstellung %s"
 
-#: includes/class-quentn-wp-rest-api-controller.php:266
-#: includes/class-quentn-wp-rest-api-controller.php:298
+#: includes/class-quentn-wp-rest-api-controller.php:269
+#: includes/class-quentn-wp-rest-api-controller.php:301
 msgid "Permissions Timer Successfully Updated"
 msgstr "Berechtigungs-Timer erfolgreich aktualisiert"
 
-#: includes/class-quentn-wp-rest-api-controller.php:420
+#: includes/class-quentn-wp-rest-api-controller.php:423
 msgid "There must be valid email address"
-msgstr "Es muss eine gültige E-Mail-Adresse vorhanden sein."
+msgstr "Es muss eine gültige E-Mail-Adresse vorhanden sein"
 
-#: includes/class-quentn-wp-rest-api-controller.php:473
+#: includes/class-quentn-wp-rest-api-controller.php:476
 msgid "Time has expired"
 msgstr "Zeit ist abgelaufen"
 
-#: includes/class-quentn-wp-rest-api-controller.php:484
+#: includes/class-quentn-wp-rest-api-controller.php:487
 msgid "API key is not valid"
 msgstr "API Key ist ungültig"
 
-#: includes/class-quentn-wp-rest-api-controller.php:484
-msgid "Incorrect API Key"
+#: includes/class-quentn-wp-rest-api-controller.php:487
+msgid "Incorrect Api Key"
 msgstr "Falscher API Key"
 
-#: includes/class-quentn-wp-restrict-access.php:93
+#: includes/class-quentn-wp-restrict-access.php:94
 msgid "Access denied"
 msgstr "Zugriff verweigert"

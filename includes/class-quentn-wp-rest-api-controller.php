@@ -257,7 +257,7 @@ class Quentn_Wp_Rest_Api
             if ( ! email_exists( $email ) ) {
                 $user_id = $this->create_user( $email );
                 if ( is_wp_error( $user_id ) ) {
-                    $error->add( __( 'Error Creating User ').$email, $user_id->get_error_message(), array( 'status' => 400 ) );
+                    $error->add( sprintf( __( 'Error Creating User %s', 'quentn-wp' ), $email ), $user_id->get_error_message(), array( 'status' => 400 ) );
                 }
             }
         }
