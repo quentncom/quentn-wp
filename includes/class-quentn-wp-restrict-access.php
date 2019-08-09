@@ -25,7 +25,7 @@ class Quentn_Wp_Restrict_Access
      * @return string
      */
      public function get_flipclock_shortcode() {
-         return "<div class='quentn-flipclock'></div>";
+         return "<div class='quentn-flipclock quentn-shortcode'></div>";
      }
 
     /**
@@ -503,7 +503,12 @@ class Quentn_Wp_Restrict_Access
         if( $quentn_post_restrict_meta['display_countdown_default_status'] ) {
             global $post;
             if ( is_a( $post, 'WP_Post' ) ) {
-                echo "<script>jQuery(document).ready(function () { jQuery('body').prepend('<div id=\'countdown-wrapper\'><div class=\"quentn-flipclock\"></div></div>')});</script>";
+                //check if countdow stay on top is true
+                if( $quentn_post_restrict_meta['quentn_countdown_stick_on_top'] ) {
+                    echo "<script>jQuery(document).ready(function () { jQuery('body').prepend('<div class=\'quentn-countdown-wrapper countdown-fixed\'><div class=\"quentn-flipclock\"></div></div><div class=\"quentn-flipclock-spacer\"></div>')});</script>";
+                } else {
+                    echo "<script>jQuery(document).ready(function () { jQuery('body').prepend('<div class=\'quentn-countdown-wrapper\'><div class=\"quentn-flipclock\"></div></div>')});</script>";
+                }
             }
         }
     }

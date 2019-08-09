@@ -21,7 +21,7 @@ if ( isset( $_GET['update'] ) and sanitize_key( $_GET['update'] == 'remove-quent
                 <span class="glyphicon glyphicon-ok"></span><strong><?php  _e( 'You are connected to Quentn', 'quentn-wp' ) ?></strong>
                 <hr class="message-inner-separator">
                 <p>
-                    <?php   printf('You are connected to Quentn host %s', get_option('quentn_base_url')) ?>
+                    <?php   printf( __( 'You are connected to Quentn host %s', 'quentn-wp' ), get_option('quentn_base_url') ) ; ?>
                 </p>
             </div>
             <a href="<?php echo $base_uri.$path."?".http_build_query($params) ?>" class="btn btn-primary btn-lg"><?php _e( 'Update Quentn account', 'quentn-wp' ) ?></a>

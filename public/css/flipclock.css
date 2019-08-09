@@ -435,13 +435,9 @@
  * Make flipclock responsive
  */
 .quentn-flipclock {
-  /*background-color: #2a2a2a;*/
-  zoom: 0.55;
-  -moz-transform: scale(0.55);
+  zoom: 0.35;
+  -moz-transform: scale(0.35);
   display:inline-block;
-  /*width:auto;*/
-  /*max-width: 100%;
-  padding-top:40px;*/
   text-align:center;
   padding:15px 0;
   margin-bottom:20px;
@@ -449,7 +445,9 @@
 }
 
 
-
+.quentn-flipclock-spacer {
+  height: 110px;
+}
 
 .flip-clock-divider .flip-clock-label {
   font-size: 20px;
@@ -458,25 +456,48 @@
 }
 
 
+@media (min-width: 480px) {
+
+  .quentn-flipclock {
+    zoom: 0.5;
+    -moz-transform: scale(0.5);
+  }
+  .quentn-flipclock-spacer {
+    height: 140px;
+  }
+}
 /**
  * SM
  */
 @media (min-width: 768px) {
 
   .quentn-flipclock {
-    zoom: 0.7;
+     zoom: 0.7;
     -moz-transform: scale(0.7);
+  }
+  .quentn-flipclock-spacer {
+    height: 160px;
   }
 }
 
 
-/**
- * LG
- */
-@media (min-width: 1200px) {
+@media (min-width: 1024px) {
   .quentn-flipclock {
     zoom: 1;
     -moz-transform: scale(1);
+  }
+  .quentn-flipclock-spacer {
+    height: 180px;
+  }
+}
+
+@media (min-width: 1366px) {
+  .quentn-flipclock {
+    zoom: 1.1;
+    -moz-transform: scale(1.1);
+  }
+  .quentn-flipclock-spacer {
+    height: 220px;
   }
 }
 

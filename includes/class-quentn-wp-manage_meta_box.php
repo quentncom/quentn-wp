@@ -71,6 +71,7 @@ class Quentn_Wp_Page_Restrictions_Controller
         $quentn_page_access_mode = '';
         $quentn_page_restrict_absolute_date = '';
         $quentn_page_restrict_default_countdown_status = '';
+        $quentn_page_countdown_stick_on_top = '';
         $quentn_page_restrict_redirection_type =  '';
         $quentn_page_restrict_redirect_url = '';
         $quentn_page_restrict_error_message = '';
@@ -86,6 +87,7 @@ class Quentn_Wp_Page_Restrictions_Controller
             $quentn_page_access_mode                        = array_key_exists( 'access_mode', $quentn_post_restrict_meta  ) ? $quentn_post_restrict_meta['access_mode'] : '';
             $quentn_page_restrict_absolute_date             = array_key_exists( 'absolute_date', $quentn_post_restrict_meta  ) ? $quentn_post_restrict_meta['absolute_date'] : '';
             $quentn_page_restrict_default_countdown_status  = array_key_exists( 'display_countdown_default_status', $quentn_post_restrict_meta  ) ? $quentn_post_restrict_meta['display_countdown_default_status'] : '';
+            $quentn_page_countdown_stick_on_top             = array_key_exists( 'quentn_countdown_stick_on_top', $quentn_post_restrict_meta  ) ? ( $quentn_page_restrict_default_countdown_status && $quentn_post_restrict_meta['quentn_countdown_stick_on_top']) : '';
             $quentn_page_restrict_redirection_type          = array_key_exists( 'redirection_type', $quentn_post_restrict_meta  ) ? $quentn_post_restrict_meta['redirection_type'] : '';
             $quentn_page_restrict_redirect_url              = array_key_exists( 'redirect_url', $quentn_post_restrict_meta  ) ? $quentn_post_restrict_meta['redirect_url'] : '';
             $quentn_page_restrict_error_message             = array_key_exists( 'error_message', $quentn_post_restrict_meta  ) ? $quentn_post_restrict_meta['error_message'] : '';
@@ -108,7 +110,7 @@ class Quentn_Wp_Page_Restrictions_Controller
 
                 <div class="panel-group" id="quentn_countdown_settings" style="display: <?php echo (($quentn_page_restrict_countdown)?'block':'none')?>">
                     <div class="panel panel-default">
-                        <div class="panel-heading"><?php  _e( 'Countdown Settings', 'quentn-wp' )?></div>
+                        <div class="panel-heading"><span class="glyphicon glyphicon-cog"></span>&nbsp;<?php  _e( 'Countdown', 'quentn-wp' )?></div>
                         <div class="panel-body">
                             <div class = "form-group">
                                 <p class="help-block">
@@ -120,6 +122,7 @@ class Quentn_Wp_Page_Restrictions_Controller
                                     <option value="absolute" <?php  selected('absolute', $quentn_page_restrict_countdown_type); ?>><?php  _e( 'Absolute', 'quentn-wp' )?></option>
                                 </select>
                             </div>
+
 
 
                             <div class="form-inline"  id="relative-div" style="display: <?php echo ($quentn_page_restrict_countdown_type == 'relative') ? 'block' : 'none'?>">
@@ -138,12 +141,12 @@ class Quentn_Wp_Page_Restrictions_Controller
 
                                 <div class="form-check" style="margin-top: 10px">
                                     <input type="radio" class="form-check-input" name="access_mode" value="permission_granted_mode" checked  >
-                                    <?php  _e( 'Countdown starts when permission has been granted.', 'quentn-wp' ) ?>
+                                    <small class="form-text text-muted"><?php  _e( 'Countdown starts when permission has been granted.', 'quentn-wp' ) ?></small>
                                 </div>
 
                                 <div class="form-check">
-                                        <input type="radio" class="form-check-input" name="access_mode" value="first_visit_mode" <?php checked( $quentn_page_access_mode, 'first_visit_mode' ); ?>>
-                                        <?php  _e( 'Countdown starts on the first visit. This works without access permission.', 'quentn-wp' ) ?>
+                                    <input type="radio" class="form-check-input" name="access_mode" value="first_visit_mode" <?php checked( $quentn_page_access_mode, 'first_visit_mode' ); ?>>
+                                    <small class="form-text text-muted"><?php  _e( 'Countdown starts on the first visit. This works without access permission.', 'quentn-wp' ) ?></small>
                                 </div>
 
 
@@ -165,6 +168,13 @@ class Quentn_Wp_Page_Restrictions_Controller
                                     </p>
                                 </div>
                             </div>
+
+                            <div class="form-group" id="countdown-position-div" style="display: <?php echo ( $quentn_page_restrict_default_countdown_status ) ? 'block' : 'none'?>">
+                                <div class = "checkbox">
+                                    <label><input type = "checkbox"><input type="checkbox" name="quentn_countdown_stick_on_top" id="quentn_countdown_stick_on_top" value="1" <?php checked( $quentn_page_countdown_stick_on_top ); ?> ></label>
+                                    <small class="form-text text-muted"><?php  _e( 'Countdown stays on the top while the page scrolls', 'quentn-wp' )?></small>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -172,7 +182,7 @@ class Quentn_Wp_Page_Restrictions_Controller
 
             <div class="panel-group" id="quentn_page_redirection_type_panel" style="display: <?php echo (($quentn_post_restrict_meta)?'block':'none')?>">
                 <div class="panel panel-default">
-                    <div class="panel-heading"><?php  _e( 'Redirection Settings', 'quentn-wp' )?></div>
+                    <div class="panel-heading"><span class="glyphicon glyphicon-cog"></span>&nbsp;<?php  _e( 'Redirection', 'quentn-wp' )?></div>
                     <div class="panel-body">
                         <div class = "form-group">
                             <label for="quentn_page_redirection_type"><?php _e( 'Select restriction type', 'quentn-wp' )?></label>
@@ -260,6 +270,7 @@ class Quentn_Wp_Page_Restrictions_Controller
         $access_mode = sanitize_text_field ( $_POST['access_mode'] );
         $q_absolute_date = sanitize_text_field ( $_POST['quentn_page_restrict_datepicker'] );
         $q_default_countdown_status = sanitize_text_field( $_POST['quentn_default_display_countdown_status'] );
+        $q_countdown_stick_on_top = sanitize_text_field( $_POST['quentn_countdown_stick_on_top'] );
         $q_redirection_type = sanitize_text_field( $_POST['quentn_page_redirection_type'] );
         $q_redirect_url = sanitize_text_field ( $_POST['quentn_page_restrict_redirect_url'] );
         $q_error_message = ( ! empty( $_POST['quentn_page_access_error_message'] ) ) ? wp_kses_post( wp_unslash( $_POST['quentn_page_access_error_message'] ) ) : '';
@@ -289,6 +300,7 @@ class Quentn_Wp_Page_Restrictions_Controller
             $quentn_restrict_post_meta['access_mode'] =  $access_mode;
             $quentn_restrict_post_meta['absolute_date'] =  $q_absolute_date;
             $quentn_restrict_post_meta['display_countdown_default_status'] = $q_default_countdown_status;
+            $quentn_restrict_post_meta['quentn_countdown_stick_on_top'] = $q_countdown_stick_on_top;
             $quentn_restrict_post_meta['redirection_type'] = $q_redirection_type;
             $quentn_restrict_post_meta['redirect_url'] = $q_redirect_url;
             $quentn_restrict_post_meta['error_message'] = $q_error_message;

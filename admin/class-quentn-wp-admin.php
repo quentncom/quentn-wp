@@ -783,7 +783,7 @@ class Quentn_Wp_Admin {
         ?>
         <select name="quentn_web_tracking_consent_method" id="quentn_web_tracking_consent_method" <?php disabled(  ! get_option( 'quentn_web_tracking_enabled'  ) || ! $this->api_handler->is_connected_with_quentn() || ! $this->api_handler->is_web_tracking_enabled() || ! $this->is_domain_registered( $_SERVER['HTTP_HOST'], $this->api_handler->get_registered_domains() ) ); ?>>
             <option value="confirm-by-server" <?php  selected( $value, 'confirm-by-server' ); ?>><?php _e( 'Confirm By Server', 'quentn-wp' ) ?></option>
-            <option value="cookie-notice" <?php  selected( $value, 'cookie-notice' ); disabled( ! Helper::is_cookie_notice_plugin_enabled() ) ?>><?php _e( 'Cookie Notice', 'quentn-wp' ) ?></option>
+            <option value="cookie-notice" <?php  selected( $value, 'cookie-notice' ); disabled( ! Helper::is_cookie_notice_plugin_enabled() ) ?>>Cookie Notice</option>
             <option value="quentn-overlay" <?php  selected( $value, 'quentn-overlay' ); ?>><?php _e('Quentn Overlay', 'quentn-wp' ) ?></option>
         </select>
         <?php

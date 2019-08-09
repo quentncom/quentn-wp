@@ -111,9 +111,18 @@ jQuery(document).ready(function () {
     jQuery( '#quentn_web_tracking_enabled' ).on( 'change', function() {
             if ( jQuery( this ).prop( 'checked' ) ) {
                 jQuery( "#quentn_web_tracking_consent_method" ).prop('disabled', false);
-
             } else {
                 jQuery( "#quentn_web_tracking_consent_method" ).prop('disabled', true);
+            }
+        }
+    );
+
+    //display countdown stick on top option when display countdown is checked
+    jQuery( '#quentn_default_display_countdown_status' ).on( 'change', function() {
+            if ( jQuery( this ).prop( 'checked' ) ) {
+                jQuery( "#countdown-position-div" ).show('slow');
+            } else {
+                jQuery( "#countdown-position-div" ).hide('slow');
             }
         }
     );

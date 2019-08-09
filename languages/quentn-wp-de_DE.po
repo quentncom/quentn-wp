@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Quentn wp\n"
 "POT-Creation-Date: 2019-08-07 17:34+0200\n"
-"PO-Revision-Date: 2019-08-08 13:26+0200\n"
+"PO-Revision-Date: 2019-08-09 14:01+0200\n"
 "Language-Team: Quentn GmbH\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,7 +44,7 @@ msgstr "Zugangsberechtigungen für Seite"
 
 #: admin/class-quentn-wp-admin.php:211
 msgid "Access Restrictions"
-msgstr "Zugangsberechtigungen"
+msgstr "Zutritt verwalten"
 
 #: admin/class-quentn-wp-admin.php:215
 msgid "Quentn User Access"
@@ -156,7 +156,7 @@ msgstr "E-Mail"
 #: includes/class-quentn-wp-access-overview-list.php:159
 #: includes/class-quentn-wp-access-overview-list.php:187
 msgid "Delete"
-msgstr "löschen"
+msgstr "Löschen"
 
 #: admin/partials/quentn-wp-connect.php:21
 msgid "You are connected to Quentn"
@@ -214,7 +214,7 @@ msgstr "Erstellt"
 
 #: includes/class-quentn-wp-access-overview-list.php:98
 msgid "Valid Until"
-msgstr "gültig bis"
+msgstr "Gültig bis"
 
 #: includes/class-quentn-wp-access-overview-list.php:101
 msgid "View Access"
@@ -289,7 +289,7 @@ msgid "Page will only be accessible for a certain period of time"
 msgstr "Seite wird nur für einen bestimmten Zeitraum angezeigt"
 
 #: includes/class-quentn-wp-manage_meta_box.php:111
-msgid "Countdown Settings"
+msgid "Countdown"
 msgstr "Countdown Einstellungen"
 
 #: includes/class-quentn-wp-manage_meta_box.php:115
@@ -323,7 +323,7 @@ msgstr "Sekunden"
 
 #: includes/class-quentn-wp-manage_meta_box.php:141
 msgid "Countdown starts when permission has been granted."
-msgstr "Countdown startet sobald der Zugriff gewährt wird."
+msgstr "Countdown startet, sobald der Zugriff gewährt wird."
 
 #: includes/class-quentn-wp-manage_meta_box.php:146
 msgid "Countdown starts on the first visit. This works without access permission."
@@ -345,8 +345,12 @@ msgstr "Countdown am Seitenanfang anzeigen"
 msgid "If this option is disabled, no countdown is displayed."
 msgstr "Wenn diese Option deaktiviert ist, wird kein Countdown angezeigt."
 
+#: includes/class-quentn-wp-manage_meta_box.php:174
+msgid "Countdown stays on the top while the page scrolls"
+msgstr "Countdown bleibt sichtbar beim scrollen"
+
 #: includes/class-quentn-wp-manage_meta_box.php:175
-msgid "Redirection Settings"
+msgid "Redirection"
 msgstr "Weiterleitung Einstellungen"
 
 #: includes/class-quentn-wp-manage_meta_box.php:178

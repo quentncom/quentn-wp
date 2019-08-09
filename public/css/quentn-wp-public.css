@@ -3,7 +3,16 @@
  * included in this file.
  */
 
-#countdown-wrapper {
+.countdown-fixed {
+    position: fixed;
+    z-index: 99;
+    width: 100%;
+}
+.quentn-shortcode {
+    zoom: 0.5;
+}
+
+.quentn-countdown-wrapper {
     background-color: #2a2a2a;
     text-align: center;
     padding: 15px 0;
@@ -12,7 +21,7 @@
     font-family: arial,sans-serif;
 }
 
-#countdown-wrapper .pre-header {
+.quentn-countdown-wrapper .pre-header {
     font-size: 16px;
     line-height: 1.6em;
     padding-bottom: 10px;

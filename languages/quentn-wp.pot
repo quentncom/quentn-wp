@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Quentn wp\n"
-"POT-Creation-Date: 2019-08-07 17:34+0200\n"
-"PO-Revision-Date: 2019-08-07 17:34+0200\n"
+"POT-Creation-Date: 2019-08-09 13:39+0200\n"
+"PO-Revision-Date: 2019-08-09 13:39+0200\n"
 "Last-Translator: \n"
 "Language-Team: Quentn GmbH\n"
 "Language: en\n"
@@ -64,6 +64,7 @@ msgstr ""
 #, php-format
 msgid "%d user accesses are deleted"
 msgstr ""
+
 
 #: admin/class-quentn-wp-admin.php:246
 msgid "Data is deleted successfully"
@@ -163,6 +164,7 @@ msgid "You are connected to Quentn"
 msgstr ""
 
 #: admin/partials/quentn-wp-connect.php:24
+#, php-format
 msgid "You are connected to Quentn host %s"
 msgstr ""
 
@@ -205,7 +207,7 @@ msgstr ""
 
 #: admin/partials/quentn-wp-dashboard.php:76
 #, php-format
-msgid "Could not find %s at the connected Quentn server. Please add %s as tracked domain in order to use this feature."
+msgid "Could not find %s at the connected Quentn server.  Please add %s as tracked domain in order to use this feature."
 msgstr ""
 
 #: includes/class-quentn-wp-access-overview-list.php:93
@@ -267,106 +269,110 @@ msgstr ""
 msgid "Quentn Page Restriction"
 msgstr ""
 
-#: includes/class-quentn-wp-manage_meta_box.php:98
+#: includes/class-quentn-wp-manage_meta_box.php:100
 msgid "Activate page Restriction"
 msgstr ""
 
-#: includes/class-quentn-wp-manage_meta_box.php:99
-#: includes/class-quentn-wp-manage_meta_box.php:106
+#: includes/class-quentn-wp-manage_meta_box.php:101
+#: includes/class-quentn-wp-manage_meta_box.php:108
 msgid "Help"
 msgstr ""
 
-#: includes/class-quentn-wp-manage_meta_box.php:99
+#: includes/class-quentn-wp-manage_meta_box.php:101
 msgid "Page will only be accessible by invite users"
 msgstr ""
 
-#: includes/class-quentn-wp-manage_meta_box.php:105
+#: includes/class-quentn-wp-manage_meta_box.php:107
 msgid "Use Countdown"
 msgstr ""
 
-#: includes/class-quentn-wp-manage_meta_box.php:106
+#: includes/class-quentn-wp-manage_meta_box.php:108
 msgid "Page will only be accessible for a certain period of time"
 msgstr ""
 
-#: includes/class-quentn-wp-manage_meta_box.php:111
-msgid "Countdown Settings"
+#: includes/class-quentn-wp-manage_meta_box.php:113
+msgid "Countdown"
 msgstr ""
 
-#: includes/class-quentn-wp-manage_meta_box.php:115
+#: includes/class-quentn-wp-manage_meta_box.php:117
 #, php-format
 msgid "You can use the shortcode %s in your page to display the countdown timer at a point of your choice."
 msgstr ""
 
-#: includes/class-quentn-wp-manage_meta_box.php:117
+#: includes/class-quentn-wp-manage_meta_box.php:119
 msgid "Select type"
 msgstr ""
 
-#: includes/class-quentn-wp-manage_meta_box.php:119
+#: includes/class-quentn-wp-manage_meta_box.php:121
 msgid "Relative"
 msgstr ""
 
-#: includes/class-quentn-wp-manage_meta_box.php:120
+#: includes/class-quentn-wp-manage_meta_box.php:122
 msgid "Absolute"
 msgstr ""
 
-#: includes/class-quentn-wp-manage_meta_box.php:127
+#: includes/class-quentn-wp-manage_meta_box.php:129
 msgid "Hours"
 msgstr ""
 
-#: includes/class-quentn-wp-manage_meta_box.php:131
+#: includes/class-quentn-wp-manage_meta_box.php:133
 msgid "Minutes"
 msgstr ""
 
-#: includes/class-quentn-wp-manage_meta_box.php:135
+#: includes/class-quentn-wp-manage_meta_box.php:137
 msgid "Seconds"
 msgstr ""
 
-#: includes/class-quentn-wp-manage_meta_box.php:141
+#: includes/class-quentn-wp-manage_meta_box.php:143
 msgid "Countdown starts when permission has been granted."
 msgstr ""
 
-#: includes/class-quentn-wp-manage_meta_box.php:146
+#: includes/class-quentn-wp-manage_meta_box.php:148
 msgid "Countdown starts on the first visit. This works without access permission."
 msgstr ""
 
-#: includes/class-quentn-wp-manage_meta_box.php:154
+#: includes/class-quentn-wp-manage_meta_box.php:156
 msgid "Date"
 msgstr ""
 
-#: includes/class-quentn-wp-manage_meta_box.php:155
+#: includes/class-quentn-wp-manage_meta_box.php:157
 msgid "Select date"
 msgstr ""
 
-#: includes/class-quentn-wp-manage_meta_box.php:162
+#: includes/class-quentn-wp-manage_meta_box.php:164
 msgid "Display countdown on top of page"
 msgstr ""
 
-#: includes/class-quentn-wp-manage_meta_box.php:164
+#: includes/class-quentn-wp-manage_meta_box.php:166
 msgid "If this option is disabled, no countdown is displayed."
 msgstr ""
 
-#: includes/class-quentn-wp-manage_meta_box.php:175
-msgid "Redirection Settings"
+#: includes/class-quentn-wp-manage_meta_box.php:174
+msgid "Countdown stays on the top while the page scrolls"
 msgstr ""
 
-#: includes/class-quentn-wp-manage_meta_box.php:178
+#: includes/class-quentn-wp-manage_meta_box.php:184
+msgid "Redirection"
+msgstr ""
+
+#: includes/class-quentn-wp-manage_meta_box.php:187
 msgid "Select restriction type"
 msgstr ""
 
-#: includes/class-quentn-wp-manage_meta_box.php:180
-#: includes/class-quentn-wp-manage_meta_box.php:187
+#: includes/class-quentn-wp-manage_meta_box.php:189
+#: includes/class-quentn-wp-manage_meta_box.php:196
 msgid "Message"
 msgstr ""
 
-#: includes/class-quentn-wp-manage_meta_box.php:181
+#: includes/class-quentn-wp-manage_meta_box.php:190
 msgid "URL"
 msgstr ""
 
-#: includes/class-quentn-wp-manage_meta_box.php:203
+#: includes/class-quentn-wp-manage_meta_box.php:212
 msgid "Redirect URL"
 msgstr ""
 
-#: includes/class-quentn-wp-manage_meta_box.php:204
+#: includes/class-quentn-wp-manage_meta_box.php:213
 msgid "Enter URL"
 msgstr ""
 
@@ -408,6 +414,7 @@ msgid "List of Pages With Limited Access"
 msgstr ""
 
 #: includes/class-quentn-wp-rest-api-controller.php:260
+#, php-format
 msgid "Error Creating User %s"
 msgstr ""
 
