@@ -9,9 +9,7 @@ class Quentn_Wp_Restrict_Access
     public function __construct() {
         add_shortcode( 'quentn_flipclock', array($this, 'get_flipclock_shortcode'));
         add_action('init', array( $this, 'set_replacement_values' ) );
-        if( ! is_admin() ) {
-            add_filter( 'the_content', array($this, 'quentn_content_permission_check'), 999);
-        }
+        add_filter( 'the_content', array($this, 'quentn_content_permission_check'), 999);
         add_filter( 'the_title', array($this, 'quentn_change_page_title'), 999);
 
         add_action('wp_head', array( $this, 'set_countdown_clock' ) );
@@ -54,8 +52,8 @@ class Quentn_Wp_Restrict_Access
          $m = new Mustache_Engine;
          $content = $m->render($content, $this->get_replacement_values());
 
-        //if status is not avtive, return content
-        if( ! $page_meta = $this->get_quentn_post_restrict_meta() ) {
+        //if user can edit posts permission or page restriction is not avtive, return content
+        if( current_user_can( 'edit_pages' ) || ! $page_meta = $this->get_quentn_post_restrict_meta() ) {
             return $content;
         }
 
@@ -449,8 +447,8 @@ class Quentn_Wp_Restrict_Access
      * @return void
      */
     public function set_countdown_clock() {
-        //if status is not avtive, return content
-        if( ! $quentn_post_restrict_meta = $this->get_quentn_post_restrict_meta() ) {
+        //if user can edit posts permission or page restriction is not avtive, no need to display countdown clock
+        if( current_user_can( 'edit_pages' ) || ! $quentn_post_restrict_meta = $this->get_quentn_post_restrict_meta() ) {
             return;
         }
 
