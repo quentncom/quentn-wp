@@ -3,20 +3,22 @@
  * included in this file.
  */
 
+.quentn-flipclock {
+    display:inline-block;
+    text-align:center;
+    font-family: arial,sans-serif;
+}
+
 .countdown-fixed {
     position: fixed;
     z-index: 99;
     width: 100%;
-}
-.quentn-shortcode {
-    zoom: 0.5;
 }
 
 .quentn-countdown-wrapper {
     background-color: #2a2a2a;
     text-align: center;
     padding: 15px 0;
-    margin-bottom: 20px;
     color: #fff;
     font-family: arial,sans-serif;
 }

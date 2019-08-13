@@ -246,7 +246,7 @@ class Quentn_Wp_Admin {
                     $this->notices[] = array( 'message' => __( 'Data is deleted successfully', 'quentn-wp' ), 'type' => 'success' );
                 }
                 else {
-                    $this->notices[] = array( 'message' => sprintf( __( 'There is no data found with the email address %s', 'quentn-wp' ), $_GET['email'] ), 'type' => 'success' );
+                    $this->notices[] = array( 'message' => sprintf( __( 'There is no data found with the email address %s', 'quentn-wp' ), $_GET['email'] ), 'type' => 'warning' );
                 }
             }
             //if direct access added successfully

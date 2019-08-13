@@ -291,6 +291,7 @@ msgid "Page will only be accessible for a certain period of time"
 msgstr ""
 
 #: includes/class-quentn-wp-manage_meta_box.php:113
+#: includes/class-quentn-wp-page-restrictions-list.php:181
 msgid "Countdown"
 msgstr ""
 
@@ -399,10 +400,6 @@ msgstr ""
 #: includes/class-quentn-wp-page-restrictions-list.php:96
 #: includes/class-quentn-wp-page-restrictions-list.php:112
 msgid "Show Access"
-msgstr ""
-
-#: includes/class-quentn-wp-page-restrictions-list.php:181
-msgid "CountDown"
 msgstr ""
 
 #: includes/class-quentn-wp-page-restrictions-list.php:219

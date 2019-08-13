@@ -23,6 +23,9 @@ class Quentn_Wp_Restrict_Access
      * @return string
      */
      public function get_flipclock_shortcode() {
+         if( current_user_can( 'edit_pages' )  ) {
+             return '';
+         }
          return "<div class='quentn-flipclock quentn-shortcode'></div>";
      }
 
@@ -144,7 +147,7 @@ class Quentn_Wp_Restrict_Access
         }
 
         //if replacement values send by quentn
-        if( $_GET['qntn'] ) {
+        if( isset( $_GET['qntn'] ) ) {
             //decode quentn values
             $qntn_values = json_decode( base64_decode( $_GET['qntn'] ), true  );
 

@@ -162,7 +162,7 @@ class Quentn_Wp {
             /**
              * The class responsible to allow admin add restriction to specific page
              */
-            require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-quentn-wp-manage_meta_box.php';
+            require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-quentn-wp-manage-meta-box.php';
 
             /**
              * The class responsible to handle installation/activation of plugin

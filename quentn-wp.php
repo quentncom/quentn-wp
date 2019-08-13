@@ -45,7 +45,6 @@ function activate_quentn_wp( $is_network_wide ) {
     $activator = new Quentn_Wp_Activator( $is_network_wide );
     $activator->activate();
 }
-error_reporting(1);
 
 /**
  * The code that runs during plugin deactivation.
