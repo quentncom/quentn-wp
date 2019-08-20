@@ -33,6 +33,6 @@ You can also select which tags should be removed when a user looses that role.
 **Grant/Revoke access permissions:** You can grant/revoke access permissions to the Wordpress pages through Quentn.
 
 
-## Further Documentation and User Guide
+## Full User Guide
 
-Full User Guide (in German) can be found [here](https://docs.quentn.com/wp-plugin)
+A full user guide (in German) can be found [here](https://docs.quentn.com/wp-plugin).
