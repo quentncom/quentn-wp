@@ -31,3 +31,8 @@ You can also select which tags should be removed when a user looses that role.
 **Create User:** You can add new users to your Wordpress website through Quentn.
 
 **Grant/Revoke access permissions:** You can grant/revoke access permissions to the Wordpress pages through Quentn.
+
+
+## Further Documentation and User Guide
+
+Full User Guide (in German) can be found [here](https://docs.quentn.com/wp-plugin)
