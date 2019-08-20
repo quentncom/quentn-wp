@@ -2,13 +2,12 @@
 
 class Quentn_Wp_Restrict_Access
 {
-    private $replacements = array();
+    private $replacement_values = array();
     /**
      * Initialize the class and set its properties.
      */
     public function __construct() {
         add_shortcode( 'quentn_flipclock', array($this, 'get_flipclock_shortcode'));
-        add_action('init', array( $this, 'set_replacement_values' ) );
         add_filter( 'the_content', array($this, 'quentn_content_permission_check'), 999);
         add_filter( 'the_title', array($this, 'quentn_change_page_title'), 999);
 
@@ -53,6 +52,7 @@ class Quentn_Wp_Restrict_Access
      public function quentn_content_permission_check( $content ) {
 
          $m = new Mustache_Engine;
+         $this->set_replacement_values();
          $content = $m->render($content, $this->get_replacement_values());
 
         //if user can edit posts permission or page restriction is not avtive, return content
@@ -106,6 +106,7 @@ class Quentn_Wp_Restrict_Access
      */
     public function quentn_change_page_title( $title ) {
         $m = new Mustache_Engine;
+        $this->set_replacement_values();
         return $m->render($title, $this->get_replacement_values());
 
     }
@@ -117,6 +118,7 @@ class Quentn_Wp_Restrict_Access
      * @access public
      * @return string
      */
+    //todo call this function only once for both filters 'the_content' and 'the_title'
     public function set_replacement_values() {
 
         //get replacement values from url
@@ -182,7 +184,7 @@ class Quentn_Wp_Restrict_Access
             if( $valid_email_in_url != '' ) {
                 $url_email_hash = hash( 'sha256', trim( $valid_email_in_url ) );
                 //then try to find this email data in the cookie
-                if ( array_key_exists( $url_email_hash, $quentn_cookie['qntn_user_data'] ) ) {
+                if ( isset($quentn_cookie['qntn_user_data']) && array_key_exists( $url_email_hash, $quentn_cookie['qntn_user_data'] ) ) {
                     $user_data = $quentn_cookie['qntn_user_data'][$url_email_hash];
                     //decode cookie data
                     $user_data = array_map( array( $this, 'decode_cookie_values' ), $user_data);
@@ -190,7 +192,9 @@ class Quentn_Wp_Restrict_Access
                     global $wpdb;
                     $table_qntn_user_data = $wpdb->prefix. TABLE_QUENTN_USER_DATA;
                     $user_data = $wpdb->get_results( "SELECT fields FROM ".$table_qntn_user_data. " WHERE email ='".$valid_email_in_url."'" );
-                    $user_data =  unserialize( $user_data[0]->fields );
+                    if( ! empty( $user_data ) ) {
+                        $user_data =  unserialize( $user_data[0]->fields );
+                    }
                 }
             } elseif ( isset( $quentn_cookie['qntn_user_data'] ) ) { //if not valid email address in the url then get latest data from cookie saved
                 $user_data = end($quentn_cookie['qntn_user_data']);
@@ -214,8 +218,8 @@ class Quentn_Wp_Restrict_Access
      */
     public function add_replacement_values( array $user_data ) {
         foreach ( $user_data as $key=>$value ) {
-            if ( ! array_key_exists( $key, $this->replacements ) ) {
-                $this->replacements[$key] = $value;
+            if ( ! array_key_exists( $key, $this->replacement_values ) ) {
+                $this->replacement_values[$key] = $value;
             }
         }
     }
@@ -228,7 +232,7 @@ class Quentn_Wp_Restrict_Access
      * @return array
      */
     public function get_replacement_values() {
-        return $this->replacements;
+        return $this->replacement_values;
     }
 
     /**
