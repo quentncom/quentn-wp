@@ -1,6 +1,6 @@
 # quentn-wp
 This plugin allows you to restrict access to specific pages, create custom access links and create dynamic page countdowns.
-Optionally, you can connect your Quentn account to your WordPress installation to share contacts and manage
+Optionally, you can connect your [Quentn](https://quentn.com) account to your WordPress installation to share contacts and manage
 access restrictions through Quentn.
 
 ## Plugin Features 
@@ -21,8 +21,7 @@ access restrictions through Quentn.
    
 ## Connect to Quentn 
 
-
-You can connect your Wordpress plugin to your Quentn account.
+You can connect your Wordpress plugin to your [Quentn](https://quentn.com) account.
     
 **Roles:** You can select for each user role, if the user should be added to Quentn in case he gets a role and which tags should be assigned to him.
 You can also select which tags should be removed when a user looses that role. 
@@ -32,3 +31,8 @@ You can also select which tags should be removed when a user looses that role.
 **Create User:** You can add new users to your Wordpress website through Quentn.
 
 **Grant/Revoke access permissions:** You can grant/revoke access permissions to the Wordpress pages through Quentn.
+
+
+## Full User Guide
+
+A full user guide (in German) can be found [here](https://docs.quentn.com/wp-plugin).
