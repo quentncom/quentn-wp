@@ -261,6 +261,11 @@ msgstr ""
 msgid "Search Email"
 msgstr ""
 
+#: includes/class-quentn-wp-activator.php:45
+#, php-format
+msgid "Quentn requires PHP version 5.6.0 or higher"
+msgstr ""
+
 #: includes/class-quentn-wp-api-handler.php:217
 msgid "Tracking is not enabled from your quentn host"
 msgstr ""

@@ -38,6 +38,15 @@ class Quentn_Wp_Activator {
 	 */
 	public function activate() {
 
+        if (  version_compare(PHP_VERSION, '5.6.0', '<=' ) ) {
+            deactivate_plugins( plugin_basename( __FILE__ ."../") );
+            wp_die(
+                __('Quentn requires PHP version 5.6.0 or higher', 'quentn-wp'),
+                'Plugin dependency check',
+                array( 'back_link' => true )
+            );
+        }
+
         global $wpdb;
         if ( $this->is_network_wide ) {
             // get ids of all sites

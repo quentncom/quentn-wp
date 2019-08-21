@@ -184,7 +184,7 @@ class Quentn_Wp_Restrict_Access
             if( $valid_email_in_url != '' ) {
                 $url_email_hash = hash( 'sha256', trim( $valid_email_in_url ) );
                 //then try to find this email data in the cookie
-                if ( isset($quentn_cookie['qntn_user_data']) && array_key_exists( $url_email_hash, $quentn_cookie['qntn_user_data'] ) ) {
+                if ( isset( $quentn_cookie['qntn_user_data'] ) && array_key_exists( $url_email_hash, $quentn_cookie['qntn_user_data'] ) ) {
                     $user_data = $quentn_cookie['qntn_user_data'][$url_email_hash];
                     //decode cookie data
                     $user_data = array_map( array( $this, 'decode_cookie_values' ), $user_data);
