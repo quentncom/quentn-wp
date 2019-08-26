@@ -202,7 +202,9 @@ class Quentn_Wp_Page_Restrictions_Controller
                                             'quentn_page_access_error_message',
                                             array(
                                                 'drag_drop_upload' => true,
-                                                'editor_height'    => 150
+                                                'textarea_rows'    => get_option('default_post_edit_rows', 10),
+                                                'quicktags' => true,
+                                                'tinymce' => false,
                                             )
                                         );
                                     ?>

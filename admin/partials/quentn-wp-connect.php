@@ -3,7 +3,7 @@ session_start();
 
 $base_uri = "https://my.quentn.com/public/api/v1/";
 $path = "wp/connect";
-$params = ["redirect_uri" => Helper::get_current_url()];
+$params = ["redirect_uri" => esc_url( remove_query_arg(  ['quentn_host_connection'], Helper::get_current_url() ) )];
 
 //if quentn account is removed
 if ( isset( $_GET['update'] ) and sanitize_key( $_GET['update'] == 'remove-quentn-account' ) ) {
