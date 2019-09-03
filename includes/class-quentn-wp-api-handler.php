@@ -146,14 +146,16 @@ class Quentn_Wp_Api_Handler
     {
         if ( null === $this->is_connected_with_quentn ) {
             $this->is_connected_with_quentn = false;
-            try {
-                if ( $this->quentn->test() ) {
-                    $this->is_connected_with_quentn = true;
-                } else {
-                    $this->error_messages[] = __( 'Please connect a Quentn account to use this feature', 'quentn-wp' );
+            if( get_option('quentn_app_key') && get_option('quentn_base_url') ) {
+                try {
+                    if ( $this->quentn->test() ) {
+                        $this->is_connected_with_quentn = true;
+                    } else {
+                        $this->error_messages[] = __( 'Please connect a Quentn account to use this feature', 'quentn-wp' );
+                    }
+                } catch ( Exception $e ) {
+                    $this->error_messages[] = $e->getMessage();
                 }
-            } catch ( Exception $e ) {
-                $this->error_messages[] = $e->getMessage();
             }
         }
 
