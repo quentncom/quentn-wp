@@ -16,7 +16,7 @@
  * Plugin Name:       Quentn
  * Plugin URI:        https://quentn.com/
  * Description:       This plugin allows you to restrict access to specific pages, create custom access links and create dynamic page countdowns. Optionally, you can connect your Quentn account to your WordPress installation to share contacts and manage access restrictions through Quentn.
- * Version:           1.0.0
+ * Version:           0.0.8
  * Author:            Quentn Team
  * Author URI:        https://quentn.com/
  * License:           GPL-2.0+
