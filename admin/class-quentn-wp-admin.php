@@ -415,11 +415,11 @@ class Quentn_Wp_Admin {
         foreach ( $wp_roles->get_names() as $slug => $name ) {
             $fields[] = array(
                 'id'        =>  'add_wp_user_'.$slug.'_to_quentn',
-                'title'     =>  $name,
+                'title'     =>  translate_user_role( $name ),
                 'callback'  =>  array( $this, 'input_add_wp_user_to_quentn' ),
                 'page'      =>  'quentn-dashboard-tags',
                 'section'   =>  'qnentn_tags_option',
-                'args'      =>  array( 'role' => $slug )
+                'args'      =>  array( 'role' => $slug, 'role_title' => translate_user_role( $name ) )
             );
 
             //set quentn terms selection option
@@ -653,7 +653,7 @@ class Quentn_Wp_Admin {
         }
 
         //if we have no term id's to delete or we are not connected with quentn
-        if( empty( $add_term_ids || ! $this->api_handler->is_connected_with_quentn() ) ) {
+        if( empty( $add_term_ids ) || ! $this->api_handler->is_connected_with_quentn() ) {
             return;
         }
 
@@ -806,9 +806,9 @@ class Quentn_Wp_Admin {
             $is_add_user_to_qntn_enabled = $quentn_update_wp_user[$args['role']]['add'];
         }
         ?>
-        <input type="checkbox" class="form-control add-wp-qntn" value="1" name="quentn_add_remove_wp_user_from_host[<?=$args['role']?>][add]" data-role="<?=$args['role']?>" id="quentn_tags_add_wp_user<?=$args['role']?>"  <?php checked( $is_add_user_to_qntn_enabled); disabled( ! $this->api_handler->is_connected_with_quentn() ); ?>  >
+        <input type="checkbox" class="form-control add-wp-qntn" value="1" name="quentn_add_remove_wp_user_from_host[<?php echo $args['role'] ?>][add]" data-role="<?php echo $args['role']?>" id="quentn_tags_add_wp_user<?php echo $args['role']?>"  <?php checked( $is_add_user_to_qntn_enabled); disabled( ! $this->api_handler->is_connected_with_quentn() ); ?>  >
         <?php
-        printf( __( 'Create or update Quentn contact if user receives role %s , with the following tags', 'quentn-wp' ), ucfirst( $args['role'] ) );
+        printf( __( 'Create or update Quentn contact if user receives role %s , with the following tags', 'quentn-wp' ), ucfirst( $args['role_title'] ) );
     }
 
     /**

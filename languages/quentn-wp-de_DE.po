@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Quentn wp\n"
 "POT-Creation-Date: 2019-08-07 17:34+0200\n"
-"PO-Revision-Date: 2019-08-21 14:32+0200\n"
+"PO-Revision-Date: 2019-09-04 14:07+0200\n"
 "Language-Team: Quentn GmbH\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -16,6 +16,10 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: vendor\n"
 "X-Poedit-SearchPathExcluded-1: .git\n"
+
+#: Description of the plugin
+msgid "This plugin allows you to restrict access to specific pages, create custom access links and create dynamic page countdowns. Optionally, you can connect your Quentn account to your WordPress installation to share contacts and manage access restrictions through Quentn."
+msgstr "Mit diesem Plugin können Sie den Zugriff auf bestimmte Seiten einschränken, benutzerdefinierte Zugriffslinks erstellen und dynamische Seiten-Countdowns erstellen. Optional können Sie Ihr Quentn-Konto mit Ihrer WordPress-Installation verbinden, um Kontakte zu teilen und Zugriffsbeschränkungen über Quentn zu verwalten."
 
 #: admin/class-quentn-wp-admin.php:188
 msgid "Choose Quentn Tags"

@@ -17,6 +17,10 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: vendor\n"
 "X-Poedit-SearchPathExcluded-1: .git\n"
 
+#: Description of the plugin
+msgid "This plugin allows you to restrict access to specific pages, create custom access links and create dynamic page countdowns. Optionally, you can connect your Quentn account to your WordPress installation to share contacts and manage access restrictions through Quentn."
+msgstr ""
+
 #: admin/class-quentn-wp-admin.php:188
 msgid "Choose Quentn Tags"
 msgstr ""
