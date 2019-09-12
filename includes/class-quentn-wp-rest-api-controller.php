@@ -365,14 +365,19 @@ class Quentn_Wp_Rest_Api
 
             $is_send_user_email = true;
             //if username is exist, then existing user will be updated instead of creating a new one
-            if ( $existing_id = username_exists( $qn_userdata['user_login'] ) ) {
+            if ( $user_id = email_exists( $qn_userdata['user_email'] ) ) {
                 //don't need to send email if we update current user
                 $is_send_user_email = false;
-                $qn_userdata['ID'] = $existing_id;
+                //update meta_value
+                foreach ( $qn_userdata as $meta_key => $meta_value ) {
+                    update_user_meta( $user_id, $meta_key, $meta_value );
+                }
+            } else {
+                //no default role set
+                $qn_userdata['role'] = '';
+                //insert user in wordpress
+                $user_id = wp_insert_user( $qn_userdata );
             }
-
-            //insert/update user in wordpress
-            $user_id = wp_insert_user( $qn_userdata );
 
             //$failur = true; array with username could not created
             if ( is_wp_error( $user_id ) ) {
@@ -434,15 +439,13 @@ class Quentn_Wp_Rest_Api
     public function user_fields_supported_by_quentn( $userdata ){
 
         $return = array();
-        if( ! isset( $userdata['username'] ) && ! isset( $userdata['email'] ) ) {
+        if( ! isset( $userdata['email'] ) || ! filter_var( $userdata['email'], FILTER_VALIDATE_EMAIL ) ) {
             return $return;
         }
         //if username is not set, we will take email address as user name
-        $return['user_login'] = ( isset( $userdata['username'] ) ) ? sanitize_text_field( $userdata['username'] ) : sanitize_text_field( $userdata['email'] );
+        $return['user_login'] = sanitize_text_field( $userdata['email'] );
+        $return['user_email'] = sanitize_text_field( $userdata['email'] );
 
-        if( isset( $userdata['email'] ) ) {
-            $return['user_email'] = sanitize_text_field( $userdata['email'] );
-        }
         if( isset( $userdata['first_name'] ) ) {
             $return['first_name'] = sanitize_text_field($userdata['first_name']);
         }
@@ -452,8 +455,7 @@ class Quentn_Wp_Rest_Api
         if(isset($userdata['website'])) {
             $return['user_url'] = sanitize_text_field($userdata['website']);
         }
-        //no default role set
-        $return['role'] = '';
+
         return $return;
     }
 
