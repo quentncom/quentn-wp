@@ -500,6 +500,7 @@ class Quentn_Wp_Admin {
      * @return bool
      */
     public function is_member_plugin_active() {
+        include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
         if( is_plugin_active( 'members/members.php' ) ) {
             return true;
         }
