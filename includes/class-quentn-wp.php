@@ -71,7 +71,7 @@ class Quentn_Wp {
 		if ( defined( 'QUENTN_WP_VERSION' ) ) {
 			$this->version = QUENTN_WP_VERSION;
 		} else {
-			$this->version = '0.1.1';
+			$this->version = '0.1.2';
 		}
 		$this->plugin_name = 'quentn-wp';
 
@@ -162,7 +162,7 @@ class Quentn_Wp {
             /**
              * The class responsible to allow admin add restriction to specific page
              */
-            require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-quentn-wp-manage-meta-box.php';
+            require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-quentn-wp-page-restriction-meta-box.php';
 
             /**
              * The class responsible to handle installation/activation of plugin

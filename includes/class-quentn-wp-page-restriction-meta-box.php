@@ -4,7 +4,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-class Quentn_Wp_Page_Restrictions_Controller
+class Quentn_Wp_Page_Restriction_Meta_Box
 {
 
     /**
@@ -318,4 +318,4 @@ class Quentn_Wp_Page_Restrictions_Controller
 }
 
 
-Quentn_Wp_Page_Restrictions_Controller::get_instance();
+Quentn_Wp_Page_Restriction_Meta_Box::get_instance();
