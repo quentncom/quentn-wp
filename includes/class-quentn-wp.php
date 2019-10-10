@@ -170,6 +170,12 @@ class Quentn_Wp {
             require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-quentn-wp-activator.php';
 
         }
+
+        include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+        if( is_plugin_active( 'sfwd-lms/sfwd_lms.php' ) ) {
+            require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-quentn-wp-learndash.php';
+        }
+
 		$this->loader = new Quentn_Wp_Loader();
 
 	}

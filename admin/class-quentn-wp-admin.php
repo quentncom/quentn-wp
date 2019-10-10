@@ -164,9 +164,6 @@ class Quentn_Wp_Admin {
 
 
 
-
-
-
         //bootstrap datetime picker
         wp_register_script('quentn.bootstrap.datetimepicker.min.js', plugin_dir_url( __FILE__ ) . 'js/bootstrap-datetimepicker.js', array( 'jquery' ), $this->version );
         wp_enqueue_script( 'quentn.bootstrap.datetimepicker.min.js' );
@@ -180,12 +177,10 @@ class Quentn_Wp_Admin {
         wp_enqueue_script( 'quentn.admin.custom.js' );
 
 
-
-
-
         //Localize the script with new data
         $translation_array = array(
             'choose_quentn_tags'            =>  __( 'Choose Quentn Tags', 'quentn-wp' ),
+            'choose_learndash_courses'      =>  __( 'Choose LearnDash Courses', 'quentn-wp' ),
             'delete_confirmation_message'   =>  __( 'Are you sure you want to delete?', 'quentn-wp' ),
             'datepicker_lang'   =>  ( substr( get_locale(),0, 2 ) == 'de' ? 'de' : 'en' ) // if wp set in german lang then set datepicker lang in german, otherwise in english
         );
@@ -552,6 +547,21 @@ class Quentn_Wp_Admin {
      */
     public function member_plugin_notice_dismiss_ajax_handler() {
         update_option( 'quentn_member_plugin_notice_dismiss', true);
+    }
+
+    /**
+     * Check if learndash plugin is active
+     *
+     * @since  1.0.0
+     * @access public
+     * @return bool
+     */
+    public function is_learndash_plugin_active() {
+        include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+        if( is_plugin_active( 'sfwd-lms/sfwd_lms.php' ) ) {
+            return true;
+        }
+        return false;
     }
 
 

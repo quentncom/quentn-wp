@@ -15,6 +15,11 @@ jQuery(document).ready(function () {
         placeholder: wp_qntn.choose_quentn_tags,
     });
 
+    //dropdown to select learndash courses
+    jQuery(".quentn-select-learndash-courses").select2({
+        placeholder: wp_qntn.choose_learndash_courses,
+    });
+
     //ajax call when user dismiss cookie plugin notice
     jQuery(document).on( 'click', '.quentn-cookie-notice', function() {
         jQuery.ajax({

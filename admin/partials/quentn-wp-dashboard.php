@@ -16,10 +16,13 @@ if( isset($_GET['tab'])) {
             <a href="?page=quentn-dashboard&tab=qnentn_tags_selection" class="nav-tab <?php if ( $active_tab == 'qnentn_tags_selection' ) { echo 'nav-tab-active'; } ?>"><?php _e( 'Roles', 'quentn-wp' ); ?></a>
             <a href="?page=quentn-dashboard&tab=qnentn_web_tracking_tab" class="nav-tab <?php if ( $active_tab == 'qnentn_web_tracking_tab' ) { echo 'nav-tab-active'; } ?>"><?php _e( 'Web Tracking', 'quentn-wp' ); ?></a>
             <a href="?page=quentn-dashboard&tab=qnentn_delete_user_data" class="nav-tab <?php if ( $active_tab == 'qnentn_delete_user_data' ) { echo 'nav-tab-active'; } ?>"><?php _e( 'Delete User Data', 'quentn-wp' ); ?></a>
+            <?php if( $this->is_learndash_plugin_active() ) { ?>
+            <a href="?page=quentn-dashboard&tab=qnentn_learndash_course_settings" class="nav-tab <?php if ( $active_tab == 'qnentn_learndash_course_settings' ) { echo 'nav-tab-active'; } ?>"><?php _e( 'LearnDash', 'quentn-wp' ); ?></a>
+            <?php } ?>
         </h2>
         <?php
         $submit_button_attributes = array();
-        if( $active_tab != "qnentn_delete_user_data" && ! $this->api_handler->is_connected_with_quentn() ) {
+        if( $active_tab != "qnentn_delete_user_data" && $active_tab != "qnentn_learndash_course_settings" && ! $this->api_handler->is_connected_with_quentn() ) {
             $submit_button_attributes =  array(
                 'disabled' => true
             );
@@ -41,6 +44,12 @@ if( isset($_GET['tab'])) {
             echo '<form method="post" action="options.php">';
             settings_fields( "quentn_tags_options_group" );
             do_settings_sections( "quentn-dashboard-tags" );
+            submit_button( NULL, 'primary', 'submit', true, $submit_button_attributes );
+            echo '</form>';
+        } elseif ( $active_tab == "qnentn_learndash_course_settings" && $this->is_learndash_plugin_active() ) {
+            echo '<form method="post" action="options.php">';
+            settings_fields( "quentn_learndash_options_group" );
+            do_settings_sections( "quentn-learn-dash" );
             submit_button( NULL, 'primary', 'submit', true, $submit_button_attributes );
             echo '</form>';
         } elseif ( $active_tab == "qnentn_web_tracking_tab" ) { //display web tracking options
