@@ -62,7 +62,7 @@ class Quentn_Wp_Restrict_Access
         if( current_user_can( 'edit_pages' ) || ! $page_meta = $this->get_quentn_post_restrict_meta() ) {
             return $content;
         }
-
+       define( 'DONOTCACHEPAGE', 1 ); // Do not cache this page
        $is_display_content = false;
 
         //If page restriction is countdown then calculate expiry time
