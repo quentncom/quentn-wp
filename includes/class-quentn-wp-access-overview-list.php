@@ -140,7 +140,8 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
             case 'delete-access':
                 return  sprintf( '<a href="?page=%s&action=%s&page_id=%s&email=%s&_wpnonce=%s" onclick="return confirm(\'%s\')" >%s</a>', esc_attr( $_REQUEST['page'] ), 'qntn-delete', $page_id, trim($item['email']), $delete_nonce, __( "Are you sure you want to delete?", 'quentn-wp' ),  __( "Delete", 'quentn-wp' ) );
             case 'view_access':
-                return  sprintf( "<input type='text' class='get_access_url' readonly  value='%s' /><button class='copy_access_url'>%s</button>", get_page_link( $_GET['page_id'] ).'?qntn_wp='.$item['email_hash'], __( 'Copy URL' ) );
+                $separator = (parse_url(get_page_link($_GET['page_id']), PHP_URL_QUERY))?'&':'?';
+                return  sprintf( "<input type='text' class='get_access_url' readonly  value='%s' /><button class='copy_access_url'>%s</button>", get_page_link( $_GET['page_id'] ).$separator.'qntn_wp='.$item['email_hash'], __( 'Copy URL' ) );
             default:
                 return __( "no value", 'quentn-wp' );
         }

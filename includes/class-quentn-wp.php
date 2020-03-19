@@ -71,7 +71,7 @@ class Quentn_Wp {
 		if ( defined( 'QUENTN_WP_VERSION' ) ) {
 			$this->version = QUENTN_WP_VERSION;
 		} else {
-			$this->version = '1.0.1';
+			$this->version = '1.0.2';
 		}
 		$this->plugin_name = 'quentn-wp';
 

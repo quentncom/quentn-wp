@@ -11,8 +11,6 @@ class Quentn_Wp_Restrict_Access
         add_filter( 'the_content', array($this, 'quentn_content_permission_check'), PHP_INT_MAX);
         //restrict content in case page is build using thrive template builder
         add_filter( 'tve_landing_page_content', array($this, 'quentn_content_permission_check'), PHP_INT_MAX);
-        add_filter( 'the_title', array($this, 'quentn_change_page_title'), PHP_INT_MAX);
-
 
         add_action('wp_head', array( $this, 'set_countdown_clock' ) );
     }
