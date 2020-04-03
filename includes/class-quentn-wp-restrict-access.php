@@ -579,22 +579,8 @@ class Quentn_Wp_Restrict_Access
      * @return int
      */
     public function calculate_absolute_page_expire_time ( $expiry_date ) {
-
-        /*==== getting timezone set in admin settings=== */
-        //if time zone is selected by region by admin, then follow it
-        $timezone_string = get_option('timezone_string');
-        $utc_difference = 0;
-        if ( ! empty($timezone_string ) ) {
-            date_default_timezone_set($timezone_string);
-        }else {
-            //if timezone is not selected by region but with UTC difference like +1, -1.5 then set UTC as default and calculate difference in seconds
-            date_default_timezone_set("UTC");
-            $utc_difference = get_option('gmt_offset')*3600;
-        }
-
         $timestamp = strtotime( $expiry_date );
-        $current_time = time() + $utc_difference;
-        return  $timestamp - $current_time;
+        return $timestamp - strtotime( current_time( "mysql", false ) );
     }
 
     /**

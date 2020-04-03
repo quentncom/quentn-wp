@@ -250,22 +250,6 @@ class Quentn_Wp_Rest_Api
         $query .= implode(', ', $place_holders);
         $wpdb->query( $wpdb->prepare( "$query ON DUPLICATE KEY UPDATE created_at= ".time(), $values) );
 
-        //create email if doesn't exist
-        $error = new WP_Error();
-        foreach ( $emails as $email ) {
-            $email = trim( $email );
-            if ( ! email_exists( $email ) ) {
-                $user_id = $this->create_user( $email );
-                if ( is_wp_error( $user_id ) ) {
-                    $error->add( sprintf( __( 'Error Creating User %s', 'quentn-wp' ), $email ), $user_id->get_error_message(), array( 'status' => 400 ) );
-                }
-            }
-        }
-        //return error, if there is any
-        if ( ! empty( $error->get_error_codes() ) ) {
-            return  $error->get_error_messages();
-        }
-
         return rest_ensure_response( esc_html__( 'Permissions Timer Successfully Updated', 'quentn-wp' ) );
     }
 
