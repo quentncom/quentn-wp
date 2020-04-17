@@ -1,7 +1,15 @@
- .bootstrap-qntn button {
-    box-sizing: unset;
-}
-
- .countdown-type div {
+.qntn-countdown-type div {
      max-width: 150px;
+     padding-left: 10px;
+     padding-right: 10px;
  }
+.qntn-connect-button {
+    background-color: inherit;
+    margin-top: 18px;
+}
+.qntn-expiration-time-left-text {
+    color: green;
+}
+.qntn-page-expire-time-text {
+    color: red;
+}

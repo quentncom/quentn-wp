@@ -28,11 +28,11 @@ if( isset($_GET['tab'])) {
             );
         ?>
         <div class="bootstrap-qntn">
-            <div class="alert alert-danger" style="margin-top: 10px">
+            <div class="alert alert-danger mt-3">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                <span class="glyphicon glyphicon-hand-right"></span> <strong><?php  _e( 'You are not connected to Quentn', 'quentn-wp' ) ?></strong>
+                <h4 class="alert-heading"><?php  _e( 'You are not connected to Quentn', 'quentn-wp' ) ?></h4>
                 <hr class="message-inner-separator">
-                <p>
+                <p class="mb-0">
                     <?php  echo _e( 'Please connect a Quentn account to use this feature', 'quentn-wp' )  ?>
                 </p>
             </div>
@@ -96,7 +96,7 @@ if( isset($_GET['tab'])) {
             require_once QUENTN_WP_PLUGIN_DIR . '/admin/partials/quentn-wp-connect.php';
         }
         elseif ( $active_tab == "qnentn_delete_user_data" ) {
-            require_once QUENTN_WP_PLUGIN_DIR . '/admin/partials/quentn-delete_user_data.php';
+            require_once QUENTN_WP_PLUGIN_DIR . '/admin/partials/quentn-delete-user-data.php';
         }
         ?>
 </div>

@@ -484,8 +484,7 @@ class Quentn_Wp_Rest_Api
      * @return int|WP_Error
      */
     public function create_user( $email ) {
-        $email = trim( $email );
-        $user_email = sanitize_text_field( $email );
+        $user_email = sanitize_email( $email );
         return wp_insert_user( ['user_login' => $user_email, 'user_email' => $user_email] );
     }
 }

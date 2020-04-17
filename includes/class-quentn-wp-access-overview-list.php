@@ -135,8 +135,19 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
             case 'email_hash':
                 return $item[$column_name];
             case 'created_at':
-                $date_created = getdate( $item['created_at'] );
-                return $date_created['mday']." ".substr($date_created['month'], 0, 3)." ".$date_created['year']." ".$date_created['hours'].":".$date_created['minutes'].":".$date_created['seconds'];;
+                $get_site_time_zone = $this->wp_get_site_timezone(); //get timezone set by site admin
+                $date_created = getdate( $item['created_at'] ); //access created timestamp
+
+                $date = new DateTime( $date_created['year']."-".$date_created['mon']."-".$date_created['mday']." ".$date_created['hours'].":".$date_created['minutes'].":".$date_created['seconds'] );
+                $date->setTimezone( new DateTimeZone( $get_site_time_zone ) ); //Sets the time zone for the DateTime object
+                $date_format = get_option('date_format');
+                $time_format = get_option('time_format');
+                if( ! empty( $date_format ) && ! empty( $time_format ) ) {
+                    return $date->format( $date_format." ".$time_format );
+                } else {
+                    return $date->format('Y-m-d H:i');
+                }
+
             case 'delete-access':
                 return  sprintf( '<a href="?page=%s&action=%s&page_id=%s&email=%s&_wpnonce=%s" onclick="return confirm(\'%s\')" >%s</a>', esc_attr( $_REQUEST['page'] ), 'qntn-delete', $page_id, trim($item['email']), $delete_nonce, __( "Are you sure you want to delete?", 'quentn-wp' ),  __( "Delete", 'quentn-wp' ) );
             case 'view_access':
@@ -226,7 +237,16 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
         //in case absolute date, expiry date will be same for all users, but for relative expirty date need to calculate for every user
         $valid_until = '';
         if( $countdown_type == 'absolute' ) {
-            $valid_until = $this->quentn_page_restriction_data['absolute_date'];
+            $absolute_date = $this->quentn_page_restriction_data['absolute_date'];
+            $valid_until_date = new DateTime($absolute_date);
+
+            $date_format = get_option('date_format');
+            $time_format = get_option('time_format');
+            if( ! empty( $date_format ) && ! empty( $time_format ) ) {
+                $valid_until = $valid_until_date->format($date_format." ".$time_format);
+            } else {
+                $valid_until = $valid_until_date->format('Y-m-d H:i');
+            }
         } elseif( $countdown_type == 'relative' ) {
             $hours = ( isset( $this->quentn_page_restriction_data['hours'] ) && $this->quentn_page_restriction_data['hours'] != '' ) ?  $this->quentn_page_restriction_data['hours'] : 0 ;
             $minutes = ( isset( $this->quentn_page_restriction_data['minutes'] ) && $this->quentn_page_restriction_data['minutes'] != '' ) ?  $this->quentn_page_restriction_data['minutes'] : 0 ;
@@ -243,13 +263,13 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
                 $quentn_expiry_page_inseconds = $result['created_at'] + $quentn_page_expirty_inseconds - time();
                 //set postfix text
                 if( $quentn_expiry_page_inseconds > 0 ) {
-                    $text_with_expiry_time = __( 'Remaining time until expiration', 'quentn-wp' );
+                    $text_with_expiry_time = '<span class="qntn-expiration-time-left-text">'.__( 'Remaining time until expiration', 'quentn-wp' ).'</span>';
                 } else {
-                    $text_with_expiry_time = __( 'Ago page has expired', 'quentn-wp' );
+                    $text_with_expiry_time = '<span class="qntn-page-expire-time-text">'.__( 'Ago page has expired', 'quentn-wp' ).'</span>';
                 }
                 //add number of seconds left to current record array
                 $results[$key]['seconds'] = $quentn_expiry_page_inseconds;
-                $valid_until = gmdate( "H:i:s", abs( $quentn_expiry_page_inseconds ) ) . " " . $text_with_expiry_time;
+                $valid_until = $this->convert_seconds_to_time( abs( $quentn_expiry_page_inseconds ) ) . " " . $text_with_expiry_time;
             }
             //add expiry date/valid until into records we got from database
             $results[$key]['valid_until'] = $valid_until;
@@ -374,16 +394,76 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
             if ( ! wp_verify_nonce($_REQUEST['qntn_direct_access_submit_nonce'] , 'qntn_direct_access_nonce' ) ) {
                 die( 'Nope! Security check failed' );
             }
-            $email = $_REQUEST['email_direct_access'];
+            $email = sanitize_email( $_REQUEST['email_direct_access'] );
             //if email is not valid, then display error message and redirect
             if ( ! filter_var($email, FILTER_VALIDATE_EMAIL ) ) {
                 wp_redirect( esc_url_raw( add_query_arg( ['page_id' => $this->page_id, 'update' => 'quentn-direct-access-email-invalid' ] ) ) );
                 exit;
             }
+
             //add/update access, if email address already exist, then only its creation date will be updated
-            $wpdb->replace( $wpdb->prefix . TABLE_QUENTN_RESTRICTIONS,['page_id' => $this->page_id, 'email' => $email, 'email_hash' => hash( 'sha256', $email ), 'created_at' => time()], ['%d', '%s', '%s', '%d'] );
+            if( $wpdb->replace( $wpdb->prefix . TABLE_QUENTN_RESTRICTIONS,['page_id' => $this->page_id, 'email' => $email, 'email_hash' => hash( 'sha256', $email ), 'created_at' => time()], ['%d', '%s', '%s', '%d'] ) ) {
+                wp_redirect( esc_url_raw(remove_query_arg( ['qntn_direct_access_submit_nonce', 'email_direct_access'], esc_url_raw(add_query_arg( [ 'update' => 'quentn-direct-access-add-success' ] ) ) ) ) );
+                exit;
+            } else {
+                wp_redirect( esc_url_raw(remove_query_arg( ['qntn_direct_access_submit_nonce', 'email_direct_access'], esc_url_raw(add_query_arg( [ 'update' => 'quentn-direct-access-add-failed' ] ) ) ) ) );
+                exit;
+            }
         }
 
+    }
+
+    /**
+     *  Returns the blog timezone
+     *
+     * Gets timezone settings from the db. If a timezone identifier is used just turns
+     * it into a DateTimeZone. If an offset is used, it tries to find a suitable timezone.
+     * If all else fails it uses UTC.
+     *
+     * @return DateTimeZone The site timezone
+     */
+    public function wp_get_site_timezone() {
+
+        $tzstring = get_option( 'timezone_string' );
+        $offset   = get_option( 'gmt_offset' );
+
+        if( empty( $tzstring ) && 0 != $offset && floor( $offset ) == $offset ){
+            $offset_st = $offset > 0 ? "-$offset" : '+'.absint( $offset );
+            $tzstring  = 'Etc/GMT'.$offset_st;
+        }
+
+        //Issue with the timezone selected, set to 'UTC'
+        if( empty( $tzstring ) ){
+            $tzstring = 'UTC';
+        }
+
+        $timezone = new DateTimeZone( $tzstring );
+        return $timezone->getName();
+    }
+
+    /**
+     *  Convert seconds to time
+     *
+     * @param int $seconds
+     * @return string
+     */
+    public function convert_seconds_to_time($seconds) {
+
+        $date1 = new DateTime("@0");
+        $date2 = new DateTime("@$seconds");
+        $interval =  date_diff($date1, $date2);
+
+        if( $interval->y ) {
+            return sprintf( _n( '%s Year', '%s Years', $interval->y, 'quentn-wp' ).", "._n( '%s Month', '%s Months', $interval->m, 'quentn-wp' ).", "._n( '%s Day', '%s Days', $interval->d, 'quentn-wp' ).", "._n( '%s Hour', '%s Hours', $interval->h, 'quentn-wp' ).' '.__('and', 'quentn-wp').' '._n( '%s Minute', '%s Minutes', $interval->i, 'quentn-wp' ), $interval->y, $interval->m, $interval->d, $interval->h, $interval->i );
+        } elseif( $interval->m ) {
+            return sprintf( _n( '%s Month', '%s Months', $interval->m, 'quentn-wp' ).", "._n( '%s Day', '%s Days', $interval->d, 'quentn-wp' ).", "._n( '%s Hour', '%s Hours', $interval->h, 'quentn-wp' ).' '.__('and', 'quentn-wp').' '._n( '%s Minute', '%s Minutes', $interval->i, 'quentn-wp' ), $interval->m, $interval->d, $interval->h, $interval->i );
+        } elseif( $interval->d ) {
+            return sprintf( _n( '%s Day', '%s Days', $interval->d, 'quentn-wp' ).", "._n( '%s Hour', '%s Hours', $interval->h, 'quentn-wp' ).' '.__('and', 'quentn-wp').' '._n( '%s Minute', '%s Minutes', $interval->i, 'quentn-wp' ), $interval->d, $interval->h, $interval->i );
+        } elseif($interval->h) {
+            return sprintf( _n( '%s Hour', '%s Hours', $interval->h, 'quentn-wp' ).' '.__('and', 'quentn-wp').' '._n( '%s Minute', '%s Minutes', $interval->i, 'quentn-wp' ), $interval->h, $interval->i );
+        } else {
+            return sprintf( _n( '%s Minute', '%s Minutes', $interval->i, 'quentn-wp' ), $interval->i );
+        }
     }
 }
 

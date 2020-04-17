@@ -1,13 +1,11 @@
 jQuery(document).ready(function () {
 
-    jQuery('#quentn_page_restrict_datepicker').datetimepicker({
-        weekStart: true,
-        todayBtn:  true,
-        autoclose: true,
-        todayHighlight: true,
-        startView: 2,
-        forceParse: false,
-        language : wp_qntn.datepicker_lang,
+
+    jQuery('#absolute_datetimepicker').datetimepicker({
+        'sideBySide' : true,
+        'format' : 'YYYY-MM-DD H:mm',
+        'locale': wp_qntn.datepicker_lang,
+        'useCurrent' : false,
     });
 
     //dropdown to select quentn tags for wp user roles
@@ -134,29 +132,32 @@ jQuery(document).ready(function () {
 
 
     //bootstrap popover
-    jQuery('[data-toggle="popover"]').popover();
+    jQuery('[data-toggle="popover"]').popover({
+        container : '#popover-qntn'
+    });
+
 
     //bootstrap touchspin settings for hours, minutes and seconds
     jQuery('#quentn_page_restrict_hours').TouchSpin({
         min: 0,
         max: 1000000,
-        buttonup_class: 'btn btn-default',
-        buttondown_class: 'btn btn-default',
+        buttonup_class: 'btn btn-outline-secondary',
+        buttondown_class: 'btn btn-outline-secondary',
     });
 
     jQuery('#quentn_page_restrict_minutes').TouchSpin({
         min: 0,
         max: 59,
-        buttonup_class: 'btn btn-default',
-        buttondown_class: 'btn btn-default',
+        buttonup_class: 'btn btn-outline-secondary',
+        buttondown_class: 'btn btn-outline-secondary',
     });
 
     jQuery('#quentn_page_restrict_seconds').TouchSpin({
         min: 0,
         max: 59,
-        buttonup_class: 'btn btn-default',
-        buttondown_class: 'btn btn-default',
-    })
+        buttonup_class: 'btn btn-outline-secondary',
+        buttondown_class: 'btn btn-outline-secondary',
+    });
 
     jQuery('#doaction').click( function( event ) {
 

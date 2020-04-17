@@ -94,26 +94,32 @@ class Quentn_Wp_Admin {
          * class.
          */
 
-        //add quentn bootstrap
-        wp_enqueue_style(  'quentn.bootstrap.css', plugin_dir_url( __FILE__ ). 'css/bootstrap-qntn.css' );
+        global $hook_suffix;
 
-        //add jquery ui style
-        wp_enqueue_style(  'quentn.jquery.ui.min.css', plugin_dir_url( __FILE__ ) . 'css/jquery-ui.min.css' );
+        if ( in_array( $hook_suffix,  array(
+            'post-new.php',
+            'post.php',
+            'toplevel_page_quentn-dashboard',
+            'quentn_page_quentn-access-pages-restrictions',
+            'admin_page_quentn-page-access-overview',
+            'toplevel_page_quentn-dashboard',
+        ) ) )  {
+            //add quentn bootstrap
+            wp_enqueue_style(  'quentn.bootstrap.css', plugin_dir_url( __FILE__ ). 'css/bootstrap-qntn.css' );
+            wp_enqueue_style(  'quentn.fontawesome.css', 'https://use.fontawesome.com/releases/v5.7.0/css/all.css', array(), '' );
+            wp_enqueue_style(  'quentn.empusdominus-bootstrap-4.min', 'https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/css/tempusdominus-bootstrap-4.min.css' );
+            //add touchspin bootstrap css
+            wp_enqueue_style( 'quentn.jquery.bootstrap-touchspin.css', plugin_dir_url( __FILE__ ) . 'css/jquery.bootstrap-touchspin.css' );
 
-        //add select2 style to select quentn tags for new users
-        wp_enqueue_style( 'quentn.select2.min.css', plugin_dir_url( __FILE__ ) . 'css/select2.min.css' );
+            //add jquery ui style
+            wp_enqueue_style(  'quentn.jquery.ui.min.css', plugin_dir_url( __FILE__ ) . 'css/jquery-ui.min.css' );
 
-        //wp_enqueue_style( 'quentn.jquery.ui.timepicker.addon.css', plugin_dir_url( __FILE__ ) . 'css/jquery-ui-timepicker-addon.css' );
+            //add select2 style to select quentn tags for new users
+            wp_enqueue_style( 'quentn.select2.min.css', plugin_dir_url( __FILE__ ) . 'css/select2.min.css' );
 
-        //add custom style
-        wp_enqueue_style( 'quentn.admin.style.css', plugin_dir_url( __FILE__ ) . 'css/admin-style.css' );
-
-        //add touchspin bootstrap css
-        wp_enqueue_style( 'quentn.jquery.bootstrap-touchspin.css', plugin_dir_url( __FILE__ ) . 'css/jquery.bootstrap-touchspin.css' );
-
-        //bootstrap datetime picker
-        wp_enqueue_style( 'quentn.bootstrap.datetimepicker.css', plugin_dir_url( __FILE__ ) . 'css/bootstrap-datetimepicker.css' );
-
+            //add custom style
+            wp_enqueue_style( 'quentn.admin.style.css', plugin_dir_url( __FILE__ ) . 'css/admin-style.css' );
+        }
     }
 
 
@@ -122,7 +128,7 @@ class Quentn_Wp_Admin {
      *
      * @since    1.0.0
      */
-    public function enqueue_scripts() {
+    public function enqueue_scripts()  {
 
         /**
          * This function is provided for demonstration purposes only.
@@ -137,56 +143,63 @@ class Quentn_Wp_Admin {
          */
 
         //wordpress default jquery, jquery ui scripts
-        wp_enqueue_script( 'jquery' );
-        wp_enqueue_script( 'jquery-ui-accordion' );
-        wp_enqueue_script( 'jquery-ui-datepicker' );
-        wp_enqueue_script( 'jquery-ui-slider' );
+        wp_enqueue_script('jquery');
+        wp_enqueue_script('jquery-ui-accordion');
+        wp_enqueue_script('jquery-ui-datepicker');
+        wp_enqueue_script('jquery-ui-slider');
 
         //add wordpress default script for thickbox/popup
-        wp_enqueue_style( 'thickbox' );
-        wp_enqueue_script( 'thickbox' );
+        wp_enqueue_style('thickbox');
+        wp_enqueue_script('thickbox');
 
-        //add bootstrap for plugin
-        wp_register_script( 'quentn.bootstrap.js', plugin_dir_url( __FILE__ ) . 'js/bootstrap.min.js', array(), '3.3.7' );
-        wp_enqueue_script( 'quentn.bootstrap.js' );
+        global $hook_suffix;
+        if ( in_array( $hook_suffix,  array(
+            'post-new.php',
+            'post.php',
+            'toplevel_page_quentn-dashboard',
+            'quentn_page_quentn-access-pages-restrictions',
+            'admin_page_quentn-page-access-overview',
+            'toplevel_page_quentn-dashboard',
+        ) ) )  {
 
+            wp_register_script( 'quentn.popper.min.js', plugin_dir_url( __FILE__ ) . 'js/popper.min.js', array(), '' );
+            wp_enqueue_script( 'quentn.popper.min.js' );
 
-        //add select2 script to select quentn tags for new users
-        wp_register_script( 'quentn.select2.js', plugin_dir_url( __FILE__ ) . 'js/select2.min.js', array( 'jquery' ), '4.0.3', true );
-        wp_enqueue_script( 'quentn.select2.js' );
+            //add bootstrap for plugin
+            wp_register_script( 'quentn.bootstrap.js', plugin_dir_url( __FILE__ ) . 'js/bootstrap.min.js', array(), '4.4.1' );
+            wp_enqueue_script( 'quentn.bootstrap.js' );
 
-        //add data/time picker script
-        //wp_enqueue_script( 'quentn.timepicker.js', plugin_dir_url( __FILE__ ) . 'js/jquery-ui-timepicker-addon.min.js', array( 'jquery' ), "1.0.0", true );
+            wp_register_script( 'quentn.moment.min.js', plugin_dir_url( __FILE__ ) . 'js/moment.min.js', array(), '' );
+            wp_enqueue_script( 'quentn.moment.min.js' );
 
+            wp_register_script( 'quentn.moment.de.js', plugin_dir_url( __FILE__ ) . 'js/moment.de.js', array(), '' );
+            wp_enqueue_script( 'quentn.moment.de.js' );
 
-        //add touchspin script file
-        wp_enqueue_script('quentn.jquery.bootstrap-touchspin.js', plugin_dir_url( __FILE__ ) . 'js/jquery.bootstrap-touchspin.js', array( 'jquery' ), '', true );
+            wp_register_script( 'quentn.tempusdominus-bootstrap-4.min', plugin_dir_url( __FILE__ ) . 'js/tempusdominus-bootstrap-4.min.js', array(), '4.4.1' );
+            wp_enqueue_script( 'quentn.tempusdominus-bootstrap-4.min' );
 
+            //add select2 script to select quentn tags for new users
+            wp_register_script( 'quentn.select2.js', plugin_dir_url( __FILE__ ) . 'js/select2.min.js', array( 'jquery' ), '4.0.3', true );
+            wp_enqueue_script( 'quentn.select2.js' );
 
+            //add touchspin script file
+            wp_register_script( 'quentn.jquery.bootstrap-touchspin.js', plugin_dir_url( __FILE__ ) . 'js/jquery.bootstrap-touchspin.js', array( 'jquery' ), '', true );
+            wp_enqueue_script( 'quentn.jquery.bootstrap-touchspin.js' );
 
-        //bootstrap datetime picker
-        wp_register_script('quentn.bootstrap.datetimepicker.min.js', plugin_dir_url( __FILE__ ) . 'js/bootstrap-datetimepicker.js', array( 'jquery' ), $this->version );
-        wp_enqueue_script( 'quentn.bootstrap.datetimepicker.min.js' );
+            //add custom script file
+            wp_register_script('quentn.admin.custom.js', plugin_dir_url( __FILE__ ) . 'js/main.js', array( 'jquery' ), $this->version );
+            wp_enqueue_script( 'quentn.admin.custom.js' );
 
-        //bootstrap datetime picker german translation
-        wp_register_script('quentn.bootstrap.datetimepicker.de.js', plugin_dir_url( __FILE__ ) . 'js/bootstrap-datepicker.de.js', array( 'jquery') );
-        wp_enqueue_script( 'quentn.bootstrap.datetimepicker.de.js' );
+            //Localize the script with new data
+            $translation_array = array(
+                'choose_quentn_tags'            =>  __( 'Choose Quentn Tags', 'quentn-wp' ),
+                'choose_learndash_courses'      =>  __( 'Choose LearnDash Courses', 'quentn-wp' ),
+                'delete_confirmation_message'   =>  __( 'Are you sure you want to delete?', 'quentn-wp' ),
+                'datepicker_lang'   =>  ( substr( get_locale(),0, 2 ) == 'de' ? 'de' : 'en' ) // if wp set in german lang then set datepicker lang in german, otherwise in english
+            );
 
-        //add custom script file
-        wp_register_script('quentn.admin.custom.js', plugin_dir_url( __FILE__ ) . 'js/main.js', array( 'jquery' ), $this->version );
-        wp_enqueue_script( 'quentn.admin.custom.js' );
-
-
-        //Localize the script with new data
-        $translation_array = array(
-            'choose_quentn_tags'            =>  __( 'Choose Quentn Tags', 'quentn-wp' ),
-            'choose_learndash_courses'      =>  __( 'Choose LearnDash Courses', 'quentn-wp' ),
-            'delete_confirmation_message'   =>  __( 'Are you sure you want to delete?', 'quentn-wp' ),
-            'datepicker_lang'   =>  ( substr( get_locale(),0, 2 ) == 'de' ? 'de' : 'en' ) // if wp set in german lang then set datepicker lang in german, otherwise in english
-        );
-
-        wp_localize_script( 'quentn.admin.custom.js', 'wp_qntn', $translation_array );
-
+            wp_localize_script( 'quentn.admin.custom.js', 'wp_qntn', $translation_array );
+        }
     }
 
 
@@ -210,8 +223,6 @@ class Quentn_Wp_Admin {
         $hook_access_overview = add_submenu_page("NULL", __( 'Quentn User Access', 'quentn-wp'),   __('Access', 'quentn-wp'), "manage_options", "quentn-page-access-overview", array( $this, 'access_restrictions_list' ) );
 
         add_action( "load-$hook_access_overview", array( $this, 'access_overview_list_screen_option' ) );
-
-
     }
 
     /**
@@ -245,7 +256,7 @@ class Quentn_Wp_Admin {
                 }
             }
             //if direct access added successfully
-            if ( $action == 'quentn-direct-access-add' ) {
+            if ( $action == 'quentn-direct-access-add-success' ) {
                 $this->notices[] = array( 'message' => __( 'User access has been added successfully', 'quentn-wp' ), 'type' => 'success' );
             }
 
@@ -257,6 +268,11 @@ class Quentn_Wp_Admin {
             //if quentn account is disconnected
             if ( $action == 'quentn-account-removed' ) {
                 $this->notices[] = array( 'message' => __( 'Quentn account has been removed', 'quentn-wp' ), 'type' => 'success' );
+            }
+
+            //if direct access failed to add
+            if ( $action == 'quentn-direct-access-add-failed' ) {
+                $this->notices[] = array( 'message' => __( 'User access could not be added', 'quentn-wp' ), 'type' => 'error' );
             }
         }
 

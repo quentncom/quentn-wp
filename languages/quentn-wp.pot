@@ -91,6 +91,10 @@ msgstr ""
 msgid "Quentn account has been removed"
 msgstr ""
 
+#: admin/class-quentn-wp-admin.php:271
+msgid "User access could not be added"
+msgstr ""
+
 #: admin/class-quentn-wp-admin.php:355
 msgid "Web Tracking Settings"
 msgstr ""
@@ -148,14 +152,14 @@ msgstr ""
 msgid "Remove tags if user looses the role %s"
 msgstr ""
 
-#: admin/partials/quentn-delete_user_data.php:22
-#: admin/partials/quentn-delete_user_data.php:24
+#: admin/partials/quentn-delete-user-data.php:22
+#: admin/partials/quentn-delete-user-data.php:24
 #: includes/class-quentn-wp-access-overview-list.php:92
 #: includes/class-quentn-wp-access-overview-list.php:421
 msgid "Email"
 msgstr ""
 
-#: admin/partials/quentn-delete_user_data.php:33
+#: admin/partials/quentn-delete-user-data.php:33
 #: includes/class-quentn-wp-access-overview-list.php:100
 #: includes/class-quentn-wp-access-overview-list.php:141
 #: includes/class-quentn-wp-access-overview-list.php:159
@@ -265,6 +269,38 @@ msgstr ""
 msgid "Search Email"
 msgstr ""
 
+#: includes/class-quentn-wp-access-overview-list.php:446
+msgid "Year"
+msgstr ""
+
+#: includes/class-quentn-wp-access-overview-list.php:446
+msgid "Years"
+msgstr ""
+
+#: includes/class-quentn-wp-access-overview-list.php:446
+msgid "Month"
+msgstr ""
+
+#: includes/class-quentn-wp-access-overview-list.php:446
+msgid "Months"
+msgstr ""
+
+#: includes/class-quentn-wp-access-overview-list.php:446
+msgid "Days"
+msgstr ""
+
+#: includes/class-quentn-wp-access-overview-list.php:446
+msgid "Day"
+msgstr ""
+
+#: includes/class-quentn-wp-access-overview-list.php:446
+msgid "Hour"
+msgstr ""
+
+#: includes/class-quentn-wp-access-overview-list.php:446
+msgid "Minute"
+msgstr ""
+
 #: includes/class-quentn-wp-activator.php:45
 #, php-format
 msgid "Quentn requires PHP version 5.6.0 or higher"
@@ -322,10 +358,12 @@ msgid "Absolute"
 msgstr ""
 
 #: includes/class-quentn-wp-manage_meta_box.php:129
+#: includes/class-quentn-wp-access-overview-list.php:446
 msgid "Hours"
 msgstr ""
 
 #: includes/class-quentn-wp-manage_meta_box.php:133
+#: includes/class-quentn-wp-access-overview-list.php:446
 msgid "Minutes"
 msgstr ""
 

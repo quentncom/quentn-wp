@@ -152,7 +152,8 @@ class Quentn_Wp_Restrict_Access
         //if replacement values send by quentn
         if( isset( $_GET['qntn'] ) ) {
             //decode quentn values
-            $qntn_values = json_decode( base64_decode( $_GET['qntn'] ), true  );
+            $qntn = sanitize_text_field( $_GET['qntn'] );
+            $qntn_values = json_decode( base64_decode( $qntn ), true  );
 
             //add quentn values in replacement values
             if( ! empty( $qntn_values ) ) {
@@ -161,7 +162,7 @@ class Quentn_Wp_Restrict_Access
 
             //if quentn values have additional data along with email address, then add it into cookies and save it in database
             if( isset( $qntn_values['email'] ) && count($qntn_values) > 1 ) {
-                $email = $qntn_values['email'];
+                $email = sanitize_email( $qntn_values['email'] );
                 unset( $qntn_values['email'] );
                 //set cookie
                 $this->set_quentn_user_data_cookie( $email, $qntn_values );
@@ -312,14 +313,14 @@ class Quentn_Wp_Restrict_Access
         $get_new_access = '';
 
         if( isset( $_GET["qntn_wp"] ) ) { //get email address if it is in query string
-            $get_new_access =   trim( $_GET["qntn_wp"] );
+            $get_new_access =   sanitize_text_field( $_GET["qntn_wp"] );
         } elseif ( isset($_GET["qntn"] ) ) { //qntn is used when request is created from quentn, it will be in base64 and json encoded
-            $qntn = json_decode( base64_decode( $_GET["qntn"] ), true  );
+            $qntn = json_decode( base64_decode( sanitize_text_field( $_GET["qntn"] ) ), true  );
             if( isset( $qntn['email'] ) ) { //if there is email in query string
                 $get_new_access =   hash( 'sha256', trim( $qntn['email'] ) );
             }
         } elseif ( isset( $_GET["email"] ) ) { //if there is plain email address in url
-            $email = str_replace(" ","+",trim( $_GET["email"] ) );
+            $email =  str_replace(" ","+", sanitize_email( $_GET["email"]  ) );
             $get_new_access =  hash( 'sha256', $email );
         }
 
@@ -576,6 +577,7 @@ class Quentn_Wp_Restrict_Access
      *
      * @since  1.0.0
      * @access public
+     * @param Datetime $expiry_date expiry date of page access
      * @return int
      */
     public function calculate_absolute_page_expire_time ( $expiry_date ) {
