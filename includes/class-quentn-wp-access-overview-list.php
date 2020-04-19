@@ -151,8 +151,8 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
             case 'delete-access':
                 return  sprintf( '<a href="?page=%s&action=%s&page_id=%s&email=%s&_wpnonce=%s" onclick="return confirm(\'%s\')" >%s</a>', esc_attr( $_REQUEST['page'] ), 'qntn-delete', $page_id, trim($item['email']), $delete_nonce, __( "Are you sure you want to delete?", 'quentn-wp' ),  __( "Delete", 'quentn-wp' ) );
             case 'view_access':
-                $separator = (parse_url(get_page_link($_GET['page_id']), PHP_URL_QUERY))?'&':'?';
-                return  sprintf( "<input type='text' class='get_access_url' readonly  value='%s' /><button class='copy_access_url'>%s</button>", get_page_link( $_GET['page_id'] ).$separator.'qntn_wp='.$item['email_hash'], __( 'Copy URL' ) );
+                $separator = ( parse_url( get_page_link( sanitize_text_field( $_GET['page_id'] ) ), PHP_URL_QUERY ) ) ? '&' : '?';
+                return  sprintf( "<input type='text' class='get_access_url' readonly  value='%s' /><button class='copy_access_url'>%s</button>", get_page_link( sanitize_text_field( $_GET['page_id'] ) ).$separator.'qntn_wp='.$item['email_hash'], __( 'Copy URL' ) );
             default:
                 return __( "no value", 'quentn-wp' );
         }
@@ -216,7 +216,7 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
         $sql = "SELECT * FROM " . $wpdb->prefix . TABLE_QUENTN_RESTRICTIONS. " where page_id='". $page_id."'";
         //set search
         if ( ! empty( $_REQUEST['s'] ) ) {
-            $sql .= " and email LIKE '%" . $_REQUEST['s']."%'";
+            $sql .= " and email LIKE '%" . esc_sql( $_REQUEST['s'] )."%'";
         }
 
         //set order by
@@ -298,7 +298,7 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
         global $wpdb;
         $sql = "SELECT COUNT(*) FROM ".$wpdb->prefix . TABLE_QUENTN_RESTRICTIONS. " where page_id='".$page_id."'";
         if ( ! empty( $_REQUEST['s'] ) ) {
-            $sql .= " and email LIKE '%".$_REQUEST['s']."%'";
+            $sql .= " and email LIKE '%". esc_sql( $_REQUEST['s'] )."%'";
         }
 
         return $wpdb->get_var( $sql );
@@ -338,7 +338,7 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
     public function get_views(){
         $views = array();
 
-        $views['add_access'] = '<a href="#TB_inline?&width=400&height=250&inlineId=qntn-add-access" title="' . __( "Access Overview For Page", "quentn-wp" ). ' ' . get_the_title($this->page_id).'" class="button action thickbox">'.__( 'Add Access', 'quentn-wp' ).'</a>';
+        $views['add_access'] = '<a href="#TB_inline?&width=400&height=250&inlineId=qntn-add-access" title="' . __( "Access Overview For Page", "quentn-wp" ). ' ' . esc_html( get_the_title( $this->page_id ) ).'" class="button action thickbox">'.__( 'Add Access', 'quentn-wp' ).'</a>';
 
         return $views;
     }
@@ -361,7 +361,7 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
                 die( 'Nope! Security check failed' );
             }
 
-            $num_records_deleted = $this->delete_restriction( absint( $_GET['page_id'] ), str_replace(" ","+",trim( $_GET['email'] ) ) );
+            $num_records_deleted = $this->delete_restriction( sanitize_text_field( $_GET['page_id'] ), str_replace(" ", "+", sanitize_email( $_GET['email'] ) ) );
             wp_redirect( esc_url_raw( remove_query_arg( ['action', 'email', '_wpnonce'], esc_url_raw(add_query_arg( ['page_id' => $this->page_id, 'update' => 'quentn-access-deleted', 'deleted' => $num_records_deleted ] ) ) ) ) );
             exit;
 
@@ -396,7 +396,7 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
             }
             $email = sanitize_email( $_REQUEST['email_direct_access'] );
             //if email is not valid, then display error message and redirect
-            if ( ! filter_var($email, FILTER_VALIDATE_EMAIL ) ) {
+            if ( ! is_email( $email ) ) {
                 wp_redirect( esc_url_raw( add_query_arg( ['page_id' => $this->page_id, 'update' => 'quentn-direct-access-email-invalid' ] ) ) );
                 exit;
             }
@@ -481,17 +481,17 @@ function quentn_show_data_access_overview_list() {
         wp_redirect( admin_url( 'admin.php?page=quentn-access-pages-restrictions' ) );
     }
 
-    $qntn_list_table = new Quentn_Wp_Access_Overview( $_REQUEST['page_id'] );
+    $qntn_list_table = new Quentn_Wp_Access_Overview( sanitize_text_field( $_REQUEST['page_id'] ) );
     $qntn_list_table->prepare_items();
 
     ?>
 
-    <h3><?php  printf( __( 'Access Overview For Page %s', 'quentn-wp' ),  get_the_title($_REQUEST['page_id'] ) ); ?></h3>
+    <h3><?php  printf( esc_html__( 'Access Overview For Page %s', 'quentn-wp' ),  esc_html( get_the_title( $_REQUEST['page_id'] ) ) ); ?></h3>
 
     <form method="get">
         <?php  $qntn_list_table->search_box(__('Search Email', 'quentn-wp' ), "search_email_id");  ?>
         <input name='page' value="quentn-page-access-overview" type="hidden">
-        <input name='page_id' value="<?php echo $_REQUEST['page_id'] ?>" type="hidden">
+        <input name='page_id' value="<?php echo esc_html( sanitize_text_field( $_REQUEST['page_id'] ) ) ?>" type="hidden">
         <?php  $qntn_list_table->display(); ?>
     </form>
     <div id='qntn-add-access' style='display:none;'>
@@ -501,8 +501,8 @@ function quentn_show_data_access_overview_list() {
                 <tr>
                     <td><?php _e('Email', 'quentn-wp' ) ?></td>
                     <td><input required type="email"  name='email_direct_access' id='email_direct_access' size='25'>
-                        <input name='page' type="hidden" value="<?php echo $_REQUEST['page'] ?>">
-                        <input name='page_id' type="hidden" value="<?php echo $_REQUEST['page_id'] ?>">
+                        <input name='page' type="hidden" value="<?php echo esc_html( sanitize_text_field( $_REQUEST['page'] ) ) ?>">
+                        <input name='page_id' type="hidden" value="<?php echo esc_html( sanitize_text_field( $_REQUEST['page_id'] ) ) ?>">
                         <input name='update' type="hidden" value="quentn-direct-access-add">
                         <input type="hidden" value="<?php echo wp_create_nonce( 'qntn_direct_access_nonce' )?>" id="qntn_direct_access_submit_nonce" name="qntn_direct_access_submit_nonce">
                     </td>

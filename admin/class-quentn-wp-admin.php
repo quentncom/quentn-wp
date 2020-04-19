@@ -252,7 +252,7 @@ class Quentn_Wp_Admin {
                     $this->notices[] = array( 'message' => __( 'Data is deleted successfully', 'quentn-wp' ), 'type' => 'success' );
                 }
                 else {
-                    $this->notices[] = array( 'message' => sprintf( __( 'There is no data found with the email address %s', 'quentn-wp' ), $_GET['email'] ), 'type' => 'warning' );
+                    $this->notices[] = array( 'message' => sprintf( esc_html__( 'There is no data found with the email address %s', 'quentn-wp' ), sanitize_email( $_GET['email'] ) ), 'type' => 'warning' );
                 }
             }
             //if direct access added successfully
@@ -1096,7 +1096,6 @@ class Quentn_Wp_Admin {
      * @return string
      */
     public function get_quentn_web_tracking_code() {
-
         //get web tracking response
         $response = $this->api_handler->get_web_tracking_response();
         //if domains are not found then return empty string

@@ -161,7 +161,7 @@ class Quentn_Wp_Restrict_Access
             }
 
             //if quentn values have additional data along with email address, then add it into cookies and save it in database
-            if( isset( $qntn_values['email'] ) && count($qntn_values) > 1 ) {
+            if( isset( $qntn_values['email'] ) && is_email( sanitize_email( $qntn_values['email'] ) ) && count($qntn_values) > 1 ) {
                 $email = sanitize_email( $qntn_values['email'] );
                 unset( $qntn_values['email'] );
                 //set cookie
@@ -169,7 +169,6 @@ class Quentn_Wp_Restrict_Access
                 global $wpdb;
                 //add it in database
                 $wpdb->replace( $wpdb->prefix . TABLE_QUENTN_USER_DATA,['email' => $email, 'fields' => serialize( $qntn_values )], ['%s', '%s'] );
-
             }
         } else { //if no qntn values in url
             $valid_email_in_url = '';
@@ -177,14 +176,14 @@ class Quentn_Wp_Restrict_Access
             $user_data = array();
             //try to find if there is any valid email address in the url
             foreach ( $_GET as $value ) {
-                if ( filter_var( str_replace(" ","+",trim( $value ) ), FILTER_VALIDATE_EMAIL ) ) {
-                    $valid_email_in_url = $value;
+                if ( is_email( str_replace(" ","+", sanitize_email( $value ) ) ) ) {
+                    $valid_email_in_url = sanitize_email( $value );
                     break;
                 }
             }
             //if there is valid email address in the url
             if( $valid_email_in_url != '' ) {
-                $url_email_hash = hash( 'sha256', trim( $valid_email_in_url ) );
+                $url_email_hash = hash( 'sha256', $valid_email_in_url );
                 //then try to find this email data in the cookie
                 if ( isset( $quentn_cookie['qntn_user_data'] ) && array_key_exists( $url_email_hash, $quentn_cookie['qntn_user_data'] ) ) {
                     $user_data = $quentn_cookie['qntn_user_data'][$url_email_hash];
@@ -219,9 +218,10 @@ class Quentn_Wp_Restrict_Access
      * @return array
      */
     public function add_replacement_values( array $user_data ) {
-        foreach ( $user_data as $key=>$value ) {
-            if ( ! array_key_exists( $key, $this->replacement_values ) ) {
-                $this->replacement_values[$key] = $value;
+        foreach ( $user_data as $key => $value ) {
+            $sanitize_key = sanitize_key( $key );
+            if ( ! array_key_exists( $sanitize_key, $this->replacement_values ) ) {
+                $this->replacement_values[$sanitize_key] = sanitize_text_field( $value );
             }
         }
     }
@@ -302,7 +302,7 @@ class Quentn_Wp_Restrict_Access
     }
 
     /**
-     * Get new access to if it is in url
+     * Get new access if it is in url
      *
      * @since  1.0.0
      * @access public
@@ -316,8 +316,8 @@ class Quentn_Wp_Restrict_Access
             $get_new_access =   sanitize_text_field( $_GET["qntn_wp"] );
         } elseif ( isset($_GET["qntn"] ) ) { //qntn is used when request is created from quentn, it will be in base64 and json encoded
             $qntn = json_decode( base64_decode( sanitize_text_field( $_GET["qntn"] ) ), true  );
-            if( isset( $qntn['email'] ) ) { //if there is email in query string
-                $get_new_access =   hash( 'sha256', trim( $qntn['email'] ) );
+            if( isset( $qntn['email'] ) && is_email( sanitize_email( $qntn['email'] ) ) ) { //if there is valid email in data send by quentn
+                $get_new_access =   hash( 'sha256', sanitize_email( $qntn['email'] ) );
             }
         } elseif ( isset( $_GET["email"] ) ) { //if there is plain email address in url
             $email =  str_replace(" ","+", sanitize_email( $_GET["email"]  ) );
@@ -357,32 +357,37 @@ class Quentn_Wp_Restrict_Access
         $this->set_json_cookie('qntn_wp_access', $set_cookie_data);
     }
 
-
+    /**
+     * Save user data in the cookie, used for placeholders
+     *
+     * @since  1.0.0
+     * @access public
+     * @param  string $access_email email address of user
+     * @param  array $data data of user e.g first_name, last_name
+     * @return string
+     */
     public function set_quentn_user_data_cookie( $access_email, $data ) {
 
         //get the existing quentn cookie
         $cookie_saved_data = $this->get_json_cookie('qntn_wp_access');
         $data = array_map( array( $this, 'encode_cookie_values' ), $data);
-        $email_hash_key = hash( 'sha256', trim( $access_email ) );
+        $email_hash_key = hash( 'sha256', $access_email );
 
         //if this page access is not created
         if ( ! isset( $cookie_saved_data['qntn_user_data'][$email_hash_key] ) ) {
 
             //if no access is created then add access key in array
             if( ! isset( $cookie_saved_data['qntn_user_data'])) {
-
                 $cookie_saved_data['qntn_user_data'] = array();
             }
 
             //add page id to access
-
             $add_page_id = array(
                 $email_hash_key => $data,
             );
             $cookie_saved_data['qntn_user_data'] = $cookie_saved_data['qntn_user_data'] + $add_page_id;
 
         } else {
-
             $cookie_saved_data['qntn_user_data'][$email_hash_key] = $data;
         }
 

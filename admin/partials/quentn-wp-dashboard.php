@@ -1,7 +1,7 @@
 <?php
 //get active tab
-if( isset($_GET['tab'])) {
-    $active_tab = $_GET[ 'tab' ];
+if( isset( $_GET['tab'] ) ) {
+    $active_tab = sanitize_key( $_GET['tab'] );
 } else {
     $active_tab = 'quentn_host_connection';
 }

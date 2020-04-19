@@ -107,7 +107,7 @@ class Quentn_Wp_Page_Restrictions_List extends \WP_List_Table {
      * @return string
      */
     public function column_page_title( $item ) {
-        $title = '<strong>' . $item['page_title'] . '</strong>';
+        $title = '<strong>' . esc_html($item['page_title']) . '</strong>';
         $actions = array(
             'show-access' => sprintf( '<a href="?page=%s&page_id=%s">%s</a>', esc_attr( 'quentn-page-access-overview' ), absint( $item['page_id'] ), __( "Show Access", 'quentn-wp' ) )
         );
@@ -231,7 +231,7 @@ class Quentn_Wp_Page_Restrictions_List extends \WP_List_Table {
         if ( 'show-access' === $this->current_action() ) {
 
             wp_redirect( add_query_arg( array(
-                'page_id' => $_GET['page_id'],
+                'page_id' => sanitize_text_field( $_GET['page_id'] ),
             ),
                 admin_url( 'admin.php?page=quentn-page-access-overview' )
             ));

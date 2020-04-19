@@ -6,11 +6,14 @@ $path = "wp/connect";
 $params = ["redirect_uri" => esc_url( remove_query_arg(  ['quentn_host_connection'], Helper::get_current_url() ) )];
 
 //if quentn account is removed
-if ( isset( $_GET['update'] ) and sanitize_key( $_GET['update'] == 'remove-quentn-account' ) ) {
-    delete_option('quentn_app_key' );
-    delete_option('quentn_base_url' );
-    wp_redirect( esc_url_raw( add_query_arg( ['update' => 'quentn-account-removed' ] ) ) );
-    exit;
+if ( isset( $_GET['update'] ) ) {
+    $action = sanitize_key( $_GET['update'] );
+    if($action == 'remove-quentn-account') {
+        delete_option('quentn_app_key' );
+        delete_option('quentn_base_url' );
+        wp_redirect( esc_url_raw( add_query_arg( ['update' => 'quentn-account-removed' ] ) ) );
+        exit;
+    }
 }
 ?>
 <div class="bootstrap-qntn qntn-connect-button">
@@ -24,25 +27,25 @@ if ( isset( $_GET['update'] ) and sanitize_key( $_GET['update'] == 'remove-quent
                 <?php   printf( __( 'You are connected to Quentn host %s', 'quentn-wp' ), get_option('quentn_base_url') ) ; ?>
             </p>
           </div>
-          <a href="<?php echo $base_uri.$path."?".http_build_query($params) ?>" class="btn btn-lg btn-primary"><?php _e( 'Update Quentn account', 'quentn-wp' ) ?></a>
-          <a href="<?php echo Helper::get_current_url().'&update=remove-quentn-account' ?>" class="btn btn-lg btn-danger"><?php _e( 'Remove Quentn account', 'quentn-wp' ) ?></a>
+          <a href="<?php echo $base_uri.$path."?".http_build_query($params) ?>" class="btn btn-primary" role="button"><?php _e( 'Update Quentn account', 'quentn-wp' ) ?></a>
+          <a href="<?php echo Helper::get_current_url().'&update=remove-quentn-account' ?>" class="btn btn-danger" role="button"><?php _e( 'Remove Quentn account', 'quentn-wp' ) ?></a>
         </div>
     <?php } else { ?>
         <div class="text-center">
-        <a href="<?php echo $base_uri.$path."?".http_build_query( $params ) ?>" class="btn btn-lg btn-primary"><?php _e( 'Connect to Quentn', 'quentn-wp' ) ?></a>
+        <a href="<?php echo $base_uri.$path."?".http_build_query( $params ) ?>" class="btn btn-primary role="button""><?php _e( 'Connect to Quentn', 'quentn-wp' ) ?></a>
         </div>
     <?php } ?>
 
 </div>
 <?php
-if ( ! empty( $_GET["token"] ) ) {
+if ( ! empty( $_GET['token'] ) ) {
     $site_url = wp_parse_url( get_home_url() );
 
     $site_path = ( isset( $site_url['path'] ) ? $site_url['path'] : '' );
     $path = "wp/request";
     $params = array(
         'redirect_uri'  => esc_url( remove_query_arg( 'token', Helper::get_current_url() ) ),
-        'token'         => $_GET['token'],
+        'token'         => sanitize_text_field( $_GET['token'] ),
     );
 
     //if wp is installed within a sub folder then we will add name of the installed folders in path e.g http://example/com/wordpress/site1
