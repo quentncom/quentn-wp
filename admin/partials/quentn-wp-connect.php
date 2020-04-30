@@ -27,12 +27,12 @@ if ( isset( $_GET['update'] ) ) {
                 <?php   printf( __( 'You are connected to Quentn host %s', 'quentn-wp' ), get_option('quentn_base_url') ) ; ?>
             </p>
           </div>
-          <a href="<?php echo $base_uri.$path."?".http_build_query($params) ?>" class="btn btn-primary" role="button"><?php _e( 'Update Quentn account', 'quentn-wp' ) ?></a>
+          <a href="<?php echo $base_uri . $path . "?" . http_build_query( $params ) ?>" class="btn btn-primary" role="button"><?php _e( 'Update Quentn account', 'quentn-wp' ) ?></a>
           <a href="<?php echo Helper::get_current_url().'&update=remove-quentn-account' ?>" class="btn btn-danger" role="button"><?php _e( 'Remove Quentn account', 'quentn-wp' ) ?></a>
         </div>
     <?php } else { ?>
         <div class="text-center">
-        <a href="<?php echo $base_uri.$path."?".http_build_query( $params ) ?>" class="btn btn-primary role="button""><?php _e( 'Connect to Quentn', 'quentn-wp' ) ?></a>
+        <a href="<?php echo $base_uri . $path . "?" . http_build_query( $params ) ?>" class="btn btn-primary role="button"><?php _e( 'Connect to Quentn', 'quentn-wp' ) ?></a>
         </div>
     <?php } ?>
 

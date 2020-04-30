@@ -76,23 +76,26 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 
 == Changelog ==
 
-= 0.1.3 =
-* Fixed a bug with user account notification mail.
+= 1.0.4 =
+* Fix: Better data sanitation and validation.
+* Fix: Use the default timezone of the website for countdowns.
+* Updated Bootstrap to Version 4.
 
-= 0.1.2 =
-* Fixed issue with page restrictions on Nginx Webservers.
-* Fixed a bug with page access url according to permalink settings.
+= 1.0.3 =
+* Fixes a bug with user account notification mail.
 
-= 0.1.1 =
+= 1.0.2 =
+* Fixes issue with page restrictions on Nginx Webservers.
+* Fixes a bug with page access url according to permalink settings.
+
+= 1.0.1 =
+* Cache restricted pages behave abnormally.
 * Added support for LearnDash.
 
 = 0.1.0 =
-* Fix bug when new user is created with multiple tags and quentn account is not connected.
-* Fix translation issue for user roles.
-* Fix translation issue for plugin description.
+* Initial version.
 
-= 0.0.8 =
-* Add support for Thrive Themes.
+== Upgrade Notice ==
 
-= 0.0.6 =
-* Plugin beta version launch.
+= 1.0.4 =
+Thanks for using Quentn Plugin! This version has some improvements in design and security. Please Upgrade immediately.
