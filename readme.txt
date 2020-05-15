@@ -3,7 +3,7 @@ Contributors: quentn
 Tags: Quentn, email, email marketing tool, integration, email automation, marketing automation, countdown, page restriction
 Requires at least: 4.1
 Tested up to: 5.2
-Stable tag: 1.0.4
+Stable tag: 1.0.5
 Requires PHP: 5.6.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -76,6 +76,10 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 
 == Changelog ==
 
+= 1.0.5 =
+* Fix: Better data sanitation and validation.
+* Add css files within the plugin.
+
 = 1.0.4 =
 * Fix: Better data sanitation and validation.
 * Fix: Use the default timezone of the website for countdowns.
@@ -97,5 +101,5 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 
 == Upgrade Notice ==
 
-= 1.0.4 =
+= 1.0.5 =
 Thanks for using Quentn Plugin! This version has some improvements in design and security. Please Upgrade immediately.
