@@ -102,12 +102,16 @@ class Quentn_Wp_Admin {
             'toplevel_page_quentn-dashboard',
             'quentn_page_quentn-access-pages-restrictions',
             'admin_page_quentn-page-access-overview',
-            'toplevel_page_quentn-dashboard',
         ) ) )  {
             //add quentn bootstrap
             wp_enqueue_style(  'quentn.bootstrap.css', plugin_dir_url( __FILE__ ). 'css/bootstrap-qntn.css' );
+
+            //add fontawesome cdn
             wp_enqueue_style(  'quentn.fontawesome.css', 'https://use.fontawesome.com/releases/v5.7.0/css/all.css', array(), '' );
-            wp_enqueue_style(  'quentn.empusdominus-bootstrap-4.min', 'https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/css/tempusdominus-bootstrap-4.min.css' );
+
+            //add tempusdominus-bootstrap-4
+            wp_enqueue_style( 'quentn.empusdominus-bootstrap-4.min', plugin_dir_url( __FILE__ ) . 'css/tempusdominus-bootstrap-4.css' );
+
             //add touchspin bootstrap css
             wp_enqueue_style( 'quentn.jquery.bootstrap-touchspin.css', plugin_dir_url( __FILE__ ) . 'css/jquery.bootstrap-touchspin.css' );
 
@@ -159,7 +163,6 @@ class Quentn_Wp_Admin {
             'toplevel_page_quentn-dashboard',
             'quentn_page_quentn-access-pages-restrictions',
             'admin_page_quentn-page-access-overview',
-            'toplevel_page_quentn-dashboard',
         ) ) )  {
 
             wp_register_script( 'quentn.popper.min.js', plugin_dir_url( __FILE__ ) . 'js/popper.min.js', array(), '' );

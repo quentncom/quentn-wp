@@ -314,7 +314,7 @@ class Quentn_Wp_Restrict_Access
 
         if( isset( $_GET["qntn_wp"] ) ) { //get email address if it is in query string
             $get_new_access =   sanitize_text_field( $_GET["qntn_wp"] );
-        } elseif ( isset($_GET["qntn"] ) ) { //qntn is used when request is created from quentn, it will be in base64 and json encoded
+        } elseif ( isset($_GET["qntn"] ) ) { //qntn is used when request is created from quentn, it is expected in base64 and json encoded
             $qntn = json_decode( base64_decode( sanitize_text_field( $_GET["qntn"] ) ), true  );
             if( isset( $qntn['email'] ) && is_email( sanitize_email( $qntn['email'] ) ) ) { //if there is valid email in data send by quentn
                 $get_new_access =   hash( 'sha256', sanitize_email( $qntn['email'] ) );
@@ -619,7 +619,7 @@ class Quentn_Wp_Restrict_Access
      * @param timestamp $until (default: 6 months from now)
      * @param string $domain (default: current base domain)
      */
-    public function set_cookie($name, $data, $until = null, $domain = null) {
+    public function set_cookie( $name, $data, $until = null, $domain = null ) {
 
         if (!$until) {
             $until = mktime(date("H"), date("i"), date("s"), date("n") + 6);
@@ -628,7 +628,7 @@ class Quentn_Wp_Restrict_Access
             $host = explode(".", $_SERVER["HTTP_HOST"]);
             $domain = $host[count($host) - 2] . "." . $host[count($host) - 1];
         }
-        setcookie($name, $data, $until, "/", "." . $domain);
+        setcookie( $name, $data, $until, "/", "." . $domain );
 
     }
 
@@ -640,12 +640,13 @@ class Quentn_Wp_Restrict_Access
      * @param timestamp $until (default: 6 months from now)
      * @param string $domain (default: current base domain)
      */
-    public function set_json_cookie($name, $data, $until = null, $domain = null) {
-        $data = base64_encode(json_encode($data));
+    public function set_json_cookie( $name, $data, $until = null, $domain = null ) {
+        $data = base64_encode( json_encode( $data ) );
+        $cookie_name = sanitize_text_field( $name );
 
         //set the cookie so we can access it within this session
-        $_COOKIE[$name] = $data;
-        $this->set_cookie($name, $data, $until, $domain);
+        $_COOKIE[$cookie_name] = $data;
+        $this->set_cookie($cookie_name, $data, $until, $domain);
     }
 
     /**
@@ -656,7 +657,8 @@ class Quentn_Wp_Restrict_Access
      */
     public function get_json_cookie($name) {
         if ( isset( $_COOKIE[$name] ) ) {
-            return json_decode(base64_decode($_COOKIE[$name]), true);
+            $cookie_value = sanitize_text_field( $_COOKIE[$name] );
+            return json_decode( base64_decode( $cookie_value ), true );
         }
         return array();
     }
