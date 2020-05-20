@@ -58,17 +58,9 @@ Answer to foo bar dilemma.
 
 == Screenshots ==
 
-1. Connect to Quentn account
-2. Select Quentn Tags for wordpress user roles
-3. Enable web tracking settings
-4. List of pages With restricted access
-5. Access overview list For a specific Page
-6. Page restriction settings screen
-7. Absolute countdown type -  grant the user access up to a certain point of time
-8. Relative countdown type -  The user has access for a specified period of time
-9. Display Countdown
-10. LearnDash Course Registration Settings
-
+1. Countdown
+2. Page restrictions settings
+3. Select Quentn Tags for User roles
 
 == Changelog ==
 
