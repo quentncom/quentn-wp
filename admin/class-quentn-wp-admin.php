@@ -200,9 +200,12 @@ class Quentn_Wp_Admin {
                 'delete_confirmation_message'   =>  __( 'Are you sure you want to delete?', 'quentn-wp' ),
                 'datepicker_lang'   =>  ( substr( get_locale(),0, 2 ) == 'de' ? 'de' : 'en' ) // if wp set in german lang then set datepicker lang in german, otherwise in english
             );
-
             wp_localize_script( 'quentn.admin.custom.js', 'wp_qntn', $translation_array );
         }
+
+        //add quentn elementor api validator
+        wp_register_script('quentn.elementor.validate.api.js', plugin_dir_url( __FILE__ ) . 'js/quentn-elementor-validate-api.js', array( 'jquery' ), $this->version, true );
+        wp_enqueue_script( 'quentn.elementor.validate.api.js' );
     }
 
 

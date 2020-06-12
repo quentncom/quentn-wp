@@ -12,16 +12,36 @@ class Helper
     //Check if cookie notice plugin is active
     public static function is_cookie_notice_plugin_enabled() {
         $return = false;
-        // https://github.com/wp-plugins/cookie-notice
         if ( function_exists('cn_cookies_accepted' ) ) {
             $return = true;
         }
+        return $return;
+    }
 
-        //it is another way to check if plugin is active
-        /*
-        if( is_plugin_active( 'cookie-notice/cookie-notice.php' ) ) {
+    //Check if learndash plugin is active
+    public static function is_learndash_plugin_enabled() {
+        $return = false;
+        if( is_plugin_active( 'sfwd-lms/sfwd_lms.php' ) ) {
             $return = true;
-        }*/
+        }
+        return $return;
+    }
+
+    //Check if elementor plugin is active
+    public static function is_elementor_plugin_enabled() {
+        $return = false;
+        if( is_plugin_active( 'elementor/elementor.php' ) ) {
+            $return = true;
+        }
+        return $return;
+    }
+
+    //Check if elementor plugin is active
+    public static function is_elementor_pro_plugin_enabled() {
+        $return = false;
+        if( is_plugin_active( 'elementor-pro/elementor-pro.php' ) ) {
+            $return = true;
+        }
         return $return;
     }
 

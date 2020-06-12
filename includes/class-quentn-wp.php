@@ -172,8 +172,15 @@ class Quentn_Wp {
         }
 
         include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
-        if( is_plugin_active( 'sfwd-lms/sfwd_lms.php' ) ) {
+        if( Helper::is_learndash_plugin_enabled() ) {
             require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-quentn-wp-learndash.php';
+        }
+
+        /**
+         * Add classes responsible to handle elementor integration
+         */
+        if( Helper::is_elementor_plugin_enabled() && Helper::is_elementor_pro_plugin_enabled() && defined('ELEMENTOR_VERSION' ) && ELEMENTOR_VERSION >= '2.0.0' ) {
+           require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-quentn-wp-elementor.php';
         }
 
 		$this->loader = new Quentn_Wp_Loader();

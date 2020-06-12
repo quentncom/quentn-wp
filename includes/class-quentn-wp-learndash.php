@@ -13,10 +13,10 @@ class Quentn_Wp_Learndash
     public function __construct() {
 
         if ( is_multisite() ) {
-            add_action( 'wpmu_activate_user', array($this, 'quentn_learndash_courses' ) );
-            add_action( 'add_user_to_blog', array($this, 'quentn_learndash_courses' ) );
+            add_action( 'wpmu_activate_user', array( $this, 'quentn_learndash_courses' ) );
+            add_action( 'add_user_to_blog', array( $this, 'quentn_learndash_courses' ) );
         } else {
-            add_action( 'user_register', array($this, 'quentn_learndash_courses', 100, 2 ) );
+            add_action( 'user_register', array( $this, 'quentn_learndash_courses', 100, 2 ) );
         }
 
         //add learndash settings

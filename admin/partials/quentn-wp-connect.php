@@ -11,6 +11,17 @@ if ( isset( $_GET['update'] ) ) {
     if($action == 'remove-quentn-account') {
         delete_option('quentn_app_key' );
         delete_option('quentn_base_url' );
+
+        //if elementor pro plugin is enabled, then also delete default quentn elementor api key and url
+        if( Helper::is_elementor_plugin_enabled() && Helper::is_elementor_pro_plugin_enabled() ) {
+            if ( class_exists( 'Quentn_Wp_Elementor_Integration' ) ) {
+                $elementor_api_key = 'elementor_'. Quentn_Wp_Elementor_Integration::OPTION_NAME_API_KEY;
+                $elementor_api_url = 'elementor_'. Quentn_Wp_Elementor_Integration::OPTION_NAME_API_URL;
+
+                delete_option( $elementor_api_key );
+                delete_option( $elementor_api_url );
+            }
+        }
         wp_redirect( esc_url_raw( add_query_arg( ['update' => 'quentn-account-removed' ] ) ) );
         exit;
     }
@@ -88,9 +99,19 @@ if( isset( $_GET['state'] ) ) {
 
     //if authorization is successful
     if($this->api_handler->get_oauth_client()->oauth()->authorize()) {
-        update_option( 'quentn_app_key', $this->api_handler->get_oauth_client()->getApiKey());
-        update_option( 'quentn_base_url', $this->api_handler->get_oauth_client()->getBaseUrl());
+        update_option( 'quentn_app_key', $this->api_handler->get_oauth_client()->getApiKey() );
+        update_option( 'quentn_base_url', $this->api_handler->get_oauth_client()->getBaseUrl() );
 
+        //if elementor pro plugin is enabled, then update default quentn elementor api key and url
+        if( Helper::is_elementor_plugin_enabled() && Helper::is_elementor_pro_plugin_enabled() ) {
+            if ( class_exists( 'Quentn_Wp_Elementor_Integration' ) ) {
+                $elementor_api_key = 'elementor_'. Quentn_Wp_Elementor_Integration::OPTION_NAME_API_KEY;
+                $elementor_api_url = 'elementor_'. Quentn_Wp_Elementor_Integration::OPTION_NAME_API_URL;
+
+                update_option( $elementor_api_key, $this->api_handler->get_oauth_client()->getApiKey() );
+                update_option( $elementor_api_url, $this->api_handler->get_oauth_client()->getBaseUrl() );
+            }
+        }
         delete_option( 'quentn_client_id');
         delete_option( 'quentn_client_secret');
         wp_redirect( esc_url_raw(add_query_arg(['update' => 'qntn-account-connected' ])) );
