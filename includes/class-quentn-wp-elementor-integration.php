@@ -129,16 +129,6 @@ class Quentn_Wp_Elementor_Integration extends Integration_Base {
             ]
         );
 
-
-        $widget->add_control(
-            'quentn_new_tags',
-            [
-                'label' => __( 'New Tags', 'quentn-wp' ),
-                'type' => Controls_Manager::TEXT,
-                'description' => __( 'Add as many tags as you want, comma separated.', 'quentn-wp' ),
-            ]
-        );
-
         $widget->end_controls_section();
 
     }
@@ -175,8 +165,7 @@ class Quentn_Wp_Elementor_Integration extends Integration_Base {
 
         try {
             $handler = new Quentn_Wp_Elementor_Handler( $api_key, $api_url );
-            $new_terms = explode(",", $form_settings['quentn_new_tags']);
-            $handler->create_subscriber( $subscriber, $form_settings['quentn_list'], $new_terms );
+            $handler->create_subscriber( $subscriber, $form_settings['quentn_list'] );
 
         } catch ( \Exception $exception ) {
             $ajax_handler->add_admin_error_message( 'Quentn ' . $exception->getMessage() );

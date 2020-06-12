@@ -132,36 +132,17 @@ class Quentn_Wp_Elementor_Handler {
 	 * @return array|mixed
 	 * @throws \Exception
 	 */
-	public function create_subscriber( $subscriber_data = [], $quentn_terms = [], $new_terms = []  ) {
+	public function create_subscriber( $subscriber_data = [], $quentn_terms = [] ) {
         $data = array();
         //add ip address and terms to subscriber data
         $subscriber_data['request_ip'] = $_SERVER["REMOTE_ADDR"];
+
         if( ! empty( $quentn_terms ) ) {
             $subscriber_data['terms'] = $quentn_terms;
         }
         $data['contact'] = $subscriber_data;
 
         //add contact at quentn
-        $results = $this->rest_client->post('contact', $data);
-
-        //if contact created successfully
-        if( isset( $results['body']['id'] ) &&  ! empty( $results['body']['id'] ) )  {
-            $contact_id = $results['body']['id'];
-            //add new terms at quentn
-            $add_new_terms = array();
-            if( ! empty( $new_terms ) ) {
-                foreach ( $new_terms as $new_term ) {
-                    $term_response = $this->rest_client->post( 'terms', array( 'name' => $new_term ) );
-                    if ( isset( $term_response['body']['id'] ) && ! in_array( $term_response['body']['id'], $quentn_terms ) ) {
-                        $add_new_terms[] = $term_response['body']['id'];
-                    }
-                }
-            }
-
-            if( ! empty( $add_new_terms ) ) {
-                $request_body = wp_json_encode( array_values( $add_new_terms ) );
-                $this->rest_client->request( 'PUT', 'contact/'.$contact_id.'/terms', $request_body );
-            }
-        }
+        $this->rest_client->post( 'contact', $data );
 	}
 }
