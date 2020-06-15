@@ -443,7 +443,8 @@ class Quentn_Wp_Elementor_Integration extends Integration_Base {
                     'label' => __( 'API URL', 'quentn-wp' ),
                     'field_args' => [
                         'type' => 'url',
-                        'desc' => sprintf( __( 'To integrate with our forms you need an <a href="%s" target="_blank">API Key</a>.', 'quentn-wp' ), 'https://quentn.com/preise' ),
+                        'desc' => sprintf( __( 'To integrate with our forms you need an %s', 'quentn-wp' ), '<a href="https://quentn.com/preise" target="_blank">'.__( "API Key", "quentn-wp" ).'</a>.' ) ,
+                        
                     ],
                 ],
                 'validate_api_data' => [

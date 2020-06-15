@@ -486,3 +486,46 @@ msgstr ""
 #: includes/class-quentn-wp-restrict-access.php:94
 msgid "Access denied"
 msgstr ""
+
+#: includes/class-quentn-wp-elementor-integration.php:66
+msgid "API Credentials"
+msgstr ""
+
+#: includes/class-quentn-wp-elementor-integration.php:82
+msgid "Use this field to set a custom API Key for the current form"
+msgstr ""
+
+#: includes/class-quentn-wp-elementor-integration.php:94
+msgid "Use this field to set a custom API URL for the current form"
+msgstr ""
+
+#: includes/class-quentn-wp-elementor-integration.php:104
+msgid "Add Tags"
+msgstr ""
+
+#: includes/class-quentn-wp-elementor-integration.php:116
+msgid "Field Mapping"
+msgstr ""
+
+
+msgid "New Tags"
+msgstr ""
+
+msgid "Add as many tags as you want, comma separated"
+msgstr ""
+
+#: includes/class-quentn-wp-elementor-integration.php:154
+msgid "Quentn Integration requires an email field"
+msgstr ""
+
+#: includes/class-quentn-wp-elementor-integration.php:154
+msgid "To integrate with our forms you need an %s"
+msgstr ""
+
+#: includes/class-quentn-wp-elementor-integration.php:154
+msgid "API Key"
+msgstr ""
+
+#: includes/class-quentn-wp-elementor-integration.php:452
+msgid "Validate API Key"
+msgstr ""
