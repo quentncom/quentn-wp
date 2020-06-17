@@ -52,8 +52,8 @@ class Quentn_Wp_Elementor_Field_Mapping extends Control_Repeater {
         foreach ( $mappable_fields as $field_id => $field_label ){
             $fields[] = [
                 'remote_id'         => $field_id,
-                'remote_label'      => $field_label,
-                'remote_type'       => 'text',
+                'remote_label'      => $field_label['label'],
+                'remote_type'       => $field_label['type'],
                 'remote_required'   => in_array( $field_id, [ 'mail' ] ),
             ];
         }
@@ -79,40 +79,41 @@ class Quentn_Wp_Elementor_Field_Mapping extends Control_Repeater {
 
         return $types[ $type ];
     }
-        /**
-         * Get a list of mappable fields
-         *
-         * @param array $extra
-         *
-         * @return array
-         */
+
+    /**
+     * Get a list of mappable fields
+     *
+     * @param array $extra
+     *
+     * @return array
+     */
     private function get_mappable_fields( $extra = [] ) {
 
         $defaults = [
-            'title'               => __( 'Title' ),
-            'title2'              => __( 'Title 2' ),
-            'full_name'           => __( 'Full Name' ),
-            'first_name'          => __( 'First Name' ),
-            'family_name'         => __( 'Family Name' ),
-            'company'             => __( 'Company' ),
-            'job_title'           => __( 'Job title' ),
-            'mail'                => __( 'Primary email' ),
-            'mail2'               => __( 'Secondary email' ),
-            'phone_type'          => __( 'Primary Phone Type' ),
-            'phone'               => __( 'Primary phone number' ),
-            'phone2_type'         => __( 'Secondary Primary phone number' ),
-            'phone2'              => __( 'Secondary phone number' ),
-            'fax'                 => __( 'Fax number' ),
-            'skype'               => __( 'Skype name' ),
-            'fb'                  => __( 'Facebook' ),
-            'twitter'             => __( 'Twitter' ),
-            'ba_street'           => __( 'Street (Billing Address)' ),
-            'ba_street2'          => __( 'Street 2 (Billing Address)' ),
-            'ba_city'             => __( 'City (Billing Address)' ),
-            'ba_postal_code'      => __( 'Postal Code (Billing Address)' ),
-            'ba_state'            => __( 'State (Billing Address)' ),
-            'ba_country'          => __( 'Country ' ),
-            'date_of_birth'       => __( 'Date of birth' ),
+            'title'               => array( 'label' => __( 'Title' ), 'type' => 'text' ),
+            'title2'              => array( 'label' => __( 'Title 2' ), 'type' => 'text' ),
+            'full_name'           => array( 'label' => __( 'Full Name' ), 'type' => 'text' ),
+            'first_name'          => array( 'label' => __( 'First Name' ), 'type' => 'text' ),
+            'family_name'         => array( 'label' => __( 'Family Name' ), 'type' => 'text' ),
+            'company'             => array( 'label' => __( 'Company' ), 'type' => 'text' ),
+            'job_title'           => array( 'label' => __( 'Job title' ), 'type' => 'text' ),
+            'mail'                => array( 'label' => __( 'Primary email' ), 'type' => 'email' ),
+            'mail2'               => array( 'label' => __( 'Secondary email' ), 'type' => 'email' ),
+            'phone_type'          => array( 'label' => __( 'Primary Phone Type' ), 'type' => 'text' ),
+            'phone'               => array( 'label' => __( 'Primary phone number' ), 'type' => 'text' ),
+            'phone2_type'         => array( 'label' => __( 'Secondary Primary phone number' ), 'type' => 'text' ),
+            'phone2'              => array( 'label' => __( 'Secondary phone number' ), 'type' => 'text' ),
+            'fax'                 => array( 'label' => __( 'Fax number' ), 'type' => 'text' ),
+            'skype'               => array( 'label' => __( 'Skype name' ), 'type' => 'text' ),
+            'fb'                  => array( 'label' => __( 'Facebook' ), 'type' => 'text' ),
+            'twitter'             => array( 'label' => __( 'Twitter' ), 'type' => 'text' ),
+            'ba_street'           => array( 'label' => __( 'Street (Billing Address)' ), 'type' => 'text' ),
+            'ba_street2'          => array( 'label' => __( 'Street 2 (Billing Address)' ), 'type' => 'text' ),
+            'ba_city'             => array( 'label' => __( 'City (Billing Address)' ), 'type' => 'text' ),
+            'ba_postal_code'      => array( 'label' => __( 'Postal Code (Billing Address)' ), 'type' => 'text' ),
+            'ba_state'            => array( 'label' => __( 'State (Billing Address)' ), 'type' => 'text' ),
+            'ba_country'          => array( 'label' => __( 'Country' ), 'type' => 'text' ),
+            'date_of_birth'       => array( 'label' => __( 'Date of birth' ), 'type' => 'date' ),
         ];
 
         return $fields = array_merge( $defaults, $extra );

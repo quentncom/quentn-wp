@@ -195,25 +195,16 @@ class Quentn_Wp_Elementor_Integration extends Integration_Base {
     }
 
 
-
-    /**
+    /*
+     * get local_ids with their values e.g  ['name' => 'Smith', 'email' => 'smith@example.com', 'address' => 'street address etc' ]
+     *
      * @param Form_Record $record
      *
      * @return array
      */
-
-    /*
-     * get local_ids with their values
-     * $fileds = [
-     *      'name' => 'Smith',
-     *      'email' => 'smith@example.com',
-     *      'message' => 'message text',
-     *      'field_1' => 'street address etc',
-     *   ]
-     */
     private function get_normalized_fields( Form_Record $record )
     {
-        $fields = [];
+        $fields = array();
         $raw_fields = $record->get( 'fields' );
         foreach ( $raw_fields as $id => $field ) {
             if ($field['type'] == 'checkbox') {
@@ -225,20 +216,12 @@ class Quentn_Wp_Elementor_Integration extends Integration_Base {
         return $fields;
     }
 
-    /**
+    /*
+     * map local_ids with quentn id's e.g [ 'name' => 'first_name', 'email' => 'mail', 'address' => 'ba_street']
+     *
      * @param Form_Record $record
      *
      * @return array
-     */
-
-    /*
-     * map local_ids with quentn id's
-     * $map = [
-     *      'name' => 'first_name',
-     *      'email' => 'mail',
-     *      'message' => 'company',
-     *      'field_1' => 'ba_street',
-     *   ]
      */
     private function map_fields( Form_Record $record ) {
         $map = [];
@@ -254,38 +237,12 @@ class Quentn_Wp_Elementor_Integration extends Integration_Base {
     }
 
     /**
-     *  /**
-     * $fileds = [
-     *      'name' => 'Smith',
-     *      'email' => 'smith@example.com',
-     *      'message' => 'message text',
-     *      'field_1' => 'street address etc',
-     *   ]
-     *
-     * $map = [
-     *      'name' => 'first_name',
-     *      'email' => 'mail',
-     *      'message' => 'company',
-     *      'field_1' => 'ba_street',
-     *   ]
-     *
-     *
-     * return = [
-     *      'first_name' => 'Smith',
-     *      'mail' => 'smith@example.com',
-     *      'company' => 'message text',
-     *      'ba_street' => 'street address etc',
-     *   ]
-     */
-
-
-    /**
      * Generate a contact from given associative array and a field map.
      *
-     * @param $fields
-     * @param $map
+     * @param $fields e.g ['name' => 'Smith', 'email' => 'smith@example.com', 'address' => 'street address etc' ]
+     * @param $map  e.g [ 'name' => 'first_name', 'email' => 'mail', 'address' => 'ba_street']
      *
-     * @return Contact|false
+     * @return array e.g [ 'first_name' => 'Smith', 'mail' => 'smith@example.com' ]
      */
     private function generate_contact_with_map( $fields, $map ) {
         $args  = [];

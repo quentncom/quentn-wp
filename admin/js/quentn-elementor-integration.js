@@ -125,6 +125,7 @@
                 var model = {
                     local_id : field.get( 'custom_id' ),
                     local_label : field.get( 'field_label' ),
+                    local_type : field.get( 'field_type' ),
                     remote_id: savedMapObject[field.get( 'custom_id' )] ? savedMapObject[ field.get( 'custom_id' ) ] : ''
                 };
 
@@ -155,6 +156,22 @@
                     label = view.model.get( 'local_label' );
 
                 _.each( self.getFieldOptions(), function (model, index ) {
+
+                    var remoteType = model.remote_type;
+                    var localType = view.model.get('local_type');
+
+                    if ( localType == 'checkbox'  && remoteType != 'options_buttons' ) {
+                        return;
+                    }
+                    if ( ( localType == 'select' || localType == 'radio' )  && remoteType != 'options_select' ) {
+                        return;
+                    }
+                    if (  localType == 'date' && remoteType != 'date' ) {
+                        return;
+                    }
+                    if (  localType == 'email' && remoteType != 'email' ) {
+                        return;
+                    }
                     options[ model.remote_id ] = model.remote_label || 'Field #' + (index + 1);
                 });
 
