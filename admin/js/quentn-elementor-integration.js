@@ -49,6 +49,7 @@
             }
 
             self.addControlSpinner('quentn_list');
+            self.addControlSpinner('quentn_fields_map');
 
             var cacheKey = this.getCacheKey({
                 controls: [apiCredControlView.getControlValue(), apiUrlControlView.getControlValue(), apikeyControlView.getControlValue()]
@@ -157,19 +158,17 @@
 
                 _.each( self.getFieldOptions(), function (model, index ) {
 
+                    var localType  = view.model.get('local_type');
                     var remoteType = model.remote_type;
-                    var localType = view.model.get('local_type');
 
-                    if ( localType == 'checkbox'  && remoteType != 'options_buttons' ) {
-                        return;
+                    //we use radio and select alternatively
+                    if (localType === 'radio' ) {
+                        localType = 'select';
                     }
-                    if ( ( localType == 'select' || localType == 'radio' )  && remoteType != 'options_select' ) {
-                        return;
+                    if ( localType === 'url' || localType === 'textarea' || localType === 'html' ) {
+                        localType = 'text';
                     }
-                    if (  localType == 'date' && remoteType != 'date' ) {
-                        return;
-                    }
-                    if (  localType == 'email' && remoteType != 'email' ) {
+                    if ( localType !== remoteType ) {
                         return;
                     }
                     options[ model.remote_id ] = model.remote_label || 'Field #' + (index + 1);

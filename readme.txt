@@ -1,9 +1,9 @@
 === Quentn WP ===
 Contributors: quentn
-Tags: Quentn, email, email marketing tool, integration, email automation, marketing automation, countdown, page restriction
+Tags: Quentn, countdown, page restriction email, elementor integration, email marketing tool, integration, email automation, marketing automation,
 Requires at least: 4.1
 Tested up to: 5.2
-Stable tag: 1.0.5
+Stable tag: 1.0.6
 Requires PHP: 5.6.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -12,7 +12,7 @@ Restrict access to specific pages, create access links and display countdowns. C
 
 == Description ==
 
-Quentn is an intuitive, user-friendly and high-performance email marketing tool that significantly simplifies and improves the marketing of small and medium-sized companies. This plugin allows you to restrict access to specific pages, create custom access links and create dynamic page countdowns. Optionally, you can connect your Quentn account to your WordPress installation to share contacts and manage access restrictions through Quentn.
+Quentn plugin allows you to restrict access to specific pages, create custom access links and create dynamic page countdowns. Optionally, you can connect your Quentn account to your WordPress installation to share contacts and manage access restrictions through Quentn.
 
 The Quentn WordPress plugin offers a variety of functions:
 
@@ -20,6 +20,7 @@ The Quentn WordPress plugin offers a variety of functions:
 *   **Personalization**  By using placeholders, you can address contacts by name. Even unknown contacts can be addressed individually (but not by name)
 *   **Countdown** The various countdown options can contribute to lead generation and increase the conversion rate
 *   **Integration and tagging in Quentn**  Quentn contacts can easily be sent to your Wordpress page via a link. Wordpress users (e.g. forum members, employees, etc.) can also be sent and tagged in Quentn - without having to rely on third-party providers such as Zapier
+*   **Elementor Integration**  If you are using Elementor Pro, You can send contacts from Elementor forms to your Quentn account. You can apply tags and can easily map Elementor form fields to contact fields in the Quentn.
 *   **LearnDash Integration** You can set default courses for all user roles which will be assigned when user gets that role.
 
 For more info, vist the [Quentn WordPress plugin Documentation](https://docs.quentn.com/de/plugins/beta-quentn-wordpress-plugin).
@@ -64,6 +65,9 @@ Answer to foo bar dilemma.
 
 == Changelog ==
 
+= 1.0.6 =
+* Integrate Elementor PRO forms with Quentn.
+
 = 1.0.5 =
 * Fix: Better data sanitation and validation.
 * Add css files within the plugin.
@@ -88,6 +92,9 @@ Answer to foo bar dilemma.
 * Initial version.
 
 == Upgrade Notice ==
+
+= 1.0.6 =
+Thanks for using Quentn Plugin! Please update the plugin to integrate Elementor PRO forms with Quentn.
 
 = 1.0.5 =
 Thanks for using Quentn Plugin! This version has some improvements in design and security. Please Upgrade immediately.

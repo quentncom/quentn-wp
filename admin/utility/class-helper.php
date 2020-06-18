@@ -104,12 +104,22 @@ class Helper
 
     //get current  browser url
     public static function  get_current_url() {
-        if( is_ssl() ) {
-            $http = 'https://';
-        }else {
-            $http = 'http://';
-        }
+        $http = self::get_protocol();
         return $http . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+    }
+
+    //get current  host
+    public static function  get_current_host_name() {
+        $http = self::get_protocol();
+        return $http . $_SERVER['SERVER_NAME'];
+    }
+
+    //get current protocol
+    public static function  get_protocol() {
+        if( is_ssl() ) {
+            return 'https://';
+        }
+        return 'http://';
     }
 
     /**

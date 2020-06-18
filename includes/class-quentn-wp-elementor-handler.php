@@ -95,28 +95,21 @@ class Quentn_Wp_Elementor_Handler {
                 $custom_fields[] = [
                     'remote_id'       => $custom_field['field_name'],
                     'remote_label'    => $custom_field['label'],
-                    'remote_type'     => $custom_field['type'],
-                    'remote_required' => ( $custom_field['label'] ) ? true : false,
+                    'remote_type'     => $this->normalize_type( $custom_field['type'] ),
+                    'remote_required' => ( $custom_field['required'] ) ? true : false,
                 ];
             }
         }
         return $custom_fields;
 	}
 
-	//todo-element
 	private function normalize_type( $type ) {
 		static $types = [
-			'text' => 'text',
+			'text_textfield' => 'text',
 			'number' => 'number',
-			'address' => 'text',
-			'phone' => 'text',
-			'date' => 'text',
-			'url' => 'url',
-			'imageurl' => 'url',
-			'radio' => 'radio',
-			'dropdown' => 'select',
-			'birthday' => 'text',
-			'zip' => 'text',
+			'options_buttons' => 'checkbox',
+			'options_select' => 'select',
+			'checkbox_confirmation' => 'acceptance',
 		];
 
 		return $types[ $type ];

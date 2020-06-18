@@ -90,8 +90,8 @@ class Quentn_Wp_Elementor_Field_Mapping extends Control_Repeater {
     private function get_mappable_fields( $extra = [] ) {
 
         $defaults = [
-            'title'               => array( 'label' => __( 'Title' ), 'type' => 'text' ),
-            'title2'              => array( 'label' => __( 'Title 2' ), 'type' => 'text' ),
+            'title'               => array( 'label' => __( 'Title' ), 'type' => 'select' ),
+            'title2'              => array( 'label' => __( 'Title 2' ), 'type' => 'select' ),
             'full_name'           => array( 'label' => __( 'Full Name' ), 'type' => 'text' ),
             'first_name'          => array( 'label' => __( 'First Name' ), 'type' => 'text' ),
             'family_name'         => array( 'label' => __( 'Family Name' ), 'type' => 'text' ),
@@ -99,10 +99,10 @@ class Quentn_Wp_Elementor_Field_Mapping extends Control_Repeater {
             'job_title'           => array( 'label' => __( 'Job title' ), 'type' => 'text' ),
             'mail'                => array( 'label' => __( 'Primary email' ), 'type' => 'email' ),
             'mail2'               => array( 'label' => __( 'Secondary email' ), 'type' => 'email' ),
-            'phone_type'          => array( 'label' => __( 'Primary Phone Type' ), 'type' => 'text' ),
-            'phone'               => array( 'label' => __( 'Primary phone number' ), 'type' => 'text' ),
-            'phone2_type'         => array( 'label' => __( 'Secondary Primary phone number' ), 'type' => 'text' ),
-            'phone2'              => array( 'label' => __( 'Secondary phone number' ), 'type' => 'text' ),
+            'phone_type'          => array( 'label' => __( 'Primary Phone Type' ), 'type' => 'select' ),
+            'phone'               => array( 'label' => __( 'Primary phone number' ), 'type' => 'tel' ),
+            'phone2_type'         => array( 'label' => __( 'Secondary Primary phone number' ), 'type' => 'select' ),
+            'phone2'              => array( 'label' => __( 'Secondary phone number' ), 'type' => 'tel' ),
             'fax'                 => array( 'label' => __( 'Fax number' ), 'type' => 'text' ),
             'skype'               => array( 'label' => __( 'Skype name' ), 'type' => 'text' ),
             'fb'                  => array( 'label' => __( 'Facebook' ), 'type' => 'text' ),

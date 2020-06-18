@@ -107,6 +107,7 @@ class Quentn_Wp_Elementor_Integration extends Integration_Base {
                 'options' =>  [],
                 'multiple' => true,
                 'label_block' => true,
+                'render_type' => 'none',
             ]
         );
 
@@ -209,6 +210,12 @@ class Quentn_Wp_Elementor_Integration extends Integration_Base {
         foreach ( $raw_fields as $id => $field ) {
             if ($field['type'] == 'checkbox') {
                 $fields[ $id ] = explode(",", $field['value'] );
+            } elseif ($field['type'] == 'acceptance' && $field['value'] == 'on') {
+                $fields[ $id ] = array(
+                    "ip" => isset( $_SERVER['HTTP_CLIENT_IP'] ) ? $_SERVER['HTTP_CLIENT_IP'] : isset( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR'],
+                    "created" => time(),
+                    "source" => Helper::get_current_host_name(),
+                );
             } else {
                 $fields[ $id ] = $field['value'];
             }
