@@ -131,7 +131,6 @@ class Quentn_Wp_Elementor_Integration extends Integration_Base {
         );
 
         $widget->end_controls_section();
-
     }
 
     public function on_export( $element ) {
@@ -208,9 +207,9 @@ class Quentn_Wp_Elementor_Integration extends Integration_Base {
         $fields = array();
         $raw_fields = $record->get( 'fields' );
         foreach ( $raw_fields as $id => $field ) {
-            if ($field['type'] == 'checkbox') {
-                $fields[ $id ] = explode(",", $field['value'] );
-            } elseif ($field['type'] == 'acceptance' && $field['value'] == 'on') {
+            if ( $field['type'] == 'checkbox' ) {
+                $fields[ $id ] = explode( ",", $field['value'] );
+            } elseif ( $field['type'] == 'acceptance' && $field['value'] == 'on' ) {
                 $fields[ $id ] = array(
                     "ip" => isset( $_SERVER['HTTP_CLIENT_IP'] ) ? $_SERVER['HTTP_CLIENT_IP'] : isset( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR'],
                     "created" => time(),
@@ -231,13 +230,12 @@ class Quentn_Wp_Elementor_Integration extends Integration_Base {
      * @return array
      */
     private function map_fields( Form_Record $record ) {
-        $map = [];
+        $map = array();
 
         $fields_map = $record->get_form_settings( 'quentn_fields_map' );
         foreach ( $fields_map as $map_item ) {
-
-            if ( ! empty( $map_item[ 'remote_id' ] ) ){
-                $map[ $map_item[ 'local_id' ] ] = $map_item[ 'remote_id' ];
+            if ( ! empty( $map_item['remote_id'] ) ) {
+                $map[$map_item['local_id']] = $map_item['remote_id'];
             }
         }
         return $map;
@@ -252,7 +250,7 @@ class Quentn_Wp_Elementor_Integration extends Integration_Base {
      * @return array e.g [ 'first_name' => 'Smith', 'mail' => 'smith@example.com' ]
      */
     private function generate_contact_with_map( $fields, $map ) {
-        $args  = [];
+        $args  = array();
 
         foreach ( $fields as $column => $value ) {
 
@@ -297,7 +295,7 @@ class Quentn_Wp_Elementor_Integration extends Integration_Base {
                     $args[ $field ] = sanitize_email( $value );
                     break;
                 case 'date_of_birth':
-                    if( $this->isValidDate($value) ) {
+                    if( $this->isValidDate( $value ) ) {
                         $args[ $field ] = $value;
                     }
                    break;
@@ -305,7 +303,7 @@ class Quentn_Wp_Elementor_Integration extends Integration_Base {
                     if (is_array($value)) {
                         $args[ $field ] = array_map( 'sanitize_text_field', $value );
                     } else {
-                        $args[ $field ] = sanitize_text_field($value);
+                        $args[ $field ] = sanitize_text_field( $value );
                     }
                     break;
             }
@@ -313,19 +311,18 @@ class Quentn_Wp_Elementor_Integration extends Integration_Base {
         }
 
         return $args;
-
     }
 
-    private function isValidDate($value)
+    private function isValidDate( $value )
     {
-        if (!$value) {
+        if ( ! $value ) {
             return false;
         }
 
         try {
-            new \DateTime($value);
+            new \DateTime( $value );
             return true;
-        } catch (\Exception $e) {
+        } catch ( \Exception $e ) {
             return false;
         }
     }
@@ -339,13 +336,13 @@ class Quentn_Wp_Elementor_Integration extends Integration_Base {
      * @return array
      */
     private function split_name( $name ) {
-        $_name = ucwords(preg_replace('/\s+/', ' ', $name));
-        $name_array = explode(' ', $_name);
+        $_name = ucwords( preg_replace( '/\s+/', ' ', $name ) );
+        $name_array = explode( ' ', $_name );
         $first_name = $name_array[0];
         $last_name = "";
-        unset($name_array[0]);
-        if (count($name_array)) {
-            $last_name = implode(' ', $name_array);
+        unset( $name_array[0] );
+        if ( count( $name_array ) ) {
+            $last_name = implode( ' ', $name_array );
         }
         return array( $first_name, $last_name );
     }

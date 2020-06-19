@@ -69,10 +69,10 @@ class Quentn_Wp_Elementor_Handler {
                 $terms[ $term['id'] ] = $term['name'];
             }
         }
-		$return_array = [
+		$return_array = array(
 			'terms' => $terms,
 			'fields' => $this->get_custom_fields(),
-		];
+        );
 
 		return $return_array;
 	}
@@ -106,6 +106,7 @@ class Quentn_Wp_Elementor_Handler {
 	private function normalize_type( $type ) {
 		static $types = [
 			'text_textfield' => 'text',
+			'text' => 'text',
 			'number' => 'number',
 			'options_buttons' => 'checkbox',
 			'options_select' => 'select',
@@ -133,6 +134,7 @@ class Quentn_Wp_Elementor_Handler {
         if( ! empty( $quentn_terms ) ) {
             $subscriber_data['terms'] = $quentn_terms;
         }
+
         $data['contact'] = $subscriber_data;
 
         //add contact at quentn

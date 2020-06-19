@@ -43,41 +43,23 @@ class Quentn_Wp_Elementor_Field_Mapping extends Control_Repeater {
 
 	public function enqueue()
     {
-        wp_register_script( 'quentn.elementor.integration.js', QUENTN_WP_PLUGIN_URL . 'admin/js/quentn-elementor-integration.js', array(), '', true  );
+        wp_register_script( 'quentn.elementor.integration.js', QUENTN_WP_PLUGIN_URL . 'admin/js/quentn-elementor-integration.js', array(), '', true );
         wp_enqueue_script( 'quentn.elementor.integration.js' );
 
         $mappable_fields = $this->get_mappable_fields();
         $fields = [];
 
-        foreach ( $mappable_fields as $field_id => $field_label ){
+        foreach ( $mappable_fields as $field_id => $field_label ) {
             $fields[] = [
                 'remote_id'         => $field_id,
                 'remote_label'      => $field_label['label'],
                 'remote_type'       => $field_label['type'],
-                'remote_required'   => in_array( $field_id, [ 'mail' ] ),
+                'remote_required'   => in_array( $field_id, ['mail'] ),
             ];
         }
         wp_localize_script( 'quentn.elementor.integration.js', 'QntnMappableFields', [
             'fields' => $fields
         ] );
-    }
-
-    private function normalize_type( $type ) {
-        static $types = [
-            'text' => 'text',
-            'number' => 'number',
-            'address' => 'text',
-            'phone' => 'text',
-            'date' => 'text',
-            'url' => 'url',
-            'imageurl' => 'url',
-            'radio' => 'radio',
-            'dropdown' => 'select',
-            'birthday' => 'text',
-            'zip' => 'text',
-        ];
-
-        return $types[ $type ];
     }
 
     /**

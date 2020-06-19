@@ -65,9 +65,8 @@ class Quentn_Wp_Elementor
     {
         $quentn_action = new \Quentn_Wp_Elementor_Integration;
         // Register the action with form widget
-        \ElementorPro\Plugin::instance()->modules_manager->get_modules('forms')->add_form_action( $quentn_action->get_name(), $quentn_action);
+        \ElementorPro\Plugin::instance()->modules_manager->get_modules('forms')->add_form_action( $quentn_action->get_name(), $quentn_action );
     }
-
 }
 
 Quentn_Wp_Elementor::get_instance();
