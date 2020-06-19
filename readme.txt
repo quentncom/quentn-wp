@@ -62,6 +62,7 @@ Answer to foo bar dilemma.
 1. Countdown
 2. Page restrictions settings
 3. Select Quentn Tags for User roles
+4. Integration Elementor PRO forms with Quentn
 
 == Changelog ==
 
