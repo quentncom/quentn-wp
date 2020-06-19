@@ -1,6 +1,6 @@
 === Quentn WP ===
 Contributors: quentn
-Tags: Quentn, countdown, page restriction email, elementor integration, email marketing tool, integration, email automation, marketing automation,
+Tags: Quentn, countdown, page restriction, email, elementor integration, email marketing tool, integration, email automation, marketing automation,
 Requires at least: 4.1
 Tested up to: 5.4.2
 Stable tag: 1.0.6
