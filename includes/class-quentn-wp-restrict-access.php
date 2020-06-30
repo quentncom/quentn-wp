@@ -7,12 +7,12 @@ class Quentn_Wp_Restrict_Access
      * Initialize the class and set its properties.
      */
     public function __construct() {
-        add_shortcode( 'quentn_flipclock', array($this, 'get_flipclock_shortcode'));
-        add_filter( 'the_content', array($this, 'quentn_content_permission_check'), PHP_INT_MAX);
+        add_shortcode( 'quentn_flipclock', array($this, 'get_flipclock_shortcode' ) );
+        add_filter( 'the_content', array( $this, 'quentn_content_permission_check' ), PHP_INT_MAX );
         //restrict content in case page is build using thrive template builder
-        add_filter( 'tve_landing_page_content', array($this, 'quentn_content_permission_check'), PHP_INT_MAX);
+        add_filter( 'tve_landing_page_content', array( $this, 'quentn_content_permission_check' ), PHP_INT_MAX );
 
-        add_action('wp_head', array( $this, 'set_countdown_clock' ) );
+        add_action( 'wp_head', array( $this, 'set_countdown_clock' ) );
     }
 
     /**
@@ -23,7 +23,7 @@ class Quentn_Wp_Restrict_Access
      * @return string
      */
      public function get_flipclock_shortcode() {
-         if( current_user_can( 'edit_pages' )  ) {
+         if( current_user_can( 'edit_pages' ) ) {
              return '';
          }
          return "<div class='quentn-flipclock quentn-shortcode'></div>";

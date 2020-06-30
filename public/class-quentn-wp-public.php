@@ -106,8 +106,11 @@ class Quentn_Wp_Public {
 		 */
 
         wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/quentn-wp-public.js', array( 'jquery' ), $this->version, false );
-        //wp_enqueue_script( 'quentn.custom.front.js', plugin_dir_url( __FILE__ ) . 'js/front.js', array( 'jquery' ), $this->version, true );
         wp_enqueue_script( 'flipclock.min.js', plugin_dir_url( __FILE__ ) . 'js/flipclock.min.js', array( 'jquery' ), $this->version, true );
+
+        if( Helper::is_elementor_plugin_enabled() && Helper::is_elementor_pro_plugin_enabled() ) {
+            wp_enqueue_script( 'quentn-elementor-form-autofill.js', plugin_dir_url( __FILE__ ) . 'js/quentn-elementor-form-autofill.js', array( 'jquery' ), $this->version, true );
+        }
 
 	}
 

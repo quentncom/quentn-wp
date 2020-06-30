@@ -17,10 +17,64 @@ class Quentn_Wp_Elementor_Integration extends Integration_Base {
 
     public function __construct() {
         if ( is_admin() ) {
-            add_action( 'elementor/admin/after_create_settings/' . Settings::PAGE_ID, [ $this, 'register_admin_fields' ], 15 );
-            add_action( 'plugins_loaded', [ $this, 'add_quentn_action' ], 15 );
+            add_action( 'elementor/admin/after_create_settings/' . Settings::PAGE_ID, array( $this, 'register_admin_fields' ), 15 );
+            add_action( 'plugins_loaded', array( $this, 'add_quentn_action' ), 15 );
         }
-        add_action( 'wp_ajax_' . self::OPTION_NAME_API_KEY . '_validate', [ $this, 'ajax_validate_api_token' ] );
+        add_action( 'wp_ajax_' . self::OPTION_NAME_API_KEY . '_validate', array( $this, 'ajax_validate_api_token' ) );
+
+        // Add attribute to elementor form field
+        add_filter( 'elementor_pro/forms/render/item', array( $this, 'add_quentn_data_attribute' ), 10, 3 );
+        add_filter( 'elementor_pro/forms/render/item/checkbox', array( $this, 'add_quentn_data_attribute_checkbox_radio' ), 10, 3 );
+        add_filter( 'elementor_pro/forms/render/item/radio', array( $this, 'add_quentn_data_attribute_checkbox_radio' ), 10, 3 );
+    }
+
+    /*
+     * Add data attribute to Elementor Pro form fields
+     */
+    public function add_quentn_data_attribute( $field, $field_index, $form_widget ) {
+        $settings = $form_widget->get_settings();
+
+        $field_type = $field['field_type'];
+
+        //elementor fields with html type text
+        $element_input = array( 'text', 'email', 'acceptance', 'tel', 'url', 'number', 'date', 'hidden' );
+        if( in_array( $field_type, $element_input ) ) {
+             $element = 'input';
+         } else {
+             $element = $field_type;
+         }
+
+        if ( isset( $settings['quentn_fields_map'] ) && isset( $settings['quentn_fields_map'][$field_index]['remote_id'] ) && ! empty( $settings['quentn_fields_map'][$field_index]['remote_id'] ) ) {
+            $remote_id =  $settings['quentn_fields_map'][$field_index]['remote_id'];
+            //add data attribute to form field
+            $form_widget->add_render_attribute( $element . $field_index,
+                [
+                    'data-qntn-field-name' => $remote_id,
+                ]
+            );
+        }
+        return $field;
+    }
+
+    /*
+     * Add data attribute to Elementor Pro form checkbox and radio fields
+     */
+    public function add_quentn_data_attribute_checkbox_radio( $field, $field_index, $form_widget ) {
+        $settings = $form_widget->get_settings();
+        $options = preg_split( "/\\r\\n|\\r|\\n/", $field['field_options'] );
+        $remote_id =  $settings['quentn_fields_map'][$field_index]['remote_id'];
+                if ( $options ) {
+                    foreach ( $options as $key => $option ) {
+                        $element_id = $field['custom_id'] . $key;
+                        //add data attribute to form field
+                        $form_widget->add_render_attribute( $element_id,
+                            [
+                                'data-qntn-field-name' => $remote_id,
+                            ]
+                        );
+                    }
+                }
+        return $field;
     }
 
     private function get_global_api_key() {
@@ -353,7 +407,7 @@ class Quentn_Wp_Elementor_Integration extends Integration_Base {
      * @return array
      * @throws \Exception
      */
-    public function handle_panel_request(  array $data ) {
+    public function handle_panel_request( array $data ) {
         if ( ! empty( $data['api_cred'] ) && 'default' === $data['api_cred'] ) {
             $api_key = $this->get_global_api_key();
             $api_url = $this->get_global_api_url();
@@ -405,7 +459,7 @@ class Quentn_Wp_Elementor_Integration extends Integration_Base {
                     'field_args' => [
                         'type' => 'url',
                         'desc' => sprintf( __( 'To integrate with our forms you need an %s', 'quentn-wp' ), '<a href="https://quentn.com/preise" target="_blank">'.__( "API Key", "quentn-wp" ).'</a>.' ) ,
-                        
+
                     ],
                 ],
                 'validate_api_data' => [
