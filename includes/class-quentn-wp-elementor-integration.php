@@ -24,8 +24,7 @@ class Quentn_Wp_Elementor_Integration extends Integration_Base {
 
         // Add attribute to elementor form field
         add_filter( 'elementor_pro/forms/render/item', array( $this, 'add_quentn_data_attribute' ), 10, 3 );
-        add_filter( 'elementor_pro/forms/render/item/checkbox', array( $this, 'add_quentn_data_attribute_checkbox_radio' ), 10, 3 );
-        add_filter( 'elementor_pro/forms/render/item/radio', array( $this, 'add_quentn_data_attribute_checkbox_radio' ), 10, 3 );
+        add_filter( 'elementor_pro/forms/render/item/radio', array( $this, 'add_quentn_data_attribute_radio' ), 10, 3 );
     }
 
     /*
@@ -57,9 +56,9 @@ class Quentn_Wp_Elementor_Integration extends Integration_Base {
     }
 
     /*
-     * Add data attribute to Elementor Pro form checkbox and radio fields
+     * Add data attribute to Elementor Pro form radio fields
      */
-    public function add_quentn_data_attribute_checkbox_radio( $field, $field_index, $form_widget ) {
+    public function add_quentn_data_attribute_radio( $field, $field_index, $form_widget ) {
         $settings = $form_widget->get_settings();
         $options = preg_split( "/\\r\\n|\\r|\\n/", $field['field_options'] );
         $remote_id =  $settings['quentn_fields_map'][$field_index]['remote_id'];

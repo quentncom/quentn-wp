@@ -22,13 +22,6 @@
             if ( qntnField.length ) {
                 if ( qntnField.is( ':radio' ) ) {
                     $( 'input[type=radio][name="'+ qntnField.attr('name') + '"][value="'+ value + '"]' ).prop( 'checked', true );
-                } else if ( qntnField.is( ':checkbox' ) &&  value === '1' ) { //if value of checkbox field is 1, we assume it is acceptance field
-                    qntnField.prop( 'checked', true );
-                } else if ( qntnField.is( ':checkbox' ) ) { //take multiple values for checkbox and separate with comma
-                    var options = value.split( "," );
-                    options.forEach( function ( item, index ) {
-                        $('input[type=checkbox][name="'+qntnField.attr( 'name' )+'"][value="' + item + '"]').prop( 'checked', true );
-                    });
                 } else if ( qntnField.is( ':input' ) || qntnField.is( ':select' ) ) {
                     qntnField.val( value );
                 }
