@@ -55,14 +55,12 @@
      * get URL query
      */
     function get_query() {
-        var url_raw = location.search;
-        var url_decode = decodeURIComponent( url_raw );
-        var url = url_decode.replace(/\+/g,' ');
+        var url = location.search;
         var qs = url.substring( url.indexOf( '?' ) + 1 ).split( '&' );
-        for ( var i = 0, result = {}; i < qs.length; i++ ) {
+        for (var i = 0, result = {}; i < qs.length; i++) {
             qs[i] = qs[i].split( '=' );
             if ( qs[i][0] ) {
-                result[qs[i][0]] = qs[i][1] ;
+                result[qs[i][0]] = decodeURIComponent( qs[i][1].replace( /\+/g, ' ' ) );
             }
         }
         return result;
