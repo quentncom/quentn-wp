@@ -95,7 +95,7 @@ class Quentn_Wp_Elementor_Handler {
                 $custom_fields[] = [
                     'remote_id'       => $custom_field['field_name'],
                     'remote_label'    => $custom_field['label'],
-                    'remote_type'     => $this->normalize_type( $custom_field['type'] ),
+                    'remote_type'     => $this->normalize_type( $custom_field['type'], $custom_field['multiple_selection'] ),
                     'remote_required' => ( $custom_field['required'] ) ? true : false,
                 ];
             }
@@ -103,12 +103,12 @@ class Quentn_Wp_Elementor_Handler {
         return $custom_fields;
 	}
 
-	private function normalize_type( $type ) {
-		static $types = [
+	private function normalize_type( $type, $is_multiple_select = false ) {
+		 $types = [
 			'text_textfield' => 'text',
 			'text' => 'text',
 			'number' => 'number',
-			'options_buttons' => 'checkbox',
+			'options_buttons' => ( $is_multiple_select ) ? 'checkbox' : 'select',
 			'options_select' => 'select',
 			'checkbox_confirmation' => 'acceptance',
 		];

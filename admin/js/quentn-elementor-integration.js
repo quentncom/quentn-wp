@@ -123,6 +123,7 @@
                     local_id : field.get( 'custom_id' ),
                     local_label : field.get( 'field_label' ),
                     local_type : field.get( 'field_type' ),
+                    allow_multiple : ( field.get( 'allow_multiple' ) === 'true' ),
                     remote_id: savedMapObject[ field.get( 'custom_id' ) ] ? savedMapObject[ field.get( 'custom_id' ) ] : ''
                 };
 
@@ -156,13 +157,12 @@
                     var localType  = view.model.get( 'local_type' );
                     var remoteType = model.remote_type;
 
-                    //we use radio and select alternatively
-                    if (localType === 'radio' ) {
+                    if ( localType === 'radio' ) { //we use radio and single select alternatively
                         localType = 'select';
-                    }
-
-                    if ( localType === 'url' || localType === 'textarea' || localType === 'hidden' ) {
+                    } else if ( localType === 'url' || localType === 'textarea' || localType === 'hidden' ) {
                         localType = 'text';
+                    } else if ( localType === 'select' &&  view.model.get( 'allow_multiple' ) === true ) { //if elementor select allow multiple values, map it with quentn multiple
+                        localType = 'checkbox';
                     }
 
                     if ( localType !== remoteType ) {
