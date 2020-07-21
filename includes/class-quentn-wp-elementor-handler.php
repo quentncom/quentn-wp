@@ -111,6 +111,7 @@ class Quentn_Wp_Elementor_Handler {
 			'options_buttons' => ( $is_multiple_select ) ? 'checkbox' : 'select',
 			'options_select' => 'select',
 			'checkbox_confirmation' => 'acceptance',
+			'date_popup' => 'date',
 		];
 
 		return $types[ $type ];

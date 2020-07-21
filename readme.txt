@@ -3,7 +3,7 @@ Contributors: quentn
 Tags: Quentn, countdown, page restriction, email, elementor integration, email marketing tool, integration, email automation, marketing automation
 Requires at least: 4.1
 Tested up to: 5.4.2
-Stable tag: 1.0.8
+Stable tag: 1.0.9
 Requires PHP: 5.6.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -66,6 +66,9 @@ Answer to foo bar dilemma.
 
 == Changelog ==
 
+= 1.0.9 =
+* Add support of Quentn datetime field with Elementor forms.
+
 = 1.0.8 =
 * Fixes issue with Elementor radio form fields mapping with Quentn custom fields.
 
@@ -99,6 +102,9 @@ Answer to foo bar dilemma.
 * Initial version.
 
 == Upgrade Notice ==
+
+= 1.0.9 =
+Thanks for using Quentn Plugin! Please update the plugin to add support of Quentn datetime field with Elementor forms.
 
 = 1.0.8 =
 Thanks for using Quentn Plugin! Please update the plugin to fixes issue with Elementor radio form fields mapping with Quentn custom fields.

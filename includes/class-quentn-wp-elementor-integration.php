@@ -249,18 +249,18 @@ class Quentn_Wp_Elementor_Integration extends Integration_Base {
 
 
     /*
-     * get local_ids with their values e.g  ['name' => 'Smith', 'email' => 'smith@example.com', 'address' => 'street address etc' ]
+     * get local_ids with their values
      *
      * @param Form_Record $record
      *
-     * @return array
+     * @return array  e.g  ['name' => 'Smith', 'email' => 'smith@example.com', 'address' => 'street address etc' ]
      */
     private function get_normalized_fields( Form_Record $record )
     {
         $fields = array();
         $raw_fields = $record->get( 'fields' );
         foreach ( $raw_fields as $id => $field ) {
-            if ( $field['type'] == 'checkbox' ) {
+            if ( $field['type'] == 'checkbox' ) { //convert multi select values into array
                 $fields[ $id ] = explode( ",", $field['value'] );
             } elseif ( $field['type'] == 'acceptance' && $field['value'] == 'on' ) {
                 $fields[ $id ] = array(
@@ -316,6 +316,12 @@ class Quentn_Wp_Elementor_Integration extends Integration_Base {
 
             $field = $map[ $column ];
 
+            $type = '';
+            //In special cases e.g date, we have Quentn type along with field id, with comma separated
+            if ( strpos( $field, ',' ) !== false ) {
+                list( $field, $type ) = explode( ',', $field );
+            }
+
             switch ( $field ) {
                 case 'full_name':
                     $parts              = $this->split_name( $value );
@@ -353,8 +359,11 @@ class Quentn_Wp_Elementor_Integration extends Integration_Base {
                     }
                    break;
                 default:
-                    if (is_array($value)) {
+                    if ( is_array( $value ) ) {
                         $args[ $field ] = array_map( 'sanitize_text_field', $value );
+                    } elseif ( $type == 'date' ) {
+                        //Date and Time are two different fields in Elementor, merge them for Quentn DateTime field
+                        $args[ $field ] .= sanitize_text_field( $value );
                     } else {
                         $args[ $field ] = sanitize_text_field( $value );
                     }

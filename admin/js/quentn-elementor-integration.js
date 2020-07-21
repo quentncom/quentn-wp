@@ -163,12 +163,19 @@
                         localType = 'text';
                     } else if ( localType === 'select' &&  view.model.get( 'allow_multiple' ) === true ) { //if elementor select allow multiple values, map it with quentn multiple
                         localType = 'checkbox';
+                    } else if ( localType === 'time' && model.remote_id !== 'date_of_birth' ) { //Quentn don't have time field, but it can be used with datetime type
+                        localType = 'date';
                     }
 
                     if ( localType !== remoteType ) {
                         return;
                     }
-                    options[ model.remote_id ] = model.remote_label || 'Field #' + (index + 1);
+
+                    if ( remoteType === 'date' ) { //in case remote type is datetime, we need its type also along with id
+                        options[ [model.remote_id, model.remote_type] ] = model.remote_label || 'Field #' + (index + 1);
+                    } else {
+                        options[ model.remote_id ] = model.remote_label || 'Field #' + (index + 1);
+                    }
                 });
 
                 localFieldsControl.model.set( 'label', label );
