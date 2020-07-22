@@ -243,8 +243,20 @@ class Quentn_Wp_Elementor_Integration extends Integration_Base {
         }
 
         $fields = $this->get_normalized_fields( $record );
-        return $this->generate_contact_with_map( $fields, $map );
+        $contact = $this->generate_contact_with_map( $fields, $map );
 
+        //if contact data includes date,time mapped with quentn datetime field, convert it into Unix timestamp
+        foreach ( $contact as $field => $value ) {
+            if ( isset($value['date'] ) ) {
+                $date_time = isset( $value['time'] ) ? $value['date'] . ' ' . $value['time'] : $value['date'];
+                $format = isset( $value['time'] ) ? 'Y-m-d H:i' : 'Y-m-d';
+                $date = DateTime::createFromFormat( $format, $date_time );
+                if ( $date !== false ) {
+                    $contact[$field] = $date->getTimestamp(); //update contact date field from array to Unix timestamp
+                }
+            }
+        }
+        return $contact;
     }
 
 
@@ -317,7 +329,7 @@ class Quentn_Wp_Elementor_Integration extends Integration_Base {
             $field = $map[ $column ];
 
             $type = '';
-            //In special cases e.g date, we have Quentn type along with field id, with comma separated
+            //In special cases e.g date and time, we have field type along with field id, with comma separated
             if ( strpos( $field, ',' ) !== false ) {
                 list( $field, $type ) = explode( ',', $field );
             }
@@ -361,9 +373,9 @@ class Quentn_Wp_Elementor_Integration extends Integration_Base {
                 default:
                     if ( is_array( $value ) ) {
                         $args[ $field ] = array_map( 'sanitize_text_field', $value );
-                    } elseif ( $type == 'date' ) {
+                    } elseif ( $type == 'date' || $type == 'time' ) {
                         //Date and Time are two different fields in Elementor, merge them for Quentn DateTime field
-                        $args[ $field ] .= sanitize_text_field( $value );
+                        $args[ $field ][$type] = sanitize_text_field( $value );
                     } else {
                         $args[ $field ] = sanitize_text_field( $value );
                     }

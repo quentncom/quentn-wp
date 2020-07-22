@@ -171,8 +171,8 @@
                         return;
                     }
 
-                    if ( remoteType === 'date' ) { //in case remote type is datetime, we need its type also along with id
-                        options[ [model.remote_id, model.remote_type] ] = model.remote_label || 'Field #' + (index + 1);
+                    if ( remoteType === 'date' ) { //in case remote type is datetime, we need local type to see if it is mapped with elementor date or time field
+                        options[ [model.remote_id, view.model.get( 'local_type' )] ] = model.remote_label || 'Field #' + (index + 1);
                     } else {
                         options[ model.remote_id ] = model.remote_label || 'Field #' + (index + 1);
                     }
