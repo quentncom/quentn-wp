@@ -250,7 +250,7 @@ class Quentn_Wp_Elementor_Integration extends Integration_Base {
             if ( isset($value['date'] ) ) {
                 $date_time = isset( $value['time'] ) ? $value['date'] . ' ' . $value['time'] : $value['date'];
                 $format = isset( $value['time'] ) ? 'Y-m-d H:i' : 'Y-m-d';
-                $date = DateTime::createFromFormat( $format, $date_time );
+                $date = DateTime::createFromFormat( $format, $date_time, Helper::get_wp_site_timezone() );
                 if ( $date !== false ) {
                     $contact[$field] = $date->getTimestamp(); //update contact date field from array to Unix timestamp
                 }

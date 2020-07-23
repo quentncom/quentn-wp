@@ -179,4 +179,31 @@ class Helper
 
         return isset( $plugins[ self::get_plugin_name() ] );
     }
+
+    /**
+     *  Returns the blog timezone
+     *
+     * Gets timezone settings from the db. If a timezone identifier is used just turns
+     * it into a DateTimeZone. If an offset is used, it tries to find a suitable timezone.
+     * If all else fails it uses UTC.
+     *
+     * @return DateTimeZone The site timezone
+     */
+    public static function get_wp_site_timezone() {
+
+        $tzstring = get_option( 'timezone_string' );
+        $offset   = get_option( 'gmt_offset' );
+
+        if( empty( $tzstring ) && 0 != $offset && floor( $offset ) == $offset ){
+            $offset_st = $offset > 0 ? "-$offset" : '+'.absint( $offset );
+            $tzstring  = 'Etc/GMT'.$offset_st;
+        }
+
+        //Issue with the timezone selected, set to 'UTC'
+        if( empty( $tzstring ) ){
+            $tzstring = 'UTC';
+        }
+
+        return new DateTimeZone( $tzstring );
+    }
 }

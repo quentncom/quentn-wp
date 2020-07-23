@@ -135,11 +135,11 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
             case 'email_hash':
                 return $item[$column_name];
             case 'created_at':
-                $get_site_time_zone = $this->wp_get_site_timezone(); //get timezone set by site admin
+                $site_time_zone_obj = Helper::get_wp_site_timezone(); //get timezone set by site admin
                 $date_created = getdate( $item['created_at'] ); //access created timestamp
 
                 $date = new DateTime( $date_created['year']."-".$date_created['mon']."-".$date_created['mday']." ".$date_created['hours'].":".$date_created['minutes'].":".$date_created['seconds'] );
-                $date->setTimezone( new DateTimeZone( $get_site_time_zone ) ); //Sets the time zone for the DateTime object
+                $date->setTimezone( $site_time_zone_obj ); //Sets the time zone for the DateTime object
                 $date_format = get_option('date_format');
                 $time_format = get_option('time_format');
                 if( ! empty( $date_format ) && ! empty( $time_format ) ) {
@@ -411,34 +411,6 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
             }
         }
 
-    }
-
-    /**
-     *  Returns the blog timezone
-     *
-     * Gets timezone settings from the db. If a timezone identifier is used just turns
-     * it into a DateTimeZone. If an offset is used, it tries to find a suitable timezone.
-     * If all else fails it uses UTC.
-     *
-     * @return DateTimeZone The site timezone
-     */
-    public function wp_get_site_timezone() {
-
-        $tzstring = get_option( 'timezone_string' );
-        $offset   = get_option( 'gmt_offset' );
-
-        if( empty( $tzstring ) && 0 != $offset && floor( $offset ) == $offset ){
-            $offset_st = $offset > 0 ? "-$offset" : '+'.absint( $offset );
-            $tzstring  = 'Etc/GMT'.$offset_st;
-        }
-
-        //Issue with the timezone selected, set to 'UTC'
-        if( empty( $tzstring ) ){
-            $tzstring = 'UTC';
-        }
-
-        $timezone = new DateTimeZone( $tzstring );
-        return $timezone->getName();
     }
 
     /**
