@@ -81,6 +81,7 @@ class Quentn_Wp_Activator {
         global $wpdb;
         $table_qntn_restriction = $wpdb->prefix. TABLE_QUENTN_RESTRICTIONS;
         $table_qntn_user_data = $wpdb->prefix. TABLE_QUENTN_USER_DATA;
+        $table_qntn_subscribers = $wpdb->prefix. TABLE_QUENTN_SUBSCRIBERS;
 
         $sql_create_table_restrictions = "CREATE TABLE IF NOT EXISTS $table_qntn_restriction (
           page_id mediumint(10) unsigned NOT NULL,
@@ -92,13 +93,24 @@ class Quentn_Wp_Activator {
 
         $sql_create_table_user_data = "CREATE TABLE IF NOT EXISTS $table_qntn_user_data (
           email varchar(150) NOT NULL,
-          fields mediumtext NOT NULL ,                
-          PRIMARY KEY  (email)
+          fields mediumtext NOT NULL,                
+          PRIMARY KEY (email)
         )";
+
+        $sql_create_table_subscribers = "CREATE TABLE IF NOT EXISTS $table_qntn_subscribers (
+          id INT(11) NOT NULL AUTO_INCREMENT,
+          user_agent mediumtext NOT NULL,               
+          contact_id varchar(150),               
+          created INT(11),
+          endpoint mediumtext NOT NULL,
+          settings mediumtext,             
+          PRIMARY KEY (id)
+        ) DEFAULT CHARACTER SET utf8";
 
         require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
         dbDelta( $sql_create_table_restrictions );
         dbDelta( $sql_create_table_user_data );
+        dbDelta( $sql_create_table_subscribers );
         update_option( "quentn_db_version", '1.0' );
         //add unique id for quentn
         if ( ! get_option( "quentn_unique_id" ) ) {

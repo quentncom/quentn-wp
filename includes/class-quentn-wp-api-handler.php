@@ -238,6 +238,25 @@ class Quentn_Wp_Api_Handler
         return $return;
     }
 
+    /**
+     * Handle API requests for web push notifications
+     *
+     * @return array
+     */
+    public function update_web_push_endpoint( $data = [], $method = 'POST' )
+    {
+        $response = array();
+        if ( $this->is_connected_with_quentn() ) {
+            try {
+                $response = self::get_quentn_client()->call('push/endpoint', $method, $data );
+            } catch ( Exception $e ) {
+                $response = array();
+                $this->error_messages[] = $e->getMessage();
+            }
+        }
+        return $response;
+    }
+
 }
 
 

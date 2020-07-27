@@ -190,15 +190,25 @@ class Quentn_Wp_Admin {
             wp_enqueue_script( 'quentn.jquery.bootstrap-touchspin.js' );
 
             //add custom script file
-            wp_register_script('quentn.admin.custom.js', plugin_dir_url( __FILE__ ) . 'js/main.js', array( 'jquery' ), $this->version );
+            wp_register_script( 'quentn.admin.custom.js', plugin_dir_url( __FILE__ ) . 'js/main.js', array( 'jquery' ), $this->version );
             wp_enqueue_script( 'quentn.admin.custom.js' );
+
+            //add web push notification file
+            wp_register_script( 'quentn-push-notifications.js', plugin_dir_url( __FILE__ ) . 'js/quentn-push-notifications.js', array( 'jquery' ), $this->version );
+            wp_enqueue_script( 'quentn-push-notifications.js' );
+
+            //add push notification service worker
+            wp_register_script( 'quentn-service-worker.js', plugin_dir_url( __FILE__ ) . 'js/quentn-service-worker.js', array( 'jquery' ), $this->version );
+            wp_enqueue_script( 'quentn-service-worker.js' );
+
 
             //Localize the script with new data
             $translation_array = array(
                 'choose_quentn_tags'            =>  __( 'Choose Quentn Tags', 'quentn-wp' ),
                 'choose_learndash_courses'      =>  __( 'Choose LearnDash Courses', 'quentn-wp' ),
                 'delete_confirmation_message'   =>  __( 'Are you sure you want to delete?', 'quentn-wp' ),
-                'datepicker_lang'   =>  ( substr( get_locale(),0, 2 ) == 'de' ? 'de' : 'en' ) // if wp set in german lang then set datepicker lang in german, otherwise in english
+                'datepicker_lang'   =>  ( substr( get_locale(),0, 2 ) == 'de' ? 'de' : 'en' ), // if wp set in german lang then set datepicker lang in german, otherwise in english
+                'plugin_dir_url' => plugin_dir_url( __FILE__ ),
             );
             wp_localize_script( 'quentn.admin.custom.js', 'wp_qntn', $translation_array );
         }
@@ -207,7 +217,6 @@ class Quentn_Wp_Admin {
         wp_register_script('quentn.elementor.validate.api.js', plugin_dir_url( __FILE__ ) . 'js/quentn-elementor-validate-api.js', array( 'jquery' ), $this->version, true );
         wp_enqueue_script( 'quentn.elementor.validate.api.js' );
     }
-
 
     /**
      * Creates admin menues

@@ -290,6 +290,16 @@ class Quentn_Wp {
 
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
+
+		//ajax endpoints for logged-in users
+		$this->loader->add_action( 'wp_ajax_create_push_notification_subscription', $plugin_public, 'create_push_notification_subscription' );
+        $this->loader->add_action( 'wp_ajax_delete_push_notification_subscription', $plugin_public, 'delete_push_notification_subscription' );
+        $this->loader->add_action( 'wp_ajax_update_push_notification_subscription', $plugin_public, 'update_push_notification_subscription' );
+
+        //ajax endpoints for front-end visitors
+        $this->loader->add_action( 'wp_ajax_nopriv_create_push_notification_subscription', $plugin_public, 'create_push_notification_subscription' );
+        $this->loader->add_action( 'wp_ajax_nopriv_delete_push_notification_subscription', $plugin_public, 'delete_push_notification_subscription' );
+        $this->loader->add_action( 'wp_ajax_nopriv_update_push_notification_subscription', $plugin_public, 'update_push_notification_subscription' );
         if( get_option('quentn_web_tracking_enabled') ) {
             $this->loader->add_action( 'wp_head', $plugin_public, 'load_quentn_web_tracking' );
         }
