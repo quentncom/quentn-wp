@@ -77,11 +77,12 @@ if( isset( $_GET['tab'] ) ) {
                     'disabled' => true
                 );
                 ?>
-                <div class="bootstrap-qntn col-md-12 mt-5">
-                    <div class="alert alert-danger">
-                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
-                            ×</button>
-                        <span class="glyphicon glyphicon-hand-right"></span> <strong><?php printf(__( "Could not find %s at the connected Quentn server.  Please add %s as tracked domain in order to use this feature.", 'quentn-wp' ),"'".$_SERVER['HTTP_HOST']."''", "'".$_SERVER['HTTP_HOST']."''" ); ?></strong>
+                <div class="bootstrap-qntn">
+                    <div class="alert alert-danger mt-3">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        <strong class="mb-2">
+                            <?php printf(__( "Could not find %s at the connected Quentn server.  Please add %s as tracked domain in order to use this feature.", 'quentn-wp' ),"'".$_SERVER['HTTP_HOST']."''", "'".$_SERVER['HTTP_HOST']."''" ); ?>
+                        </strong>
                     </div>
                 </div>
             <?php

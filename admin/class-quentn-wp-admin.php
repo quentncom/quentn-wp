@@ -645,17 +645,11 @@ class Quentn_Wp_Admin {
             'mail'        => $email,
         );
 
-        //send request to quentn api and get response having id of newly created user
-        $get_response = $this->api_handler->get_quentn_client()->contacts()->createContact( $contact_data );
-
-        //In case contact is created successfully, Add terms for this contact
-        if( ! empty( $get_response['data']['id'] ) and ! empty( $term_ids ) ) {
-            //get contact id from response
-            $contact_id = $get_response['data']['id'];
-
-            //send request to quentn api to add terms for this contact
-            $this->api_handler->get_quentn_client()->contacts()->addContactTerms( $contact_id, array_unique( $term_ids ) );
+        if ( ! empty( $term_ids ) ) {
+            $contact_data['terms'] = $term_ids;
         }
+        //send request to quentn api and get response having id of newly created user
+        $this->api_handler->get_quentn_client()->contacts()->createContact( $contact_data );
     }
 
 
@@ -899,7 +893,7 @@ class Quentn_Wp_Admin {
         ?>
         <select class="quentn-term-selection"  style="width: 70%"  name="quentn_tags_wp_user[<?php echo $args['role']?>][]" id="quentn_tags_wp_user<?php echo $args['role']?>" <?php disabled( ! $this->api_handler->is_connected_with_quentn() || !$is_add_user_to_qntn_enabled);  ?> multiple>
             <?php foreach($args['terms'] as $term) { ?>
-                <option value="<?php echo $term['id']?>" <?php echo ( in_array( $term['id'], $existing_terms ) ) ? 'selected="selected"' : ''; ?>><?php echo $term['name']?></option>
+                <option value="<?php echo $term['id']?>" <?php selected ( in_array( $term['id'], $existing_terms ) )  ?>><?php echo $term['name']?></option>
             <?php } ?>
         </select>
         <?php
