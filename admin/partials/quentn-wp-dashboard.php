@@ -14,6 +14,7 @@ if( isset( $_GET['tab'] ) ) {
         <h2 class="nav-tab-wrapper">
             <a href="?page=quentn-dashboard&tab=quentn_host_connection" class="nav-tab <?php if ( $active_tab == 'quentn_host_connection' ) { echo 'nav-tab-active'; } ?>"><?php _e( 'Connect', 'quentn-wp' ); ?></a>
             <a href="?page=quentn-dashboard&tab=qnentn_tags_selection" class="nav-tab <?php if ( $active_tab == 'qnentn_tags_selection' ) { echo 'nav-tab-active'; } ?>"><?php _e( 'Roles', 'quentn-wp' ); ?></a>
+            <a href="?page=quentn-dashboard&tab=qnentn_push_notifications" class="nav-tab <?php if ( $active_tab == 'qnentn_push_notifications' ) { echo 'nav-tab-active'; } ?>"><?php _e( 'Push Notifications', 'quentn-wp' ); ?></a>
             <a href="?page=quentn-dashboard&tab=qnentn_web_tracking_tab" class="nav-tab <?php if ( $active_tab == 'qnentn_web_tracking_tab' ) { echo 'nav-tab-active'; } ?>"><?php _e( 'Web Tracking', 'quentn-wp' ); ?></a>
             <a href="?page=quentn-dashboard&tab=qnentn_delete_user_data" class="nav-tab <?php if ( $active_tab == 'qnentn_delete_user_data' ) { echo 'nav-tab-active'; } ?>"><?php _e( 'Delete User Data', 'quentn-wp' ); ?></a>
             <?php if( $this->is_learndash_plugin_active() ) { ?>
@@ -50,6 +51,12 @@ if( isset( $_GET['tab'] ) ) {
             echo '<form method="post" action="options.php">';
             settings_fields( "quentn_learndash_options_group" );
             do_settings_sections( "quentn-learn-dash" );
+            submit_button( NULL, 'primary', 'submit', true, $submit_button_attributes );
+            echo '</form>';
+        } elseif ( $active_tab == "qnentn_push_notifications" ) {
+            echo '<form method="post" action="options.php">';
+            settings_fields( "quentn_push_notification_options_group" );
+            do_settings_sections( "quentn-push-notification" );
             submit_button( NULL, 'primary', 'submit', true, $submit_button_attributes );
             echo '</form>';
         } elseif ( $active_tab == "qnentn_web_tracking_tab" ) { //display web tracking options

@@ -14,6 +14,9 @@
                 case 'quentn_api_url':
                     this.onApiUpdate();
                     break;
+                case 'quentn_push_notification':
+                    this.onNotifcationUpdate(); //todo delete this function
+                    break;
             }
         },
 
@@ -62,6 +65,18 @@
                 });
             });
 
+        },
+        //todo delete this function
+        onNotifcationUpdate: function onNotifcationUpdate() {
+            var self = this,
+                quentnFieldsMapControlView = self.getEditorControlView( 'quentn_fields_map' ),
+                pushNotificationControlView = self.getEditorControlView( 'quentn_push_notification' );
+            var mapFields = quentnFieldsMapControlView.getControlValue();
+
+            mapFields.each( function ( model ) {
+                //console.log(model)
+                //console.log(model.get('remote_id'))
+            });
         },
 
         onSectionActive: function onSectionActive() {
@@ -163,6 +178,8 @@
                         localType = 'text';
                     } else if ( localType === 'select' &&  view.model.get( 'allow_multiple' ) === true ) { //if elementor select allow multiple values, map it with quentn multiple
                         localType = 'checkbox';
+                    } else if ( localType === 'acceptance' ) { //if local type is acceptance, then add one more option in it for push notifications
+                        options[ 'quentn_push_notification' ] = QntnMappableFields.push_notification;
                     }
 
                     if ( localType !== remoteType ) {

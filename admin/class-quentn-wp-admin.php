@@ -372,6 +372,10 @@ class Quentn_Wp_Admin {
                 'option_group' => 'quentn_tags_options_group',
                 'option_name'  => 'quentn_add_remove_wp_user_from_host'
             ),
+            array(
+                'option_group' => 'quentn_push_notification_options_group',
+                'option_name'  => 'quentn_tags_push_notification'
+            ),
         );
 
         //add values for settings api, add_settings_section
@@ -387,6 +391,12 @@ class Quentn_Wp_Admin {
                 'title' => __( 'Select Quentn Tags', 'quentn-wp'),
                 'callback' => '__return_false',
                 'page' => 'quentn-dashboard-tags'
+            ),
+            array(
+                'id' => 'qnentn_push_notification_option',
+                'title' =>  __( 'Select Quentn Tags', 'quentn-wp'),
+                'callback' => '__return_false',
+                'page' => 'quentn-push-notification'
             ),
         );
 
@@ -472,6 +482,19 @@ class Quentn_Wp_Admin {
                 'args'      => array( 'role' => $slug )
             );
         }
+
+        //add push_notification
+        $fields[] = array(
+            'id'        => 'quentn_tags_push_notification',
+            'title'     =>  __( 'Quentn Tags', 'quentn-wp' ),
+            'callback'  => array( $this, 'quentn_push_notification_tags' ),
+            'page'      => 'quentn-push-notification',
+            'section'   => 'qnentn_push_notification_option',
+            'args'            => array(
+                'label_for' => __('Please Select Tags', 'quentn-wp'),
+                'terms'     => $qntn_terms,
+            )
+        );
 
         // add settings field
         foreach ( $fields as $field ) {
@@ -909,6 +932,24 @@ class Quentn_Wp_Admin {
         <select class="quentn-term-selection"  style="width: 70%"  name="quentn_tags_wp_user[<?php echo $args['role']?>][]" id="quentn_tags_wp_user<?php echo $args['role']?>" <?php disabled( ! $this->api_handler->is_connected_with_quentn() || !$is_add_user_to_qntn_enabled);  ?> multiple>
             <?php foreach($args['terms'] as $term) { ?>
                 <option value="<?php echo $term['id']?>" <?php echo ( in_array( $term['id'], $existing_terms ) ) ? 'selected="selected"' : ''; ?>><?php echo $term['name']?></option>
+            <?php } ?>
+        </select>
+        <?php
+    }
+
+    /**
+     * Display quentn tags dropdown for push notifications
+     *
+     * @since  1.1.0
+     * @access public
+     * @return void
+     */
+    public function quentn_push_notification_tags( $args ) {
+        $existing_quentn_tags_push_notification =  ( get_option( 'quentn_tags_push_notification' ) ) ? get_option( 'quentn_tags_push_notification' ) : [] ;
+        ?>
+        <select class="quentn-select-push_notification-tags"  style="width: 70%"  name="quentn_tags_push_notification[]" id="quentn_tags_push_notification"  multiple>
+            <?php foreach( $args['terms'] as $term ) { ?>
+                `                <option value="<?php echo $term['id']?>" <?php selected( in_array( $term['id'], $existing_quentn_tags_push_notification ) ) ?>><?php echo $term['name']?></option>
             <?php } ?>
         </select>
         <?php

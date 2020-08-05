@@ -172,6 +172,9 @@ class Quentn_Wp_Public {
             } elseif ( is_email( $contact_id ) ) {
                 $subscription_data['email'] = $contact_id;
             }
+            if ( get_option( 'quentn_tags_push_notification' ) ) {
+                $subscription_data['terms'] = get_option( 'quentn_tags_push_notification' );
+            }
         }
 
         $data = array( 'user_agent' => $subscription_data['user_agent'], 'contact_id' => ( $contact_id ) ? $contact_id : NULL  , 'created' => time(), 'endpoint' => $subscription_data['endpoint'], 'settings' => ( isset( $_POST['settings'] ) ) ?  stripslashes( $_POST['settings'] ) : NULL  );
@@ -216,6 +219,9 @@ class Quentn_Wp_Public {
             $subscription_data['contact_id'] = $contact_id;
         } elseif ( is_email( $contact_id ) ) {
             $subscription_data['email'] = $contact_id;
+        }
+        if ( get_option( 'quentn_tags_push_notification' ) ) {
+            $subscription_data['terms'] = get_option( 'quentn_tags_push_notification' );
         }
 
 

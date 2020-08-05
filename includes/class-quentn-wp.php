@@ -157,6 +157,10 @@ class Quentn_Wp {
          */
         require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-quentn-wp-uninstall.php';
 
+        /**
+         * The class responsible for push notifications
+         */
+        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-quentn-wp-push-notification.php';
 
         if ( is_admin() ) {
             /**

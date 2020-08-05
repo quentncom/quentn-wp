@@ -12,8 +12,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Quentn_Wp_Elementor_Integration extends Integration_Base {
 
-    const OPTION_NAME_API_KEY = 'pro_quentn_api_key';
-    const OPTION_NAME_API_URL = 'pro_quentn_api_url';
+    const OPTION_NAME_API_KEY       = 'pro_quentn_api_key';
+    const OPTION_NAME_API_URL       = 'pro_quentn_api_url';
+    const QUENTN_PUSH_NOTIFICATION  = 'quentn_push_notification';
 
     public function __construct() {
         if ( is_admin() ) {
@@ -152,6 +153,18 @@ class Quentn_Wp_Elementor_Integration extends Integration_Base {
         );
 
         $widget->add_control(
+            'quentn_push_notification',
+            [
+                'label' => __( 'Push Notification', 'elementor-pro' ),
+                'type' => Controls_Manager::SWITCHER,
+                'default' => 'yes',
+                'description' => __( 'Ask user for notification permission on form submit', 'quentn-wp' ),
+                'label_off' => __( 'Off', 'quentn-wp' ),
+                'label_on' => __( 'On', 'quentn-wp' ),
+            ]
+        );
+
+        $widget->add_control(
             'quentn_list',
             [
                 'label' => __( 'Add Tags', 'quentn-wp' ),
@@ -203,7 +216,21 @@ class Quentn_Wp_Elementor_Integration extends Integration_Base {
         $form_settings = $record->get( 'form_settings' );
         $subscriber = $this->create_subscriber_object( $record );
 
-       if ( ! $subscriber ) {
+        $push_notification = false;
+        //if push notifation field is mapped in form, then we will only ask permission if it is checked by user
+        if (  array_key_exists( self::QUENTN_PUSH_NOTIFICATION, $subscriber ) ) {
+            if ( $subscriber[self::QUENTN_PUSH_NOTIFICATION] ) {
+                $push_notification = true;
+            }
+        } elseif ( isset( $form_settings['quentn_push_notification'] ) && $form_settings['quentn_push_notification'] == 'yes' ) { //if no field is mapped then check admin settings
+            $push_notification = true;
+        }
+
+        if ( $push_notification ) {
+            $ajax_handler->add_response_data( 'qntn_push_notification', true );
+        }
+
+        if ( ! $subscriber ) {
             $ajax_handler->add_admin_error_message( __( 'Quentn Integration requires an email field', 'quentn-wp' ) );
             return;
         }
@@ -236,7 +263,7 @@ class Quentn_Wp_Elementor_Integration extends Integration_Base {
      * @return array|bool
      */
     private function create_subscriber_object( Form_Record $record ) {
-         $map = $this->map_fields( $record );
+        $map = $this->map_fields( $record );
 
         if ( ! in_array( 'mail', $map ) ) {
             return false;
@@ -258,11 +285,18 @@ class Quentn_Wp_Elementor_Integration extends Integration_Base {
     private function get_normalized_fields( Form_Record $record )
     {
         $fields = array();
+        $form_settings = $record->get_form_settings( 'quentn_fields_map' );
         $raw_fields = $record->get( 'fields' );
         foreach ( $raw_fields as $id => $field ) {
             if ( $field['type'] == 'checkbox' ) {
                 $fields[ $id ] = explode( ",", $field['value'] );
             } elseif ( $field['type'] == 'acceptance' && $field['value'] == 'on' ) {
+                //if elementor local type is acceptance, then it can be mapped with quentn custom field or push notifcation option
+                $key = array_search( $id, array_column( $form_settings, 'local_id' ) );
+                if ( $form_settings[ $key ]['remote_id'] == self::QUENTN_PUSH_NOTIFICATION) { //if acceptance field is mapped with not custom field but push notification option
+                    $fields[ $id ] = $field['value'];
+                    continue;
+                }
                 $fields[ $id ] = array(
                     "ip" => isset( $_SERVER['HTTP_CLIENT_IP'] ) ? $_SERVER['HTTP_CLIENT_IP'] : isset( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR'],
                     "created" => time(),

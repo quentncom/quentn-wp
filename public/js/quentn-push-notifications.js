@@ -2,7 +2,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const applicationServerPublicKey = 'BIH-nytnvEd6j4eA6WqgH7yDaVSNPN1H0JgyP95Xn3yDJqPyMky51c7rp6uYYjvBFbE0tpOybzjHD1TjGX6kygE';
 
-    const pushButton = document.querySelector('.js-push-btn');
+    const enablePushButton = document.querySelector('.quentn-enable-push-notification-btn');
+    const disablePushButton = document.querySelector('.quentn-disable-push-notification-btn');
 
     let isSubscribed = false;
     let swRegistration = null;
@@ -21,7 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     } else {
         console.warn('Push messaging is not supported');
-        pushButton.textContent = 'Push Not Supported';
     }
 
     function urlB64ToUint8Array(base64String) {
@@ -39,16 +39,28 @@ document.addEventListener('DOMContentLoaded', () => {
         return outputArray;
     }
 
-
     function initializeUI() {
-        pushButton.addEventListener('click', function() {
-            pushButton.disabled = true;
-            if (isSubscribed) {
-                unsubscribeUser();
-            } else {
+        if ( enablePushButton ) {
+            enablePushButton.addEventListener('click', function() {
+                enablePushButton.disabled = true;
                 subscribeUser();
-            }
+            });
+        }
+        //add event on element form submit
+        jQuery( document ).on('submit_success', function(event, response){
+             if ( response ) {
+                 if ( response.data.qntn_push_notification ) {
+                     subscribeUser();
+                 }
+             }
         });
+
+        if ( disablePushButton ) {
+            disablePushButton.addEventListener('click', function() {
+                disablePushButton.disabled = true;
+                unsubscribeUser();
+            });
+        }
 
         // Set the initial subscription value
         swRegistration.pushManager.getSubscription()
@@ -68,19 +80,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateBtn() {
         if (Notification.permission === 'denied') {
-            pushButton.textContent = 'Push Messaging Blocked';
-            pushButton.disabled = true;
             updateSubscriptionOnServer(null);
             return;
         }
 
-        if (isSubscribed) {
-            pushButton.textContent = 'Disable Push Messaging';
+        if ( isSubscribed ) {
+            //todo improve if conditions
+            if ( enablePushButton ) {
+                enablePushButton.style.display = 'none';
+            }
+            if ( disablePushButton ) {
+                disablePushButton.style.display = 'block';
+                disablePushButton.disabled = false;
+            }
         } else {
-            pushButton.textContent = 'Enable Push Messaging';
+            if ( disablePushButton ) {
+                disablePushButton.style.display = 'none';
+            }
+            if ( enablePushButton ) {
+                enablePushButton.style.display = 'block';
+                enablePushButton.disabled = false;
+            }
         }
 
-        pushButton.disabled = false;
     }
 
     function subscribeUser() {
@@ -124,7 +146,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } );
     }
 
-
     function updateSubscriptionOnPage(subscription) {
 
         var qntn = (new URL(window.location.href)).searchParams.get("qntn");
@@ -138,7 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const token = subscription.getKey('auth');
         const contentEncoding = (PushManager.supportedContentEncodings || ['aesgcm'])[0];
 
-        jQuery.ajax( {
+        jQuery.ajax({
             type: 'post',
             url: wp_qntn_url.ajaxurl,
             data: {
@@ -156,10 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
             error: function ( response ){
                 console.log('update Failure: ' + response)
             },
-        } );
-
-
-
+        });
     }
 
     function updateSubscriptionOnServer(subscription, method = 'POST') {

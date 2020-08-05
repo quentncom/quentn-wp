@@ -58,7 +58,8 @@ class Quentn_Wp_Elementor_Field_Mapping extends Control_Repeater {
             ];
         }
         wp_localize_script( 'quentn.elementor.integration.js', 'QntnMappableFields', [
-            'fields' => $fields
+            'fields' => $fields,
+            'push_notification' => __( 'Push Notification', 'quentn-wp' ),
         ] );
     }
 

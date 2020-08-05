@@ -18,6 +18,11 @@ jQuery(document).ready(function () {
         placeholder: wp_qntn.choose_learndash_courses,
     });
 
+    //dropdown to select push notification tags
+    jQuery(".quentn-select-push_notification-tags").select2({
+        placeholder: wp_qntn.choose_quentn_tags,
+    });
+
     //ajax call when user dismiss cookie plugin notice
     jQuery(document).on( 'click', '.quentn-cookie-notice', function() {
         jQuery.ajax({
