@@ -96,7 +96,6 @@ if( isset( $_GET['tab'] ) ) {
         }
         elseif ( $active_tab == "quentn_settings" ) {
             echo '<form method="post" action="options.php" class="qntn-form">';
-            echo '<h2>'.__( 'Redirect after auto login', 'quentn-wp' ).'</h2>';
             settings_fields( "quentn_auto_login_options_group" );
             do_settings_sections( "quentn-dashboard-auto-login" );
             submit_button( NULL, 'primary', 'submit', true, $submit_button_attributes );
