@@ -22,7 +22,7 @@ class Quentn_Wp_Reset_Password
      * @return void
      */
     public function quentn_reset_password() {
-        if ( $_GET['qntn_pwd'] ) {
+        if ( isset( $_GET['qntn_pwd'] ) ) {
             $qntn_pwd = sanitize_text_field ( $_GET['qntn_pwd'] );
             $data = json_decode( base64_decode( $qntn_pwd ), true );
             $api_key = get_option( 'quentn_app_key' );
