@@ -13,3 +13,15 @@
 .qntn-page-expire-time-text {
     color: red;
 }
+.qntn-form input[type="text"] {
+    width: 25em;
+    height: 28px;
+}
+.qntn-form input[type="email"] {
+    width: 25em;
+    height: 28px;
+}
+.qntn-form label {
+    display: block;
+    width:  25em;
+}

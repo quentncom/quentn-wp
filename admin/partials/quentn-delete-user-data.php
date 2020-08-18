@@ -11,18 +11,19 @@
             $query =   $wpdb->delete( $wpdb->prefix . TABLE_QUENTN_USER_DATA, ['email' => $email ], [ '%s' ] );
 
             //add and remove items from a query string
-            wp_redirect( esc_url_raw(remove_query_arg( ['quentn-user-data-delete', 'qntn_user_data_nonce_delete_nonce'], esc_url_raw(add_query_arg( [ 'update' => 'quentn-user-data-deleted', 'deleted' => $query ] ) ) ) ) );
+            wp_redirect( esc_url_raw( remove_query_arg( ['quentn-user-data-delete', 'qntn_user_data_nonce_delete_nonce'], esc_url_raw( add_query_arg( [ 'update' => 'quentn-user-data-deleted', 'deleted' => $query ] ) ) ) ) );
             exit;
         }
     }
 ?>
 
-<form method="get" action="./admin.php?page=quentn-dashboard&tab=qnentn_delete_user_data">
-    <table class="form-table">
+<form method="get" class="qntn_form" action="./admin.php?page=quentn-dashboard&tab=qnentn_delete_user_data">
+    <table class="form-table qntn-form">
         <tr class="form-field form-required">
             <th><?php _e('Email', 'quentn-wp' ) ?></th>
             <td>
-                <input required name="email" type="email" id="email" style="width: 25em" placeholder="<?php  _e( 'Email', 'quentn-wp' ) ?>">
+                <input required name="email" type="email" id="email" placeholder="<?php  _e( 'Email', 'quentn-wp' ) ?>">
+                <label for="email"> <?php printf( __( 'Enter email address to delete related contact data.', 'quentn-wp'  ) ); ?></label>
                 <input name='page' type="hidden" value="<?php echo esc_html( sanitize_text_field( $_REQUEST['page'] ) ) ?>">
                 <input name='tab' type="hidden" value="<?php echo esc_html( sanitize_text_field( $_REQUEST['tab'] ) ) ?>">
                 <input name='update' type="hidden" value="quentn-user-data-delete">

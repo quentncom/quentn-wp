@@ -15,14 +15,14 @@ if( isset( $_GET['tab'] ) ) {
             <a href="?page=quentn-dashboard&tab=quentn_host_connection" class="nav-tab <?php if ( $active_tab == 'quentn_host_connection' ) { echo 'nav-tab-active'; } ?>"><?php _e( 'Connect', 'quentn-wp' ); ?></a>
             <a href="?page=quentn-dashboard&tab=qnentn_tags_selection" class="nav-tab <?php if ( $active_tab == 'qnentn_tags_selection' ) { echo 'nav-tab-active'; } ?>"><?php _e( 'Roles', 'quentn-wp' ); ?></a>
             <a href="?page=quentn-dashboard&tab=qnentn_web_tracking_tab" class="nav-tab <?php if ( $active_tab == 'qnentn_web_tracking_tab' ) { echo 'nav-tab-active'; } ?>"><?php _e( 'Web Tracking', 'quentn-wp' ); ?></a>
-            <a href="?page=quentn-dashboard&tab=qnentn_delete_user_data" class="nav-tab <?php if ( $active_tab == 'qnentn_delete_user_data' ) { echo 'nav-tab-active'; } ?>"><?php _e( 'Delete User Data', 'quentn-wp' ); ?></a>
+            <a href="?page=quentn-dashboard&tab=quentn_settings" class="nav-tab <?php if ( $active_tab == 'quentn_settings' ) { echo 'nav-tab-active'; } ?>"><?php _e( 'Misc', 'quentn-wp' ); ?></a>
             <?php if( $this->is_learndash_plugin_active() ) { ?>
             <a href="?page=quentn-dashboard&tab=qnentn_learndash_course_settings" class="nav-tab <?php if ( $active_tab == 'qnentn_learndash_course_settings' ) { echo 'nav-tab-active'; } ?>"><?php _e( 'LearnDash', 'quentn-wp' ); ?></a>
             <?php } ?>
         </h2>
         <?php
         $submit_button_attributes = array();
-        if( $active_tab != "qnentn_delete_user_data" && $active_tab != "qnentn_learndash_course_settings" && ! $this->api_handler->is_connected_with_quentn() ) {
+        if( $active_tab != "quentn_settings" && $active_tab != "qnentn_learndash_course_settings" && ! $this->api_handler->is_connected_with_quentn() ) {
             $submit_button_attributes =  array(
                 'disabled' => true
             );
@@ -94,7 +94,15 @@ if( isset( $_GET['tab'] ) ) {
         } elseif ( $active_tab == "quentn_host_connection" ) {
             require_once QUENTN_WP_PLUGIN_DIR . '/admin/partials/quentn-wp-connect.php';
         }
-        elseif ( $active_tab == "qnentn_delete_user_data" ) {
+        elseif ( $active_tab == "quentn_settings" ) {
+            echo '<form method="post" action="options.php" class="qntn-form">';
+            echo '<h2>'.__( 'Redirect after auto login', 'quentn-wp' ).'</h2>';
+            settings_fields( "quentn_auto_login_options_group" );
+            do_settings_sections( "quentn-dashboard-auto-login" );
+            submit_button( NULL, 'primary', 'submit', true, $submit_button_attributes );
+            echo '</form>';
+            echo "<hr >";
+            echo '<h2>'.__( 'Delete contact data', 'quentn-wp' ).'</h2>';
             require_once QUENTN_WP_PLUGIN_DIR . '/admin/partials/quentn-delete-user-data.php';
         }
         ?>

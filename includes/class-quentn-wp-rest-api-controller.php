@@ -68,7 +68,7 @@ class Quentn_Wp_Rest_Api
      */
     public function __construct()
     {
-        add_action( 'rest_api_init', array($this, 'register_page_routes' ));
+        add_action( 'rest_api_init', array( $this, 'register_page_routes' ) );
 
         $this->namespace = '/quentn/api/v1';
         $this->create_user = '/users';
@@ -132,9 +132,9 @@ class Quentn_Wp_Rest_Api
             // By using this constant we ensure that when the WP_REST_Server changes our readable endpoints will work as intended.
             'methods' => \WP_REST_Server::CREATABLE,
             // Here we register our callback. The callback is fired when this endpoint is matched by the WP_REST_Server class.
-            'callback' => array($this, 'quentn_revoke_page_countdown_permission'),
+            'callback' => array( $this, 'quentn_revoke_page_countdown_permission' ),
             // Here we register our permissions callback. The callback is fired before the main callback to check if the current user can access the endpoint.
-            'permission_callback' => array($this, 'quentn_check_credentials'),
+            'permission_callback' => array( $this, 'quentn_check_credentials' ),
 
             'args' => array(
                 'data' => array(
@@ -150,13 +150,13 @@ class Quentn_Wp_Rest_Api
         ) );
 
         //register route to get list of all pages having quentn restrictions active
-        register_rest_route($this->namespace, $this->get_page_restrictions, array(
+        register_rest_route( $this->namespace, $this->get_page_restrictions, array(
             // By using this constant we ensure that when the WP_REST_Server changes our readable endpoints will work as intended.
             'methods' => \WP_REST_Server::CREATABLE,
             // Here we register our callback. The callback is fired when this endpoint is matched by the WP_REST_Server class.
-            'callback' => array($this, 'quentn_get_restricted_pages'),
+            'callback' => array( $this, 'quentn_get_restricted_pages' ),
             // Here we register our permissions callback. The callback is fired before the main callback to check if the current user can access the endpoint.
-            'permission_callback' => array($this, 'quentn_check_credentials'),
+            'permission_callback' => array( $this, 'quentn_check_credentials' ),
 
             'args' => array(
                 'data' => array(
@@ -172,13 +172,13 @@ class Quentn_Wp_Rest_Api
         ));
 
         //register route to get list of all user roles of wp site
-        register_rest_route($this->namespace, $this->get_user_roles, array(
+        register_rest_route( $this->namespace, $this->get_user_roles, array(
             // By using this constant we ensure that when the WP_REST_Server changes our readable endpoints will work as intended.
             'methods' => \WP_REST_Server::CREATABLE,
             // Here we register our callback. The callback is fired when this endpoint is matched by the WP_REST_Server class.
-            'callback' => array($this, 'quentn_get_user_roles'),
+            'callback' => array( $this, 'quentn_get_user_roles' ),
             // Here we register our permissions callback. The callback is fired before the main callback to check if the current user can access the endpoint.
-            'permission_callback' => array($this, 'quentn_check_credentials'),
+            'permission_callback' => array( $this, 'quentn_check_credentials' ),
             // Here we register our permissions callback. The callback is fired before the main callback to check if the current user can access the endpoint.
             'args' => array(
                 'data' => array(
@@ -194,13 +194,13 @@ class Quentn_Wp_Rest_Api
         ));
 
         //register route to get create new user in wp
-        register_rest_route($this->namespace, $this->create_user, array(
+        register_rest_route( $this->namespace, $this->create_user, array(
             // By using this constant we ensure that when the WP_REST_Server changes our readable endpoints will work as intended.
             'methods' => \WP_REST_Server::CREATABLE,
             // Here we register our callback. The callback is fired when this endpoint is matched by the WP_REST_Server class.
-            'callback' => array($this, 'quentn_create_user'),
+            'callback' => array( $this, 'quentn_create_user' ),
             // Here we register our permissions callback. The callback is fired before the main callback to check if the current user can access the endpoint.
-            'permission_callback' => array($this, 'quentn_check_credentials'),
+            'permission_callback' => array( $this, 'quentn_check_credentials' ),
 
             'args' => array(
                 'data' => array(
@@ -247,8 +247,8 @@ class Quentn_Wp_Rest_Api
 
         //insert into database
         $query = "INSERT INTO ".$wpdb->prefix . TABLE_QUENTN_RESTRICTIONS." ( page_id, email, email_hash, created_at ) VALUES ";
-        $query .= implode(', ', $place_holders);
-        $wpdb->query( $wpdb->prepare( "$query ON DUPLICATE KEY UPDATE created_at= ".time(), $values) );
+        $query .= implode( ', ', $place_holders );
+        $wpdb->query( $wpdb->prepare( "$query ON DUPLICATE KEY UPDATE created_at= ".time(), $values ) );
 
         return rest_ensure_response( esc_html__( 'Permissions Timer Successfully Updated', 'quentn-wp' ) );
     }
@@ -369,7 +369,7 @@ class Quentn_Wp_Rest_Api
             }
 
             //add roles to new user
-            $new_user = new WP_User($user_id);
+            $new_user = new WP_User( $user_id );
             if ( isset( $request_data['data']['roles']['add_roles'] ) ) {
                 $new_roles = $request_data['data']['roles']['add_roles'];
                 foreach ( $new_roles as $new_role ) {
@@ -384,6 +384,9 @@ class Quentn_Wp_Rest_Api
                     $new_user->remove_role( trim( $remove_role ) );
                 }
             }
+
+            //add user meta last login as false
+            update_user_meta( $new_user->ID, 'quentn_last_login', 0 );
 
             //send email if set by quentn call
             if ( $is_send_user_email && isset( $request_data['data']['notify'] ) && $request_data['data']['notify'] ) {

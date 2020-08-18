@@ -71,7 +71,7 @@ class Quentn_Wp {
 		if ( defined( 'QUENTN_WP_VERSION' ) ) {
 			$this->version = QUENTN_WP_VERSION;
 		} else {
-			$this->version = '1.0.9';
+			$this->version = '1.1.0';
 		}
 		$this->plugin_name = 'quentn-wp';
 
@@ -136,13 +136,15 @@ class Quentn_Wp {
 
         require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-quentn-wp-restrict-access.php';
 
+        /**
+         * The class responsible to reset user password redirect
+         */
+        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-quentn-wp-reset-password.php';
 
         /*
         * A collection of useful static functions
         */
-
         require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/utility/class-helper.php';
-
 
         /**
          * The class responsible for defining all actions that occur in the public-facing
@@ -179,7 +181,7 @@ class Quentn_Wp {
         /**
          * Add classes responsible to handle elementor integration
          */
-        if( Helper::is_elementor_plugin_enabled() && Helper::is_elementor_pro_plugin_enabled() && defined('ELEMENTOR_VERSION' ) && ELEMENTOR_VERSION >= '2.0.0' ) {
+        if( defined('ELEMENTOR_VERSION' ) && defined('ELEMENTOR_PRO_VERSION' )  && ELEMENTOR_VERSION >= '2.0.0' ) {
            require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-quentn-wp-elementor.php';
         }
 
@@ -237,6 +239,9 @@ class Quentn_Wp {
             $this->loader->add_action( 'user_register', $plugin_admin, 'quentn_add_user', 100, 2  );
             $this->loader->add_action( 'delete_user', $plugin_admin, 'quentn_delete_user' );
         }
+
+        //update user in quentn when user is updated in wp
+        $this->loader->add_action( 'wp_login', $plugin_admin, 'quentn_user_login', 10, 2 );
 
         //update user in quentn when user is updated in wp
         $this->loader->add_action( 'profile_update', $plugin_admin, 'quentn_add_user', 100, 2 );

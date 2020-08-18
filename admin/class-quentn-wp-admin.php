@@ -363,21 +363,31 @@ class Quentn_Wp_Admin {
                 'option_group' => 'quentn_tags_options_group',
                 'option_name'  => 'quentn_add_remove_wp_user_from_host'
             ),
+            array(
+                'option_group' => 'quentn_auto_login_options_group',
+                'option_name'  => 'quentn_auto_login_url'
+            ),
         );
 
         //add values for settings api, add_settings_section
         $sections = array(
             array(
-                'id' => 'quentn_web_tracking_option',
-                'title' =>  __( 'Web Tracking Settings', 'quentn-wp'),
-                'callback' => '__return_false',
-                'page' => 'quentn-dashboard-web-tracking'
+                'id'        => 'quentn_web_tracking_option',
+                'title'     =>  __( 'Web Tracking Settings', 'quentn-wp'),
+                'callback'  => '__return_false',
+                'page'      => 'quentn-dashboard-web-tracking'
             ),
             array(
-                'id' => 'qnentn_tags_option',
-                'title' => __( 'Select Quentn Tags', 'quentn-wp'),
+                'id'       => 'qnentn_tags_option',
+                'title'    => __( 'Select Quentn Tags', 'quentn-wp'),
                 'callback' => '__return_false',
-                'page' => 'quentn-dashboard-tags'
+                'page'     => 'quentn-dashboard-tags'
+            ),
+            array(
+                'id'       => 'qnentn_auto_login_option',
+                'title'    => __( 'Redirect after auto login', 'quentn-wp'),
+                'callback' => '__return_false',
+                'page'     => 'quentn-dashboard-auto-login'
             ),
         );
 
@@ -391,7 +401,6 @@ class Quentn_Wp_Admin {
             add_settings_section( $section["id"], $section["title"], ( isset( $section["callback"] ) ? $section["callback"] : '' ), $section["page"] );
         }
     }
-
 
     /**
      * Register fields
@@ -421,6 +430,13 @@ class Quentn_Wp_Admin {
             );
         }
 
+        $fields[] = array(
+            'id'        => 'quentn_auto_login_redirect_url',
+            'title'     => __( 'Redirect URL', 'quentn-wp' ),
+            'callback'  => array( $this, 'field_quentn_auto_login_redirect_url' ),
+            'page'      => 'quentn-dashboard-auto-login',
+            'section'   => 'qnentn_auto_login_option',
+        );
 
         //add tag fields for all wordpress roles
         $wp_roles =  new WP_Roles;
@@ -652,6 +668,18 @@ class Quentn_Wp_Admin {
         $this->api_handler->get_quentn_client()->contacts()->createContact( $contact_data );
     }
 
+    /**
+     *
+     * @since  1.1.0
+     * @access public
+     * @param string $user_login username
+     * @param WP_User $user
+     * @return void
+     */
+    public function quentn_user_login( $user_login, $user ) {
+        update_user_meta( $user->ID, 'quentn_last_login', time() );
+    }
+
 
     /**
      * Add Quentn tags to user
@@ -813,6 +841,22 @@ class Quentn_Wp_Admin {
             <option value="cookie-notice" <?php  selected( $value, 'cookie-notice' ); disabled( ! Helper::is_cookie_notice_plugin_enabled() ) ?>>Cookie Notice</option>
             <option value="quentn-overlay" <?php  selected( $value, 'quentn-overlay' ); ?>><?php _e('Quentn Overlay', 'quentn-wp' ) ?></option>
         </select>
+        <?php
+    }
+
+    /**
+     * Display web tracking consent methods dropdown
+     *
+     * @since  1.1.0
+     * @access public
+     * @return void
+     */
+    public function field_quentn_auto_login_redirect_url()
+    {
+        $value = esc_attr( get_option( 'quentn_auto_login_url' ) );
+        ?>
+            <input  class="form-control" type="text" name="quentn_auto_login_url" id="quentn_auto_login_url" value="<?php echo $value; ?>" placeholder="<?php  _e( 'URL', 'quentn-wp' ) ?>">
+            <label for="quentn_auto_login_url"> <?php printf( __( 'Redirect user to this page after auto login.', 'quentn-wp'  ) ); ?></label>
         <?php
     }
 

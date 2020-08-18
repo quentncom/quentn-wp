@@ -103,6 +103,10 @@ msgstr ""
 msgid "Select Quentn Tags"
 msgstr ""
 
+#: admin/class-quentn-wp-admin.php:388
+msgid "Redirect after auto login"
+msgstr ""
+
 #: admin/class-quentn-wp-admin.php:391
 #: admin/partials/quentn-wp-dashboard.php:17
 msgid "Web Tracking"
@@ -152,6 +156,10 @@ msgstr ""
 msgid "Remove tags if user looses the role %s"
 msgstr ""
 
+#: admin/class-quentn-wp-admin.php:859
+msgid "Redirect user to this page after auto login."
+msgstr ""
+
 #: admin/partials/quentn-delete-user-data.php:22
 #: admin/partials/quentn-delete-user-data.php:24
 #: includes/class-quentn-wp-access-overview-list.php:92
@@ -165,6 +173,10 @@ msgstr ""
 #: includes/class-quentn-wp-access-overview-list.php:159
 #: includes/class-quentn-wp-access-overview-list.php:187
 msgid "Delete"
+msgstr ""
+
+#: admin/partials/quentn-delete-user-data.php:26
+msgid "Enter email address to delete related contact data."
 msgstr ""
 
 #: admin/partials/quentn-wp-connect.php:21
@@ -204,6 +216,10 @@ msgstr ""
 msgid "Delete User Data"
 msgstr ""
 
+#: admin/partials/quentn-wp-dashboard.php:18
+msgid "Misc"
+msgstr ""
+
 #: admin/partials/quentn-wp-dashboard.php:30
 msgid "You are not connected to Quentn"
 msgstr ""
@@ -216,6 +232,10 @@ msgstr ""
 #: admin/partials/quentn-wp-dashboard.php:76
 #, php-format
 msgid "Could not find %s at the connected Quentn server.  Please add %s as tracked domain in order to use this feature."
+msgstr ""
+
+#: admin/partials/quentn-wp-dashboard.php:105
+msgid "Delete contact data"
 msgstr ""
 
 #: includes/class-quentn-wp-access-overview-list.php:93
@@ -417,6 +437,7 @@ msgid "URL"
 msgstr ""
 
 #: includes/class-quentn-wp-manage_meta_box.php:212
+#: includes/class-quentn-wp-admin.php:435
 msgid "Redirect URL"
 msgstr ""
 
@@ -528,4 +549,8 @@ msgstr ""
 
 #: includes/class-quentn-wp-elementor-integration.php:452
 msgid "Validate API Key"
+msgstr ""
+
+#: includes/class-quentn-wp-elementor-integration.php:452
+msgid "<strong>ERROR</strong>: Link invalid. Email '%s' does not exist."
 msgstr ""

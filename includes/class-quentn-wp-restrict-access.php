@@ -619,16 +619,19 @@ class Quentn_Wp_Restrict_Access
      * @param timestamp $until (default: 6 months from now)
      * @param string $domain (default: current base domain)
      */
-    public function set_cookie( $name, $data, $until = null, $domain = null ) {
+    public function set_cookie( $name, $data, $until = null, $domain = null, $path = null ) {
 
         if (!$until) {
             $until = mktime(date("H"), date("i"), date("s"), date("n") + 6);
         }
         if (!$domain) {
-            $host = explode(".", $_SERVER["HTTP_HOST"]);
-            $domain = $host[count($host) - 2] . "." . $host[count($host) - 1];
+            $site_url = wp_parse_url( get_home_url() );
+            $domain = ( isset( $site_url['host'] ) ) ? $site_url['host'] : '';
         }
-        setcookie( $name, $data, $until, "/", "." . $domain );
+        if (!$path) {
+            $path = ( defined( 'SITECOOKIEPATH' ) ) ? SITECOOKIEPATH : '/';
+        }
+        setcookie( $name, $data, $until, $path, "." . $domain );
 
     }
 
