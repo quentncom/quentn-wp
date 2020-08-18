@@ -43,14 +43,14 @@ class Quentn_Wp_Reset_Password
                 exit;
             }
             $qntn_user_email = sanitize_email( $data['email'] );
+            //get user object
             $user = get_user_by( 'email', $qntn_user_email ) ;
-            if ( empty( $user ) ) {
+            if ( ! $user instanceof WP_User ) {
                 add_filter( 'authenticate', function( $user ) use ( $qntn_user_email ) {
                     $user = new WP_Error( 'denied', sprintf( __( '<strong>ERROR</strong>: Link invalid. Email \'%s\' does not exist.' ), $qntn_user_email ) );
                     return $user;
                 }, 10 );
-            }
-            if ( $user instanceof WP_User ) {
+            } else  {
                 //check if key already been used
                 if ( in_array($data['vu'], get_user_meta( $user->ID, 'quentn_reset_pwd_vu' ) ) ) {
                     wp_redirect( site_url( 'wp-login.php?action=lostpassword&error=invalidkey' ) );
