@@ -17,7 +17,7 @@
     }
 ?>
 
-<form method="get" class="qntn_form" action="./admin.php?page=quentn-dashboard&tab=qnentn_delete_user_data">
+<form method="get" action="./admin.php?page=quentn-dashboard&tab=qnentn_delete_user_data">
     <table class="form-table qntn-form">
         <tr class="form-field form-required">
             <th><?php _e('Email', 'quentn-wp' ) ?></th>
