@@ -62,6 +62,13 @@ class Quentn_Wp_Uninstall {
             'quentn_unique_id'
         ));
 
+        //delete user meta
+        $wpdb->query($wpdb->prepare(
+            "DELETE FROM $wpdb->usermeta WHERE
+			 meta_key like %s",
+            '%quentn%'
+        ));
+
         //delete quentn meta data
         delete_post_meta_by_key( '_quentn_post_restrict_meta' );
     }
