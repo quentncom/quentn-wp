@@ -47,7 +47,7 @@ class Quentn_Wp_Reset_Password
             $user = get_user_by( 'email', $qntn_user_email ) ;
             if ( ! $user instanceof WP_User ) {
                 add_filter( 'authenticate', function( $user ) use ( $qntn_user_email ) {
-                    $user = new WP_Error( 'denied', sprintf( __( '<strong>ERROR</strong>: Link invalid. Email \'%s\' does not exist.' ), $qntn_user_email ) );
+                    $user = new WP_Error( 'denied', sprintf( __( "<strong>ERROR</strong>: Link invalid. Email '%s' does not exist.", 'quentn-wp' ), $qntn_user_email ) );
                     return $user;
                 }, 10 );
             } else  {
