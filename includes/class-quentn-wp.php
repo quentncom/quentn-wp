@@ -141,6 +141,11 @@ class Quentn_Wp {
          */
         require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-quentn-wp-reset-password.php';
 
+        /**
+         * The class responsible for cron job
+         */
+        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-quentn-wp-cron.php';
+
         /*
         * A collection of useful static functions
         */

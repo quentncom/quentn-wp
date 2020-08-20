@@ -71,6 +71,12 @@ class Quentn_Wp_Uninstall {
 
         //delete quentn meta data
         delete_post_meta_by_key( '_quentn_post_restrict_meta' );
+
+        //unschedule cron tasks
+        $timestamp = wp_next_scheduled( 'quentn_cron_hook' );
+        if ( $timestamp ) {
+            wp_unschedule_event( $timestamp, 'quentn_cron_hook' );
+        }
     }
 
 }

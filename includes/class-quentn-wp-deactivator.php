@@ -54,6 +54,12 @@ class Quentn_Wp_Deactivator {
             //deactivated on a single site, in a multi-site
             $this->quentn_perform_deactivation( $wpdb->blogid );
         }
+
+        //unschedule cron tasks
+        $timestamp = wp_next_scheduled( 'quentn_cron_hook' );
+        if ( $timestamp ) {
+            wp_unschedule_event( $timestamp, 'quentn_cron_hook' );
+        }
     }
 
     private function quentn_perform_deactivation() {

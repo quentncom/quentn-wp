@@ -74,8 +74,16 @@ class Quentn_Wp_Reset_Password
                     $value = $data['vu'];
                     $site_url = wp_parse_url( get_home_url() );
                     $domain = ( isset( $site_url['host'] ) ) ? $site_url['host'] : '';
+                    $path = ( defined( 'SITECOOKIEPATH' ) ) ? SITECOOKIEPATH : '/';
+
                     //set cookie to get vu value for key used to reset password
-                    setcookie( $qntn_rp_cookie, $value, 0, '/', $domain, is_ssl(), true );
+                    setcookie( $qntn_rp_cookie, $value, 0, $path,'.'. $domain, is_ssl(), true );
+                    //if its multisite and plugin not active network wide, link will be invalid after first click, without actually reset password, bcz plugin may be
+                    // active on sub site but not on main site, then we not able to execute code on 'after_password_reset' hook
+                    if ( is_multisite() && ! Helper::is_plugin_active_for_network() ) {
+                        add_user_meta( $user->ID, 'quentn_reset_pwd_vu', $data['vu'] );
+                    }
+
                     $rp_link = network_site_url( "wp-login.php?action=rp&key=$key&login=" . $user_login, 'login' );
                     wp_safe_redirect( $rp_link );
                     exit;
