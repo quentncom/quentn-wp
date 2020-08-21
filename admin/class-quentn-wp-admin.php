@@ -662,10 +662,10 @@ class Quentn_Wp_Admin {
         );
 
         if ( ! empty( $term_ids ) ) {
-            $contact_data['terms'] = $term_ids;
+            $contact_data['terms'] = apply_filters( 'quentn_contact_terms', $term_ids );
         }
         //send request to quentn api and get response having id of newly created user
-        $this->api_handler->get_quentn_client()->contacts()->createContact( $contact_data );
+        $this->api_handler->get_quentn_client()->contacts()->createContact( apply_filters( 'quentn_contact_data', $contact_data ) );
     }
 
     /**

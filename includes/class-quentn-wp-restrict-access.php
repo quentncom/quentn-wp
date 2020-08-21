@@ -79,7 +79,7 @@ class Quentn_Wp_Restrict_Access
         if( $is_display_content ) {
             //set cookie if it is new email address
             $get_access_email = $this->get_new_access();
-            if( $get_access_email != '' ) {
+            if( $get_access_email ) {
                 $this->set_cookie_data( $get_access_email );
             }
             return $content;
@@ -274,7 +274,7 @@ class Quentn_Wp_Restrict_Access
         //get email address if it is in url/ new access
         $get_access_email = $this->get_new_access();
         //if it is new access/in url then add it in access emails list
-        if( $get_access_email != '') {
+        if( $get_access_email ) {
             $get_access_emails = array( $get_access_email );
         }
 
@@ -306,11 +306,11 @@ class Quentn_Wp_Restrict_Access
      *
      * @since  1.0.0
      * @access public
-     * @return string
+     * @return string|boolean
      */
     public function get_new_access() {
 
-        $get_new_access = '';
+        $get_new_access = false;
 
         if( isset( $_GET["qntn_wp"] ) ) { //get email address if it is in query string
             $get_new_access =   sanitize_text_field( $_GET["qntn_wp"] );

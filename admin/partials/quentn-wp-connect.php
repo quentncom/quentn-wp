@@ -103,7 +103,7 @@ if( isset( $_GET['state'] ) ) {
         update_option( 'quentn_base_url', $this->api_handler->get_oauth_client()->getBaseUrl() );
 
         //if elementor pro plugin is enabled, then update default quentn elementor api key and url
-        if( Helper::is_elementor_plugin_enabled() && Helper::is_elementor_pro_plugin_enabled() ) {
+        if( defined('ELEMENTOR_VERSION' ) && defined('ELEMENTOR_PRO_VERSION' )  && ELEMENTOR_VERSION >= '2.0.0' ) {
             if ( class_exists( 'Quentn_Wp_Elementor_Integration' ) ) {
                 $elementor_api_key = 'elementor_'. Quentn_Wp_Elementor_Integration::OPTION_NAME_API_KEY;
                 $elementor_api_url = 'elementor_'. Quentn_Wp_Elementor_Integration::OPTION_NAME_API_URL;

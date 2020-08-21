@@ -363,9 +363,10 @@ class Quentn_Wp_Rest_Api
                 $user_id = wp_insert_user( $qn_userdata );
             }
 
-            //$failur = true; array with username could not created
+            //if user could not created
             if ( is_wp_error( $user_id ) ) {
-                $error->add( 'Error Creating User '.$qn_userdata['user_login'], $user_id->get_error_message(), array('status' => 400));
+                $error->add( 'Error Creating User '.$qn_userdata['user_login'], $user_id->get_error_message(), array('status' => 400 ) );
+                continue;
             }
 
             //add roles to new user
@@ -385,6 +386,7 @@ class Quentn_Wp_Rest_Api
                 }
             }
 
+            do_action( 'quentn_user_register', $new_user );
             //add user meta last login as false
             update_user_meta( $new_user->ID, 'quentn_last_login', 0 );
 
