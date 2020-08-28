@@ -103,8 +103,7 @@ class Quentn_Wp_Rest_Api
      * @since 1.0
      * @return void
      */
-    public function register_page_routes()
-    {
+    public function register_page_routes()  {
 
         //register route to add access to restricted pages from quentn
         register_rest_route( $this->namespace, $this->grant_access, array(
@@ -223,8 +222,7 @@ class Quentn_Wp_Rest_Api
      * @access public
      * @return void
      */
-    public function quentn_grant_permission( $request )
-    {
+    public function quentn_grant_permission( $request ) {
         global $wpdb;
         $request_body = json_decode( $request->get_body(), true );
         //decode and save request in array
@@ -331,8 +329,7 @@ class Quentn_Wp_Rest_Api
      * @param string $request request received from quentn
      * @return void
      */
-    public function quentn_create_user( $request )
-    {
+    public function quentn_create_user( $request ) {
         $request_body = json_decode( $request->get_body(), true );
         $request_data = json_decode( base64_decode( $request_body['data'] ), true );
         $qntn_users = isset( $request_data['data']['users'] ) ? $request_data['data']['users'] : array();
@@ -425,7 +422,7 @@ class Quentn_Wp_Rest_Api
      * @access public
      * @return array
      */
-    public function user_fields_supported_by_quentn( $userdata ){
+    public function user_fields_supported_by_quentn( $userdata ) {
 
         $return = array();
         if( ! isset( $userdata['email'] ) || ! filter_var( $userdata['email'], FILTER_VALIDATE_EMAIL ) ) {
