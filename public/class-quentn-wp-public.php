@@ -20,6 +20,8 @@
  * @subpackage Quentn_Wp/public
  * @author     Quentn Team < info@quentn.com>
  */
+use QuentnWP\Admin\Utility\Helper;
+
 class Quentn_Wp_Public {
 
 	/**

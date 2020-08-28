@@ -27,6 +27,9 @@
  * @subpackage Quentn_Wp/includes
  * @author     Quentn Team < info@quentn.com>
  */
+
+use QuentnWP\Admin\Utility\Helper;
+
 class Quentn_Wp {
 
 	/**
@@ -113,27 +116,28 @@ class Quentn_Wp {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-quentn-wp-i18n.php';
 
         /**
+         * A collection of useful static functions
+         */
+        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/utility/class-helper.php';
+
+		/**
          * The class responsible for defining all actions that occur in the admin area.
          */
-
         require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-quentn-wp-admin.php';
 
         /**
          * The class responsible for handling quentn api calls
          */
-
         require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-quentn-wp-api-handler.php';
 
         /**
          * The class responsible for register and handle rest api route/endpoings
          */
-
         require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-quentn-wp-rest-api-controller.php';
 
         /**
          * The class responsible to restrict access for unauthorized access to page
          */
-
         require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-quentn-wp-restrict-access.php';
 
         /**
@@ -145,11 +149,6 @@ class Quentn_Wp {
          * The class responsible for cron job
          */
         require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-quentn-wp-cron.php';
-
-        /*
-        * A collection of useful static functions
-        */
-        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/utility/class-helper.php';
 
         /**
          * The class responsible for defining all actions that occur in the public-facing
@@ -163,7 +162,6 @@ class Quentn_Wp {
          * The class responsible to handle uninstallation
          */
         require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-quentn-wp-uninstall.php';
-
 
         if ( is_admin() ) {
             /**
@@ -191,7 +189,6 @@ class Quentn_Wp {
         }
 
 		$this->loader = new Quentn_Wp_Loader();
-
 	}
 
 	/**
@@ -208,7 +205,6 @@ class Quentn_Wp {
 		$plugin_i18n = new Quentn_Wp_i18n();
 
 		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
-
 	}
 
 	/**
@@ -219,7 +215,6 @@ class Quentn_Wp {
 	 * @access   private
 	 */
 	private function define_admin_hooks() {
-
 
 		$plugin_admin = new Quentn_Wp_Admin( $this->get_plugin_name(), $this->get_version() );
 

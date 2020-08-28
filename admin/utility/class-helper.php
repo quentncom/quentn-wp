@@ -1,4 +1,6 @@
-<?php 
+<?php
+
+namespace QuentnWP\Admin\Utility;
 
 class Helper
 {
@@ -204,6 +206,6 @@ class Helper
             $tzstring = 'UTC';
         }
 
-        return new DateTimeZone( $tzstring );
+        return new \DateTimeZone( $tzstring );
     }
 }

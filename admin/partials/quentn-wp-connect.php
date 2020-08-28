@@ -1,4 +1,5 @@
 <?php
+use QuentnWP\Admin\Utility\Helper;
 session_start();
 
 $base_uri = "https://my.quentn.com/public/api/v1/";

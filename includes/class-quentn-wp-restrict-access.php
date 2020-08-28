@@ -1,4 +1,5 @@
 <?php
+use QuentnWP\Admin\Utility\Helper;
 
 class Quentn_Wp_Restrict_Access
 {

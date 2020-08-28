@@ -1,4 +1,5 @@
 <?php
+use QuentnWP\Admin\Utility\Helper;
 
 if (!defined('ABSPATH')) {
     exit;

@@ -4,7 +4,7 @@ use Elementor\Controls_Manager;
 use Elementor\Settings;
 use ElementorPro\Modules\Forms\Classes\Form_Record;
 use ElementorPro\Modules\Forms\Module;
-
+use QuentnWP\Admin\Utility\Helper;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly.
@@ -250,10 +250,20 @@ class Quentn_Wp_Elementor_Integration extends Integration_Base {
             if ( isset($value['date'] ) ) {
                 $date_time = isset( $value['time'] ) ? $value['date'] . ' ' . $value['time'] : $value['date'];
                 $format = isset( $value['time'] ) ? 'Y-m-d H:i' : 'Y-m-d';
-                $date = DateTime::createFromFormat( $format, $date_time, Helper::get_wp_site_timezone() );
+
+                /**
+                 * @var $site_time_zone_obj \DateTimeZone
+                 */
+                $site_time_zone_obj = Helper::get_wp_site_timezone();
+                $date = DateTime::createFromFormat( $format, $date_time, $site_time_zone_obj );
                 if ( $date !== false ) {
                     $contact[$field] = $date->getTimestamp(); //update contact date field from array to Unix timestamp
                 }
+            }
+
+            //if only elementor time field is set against Quentn date field but no elementor date field is found, then we will ignore it as we don't have time field in Quentn
+            if ( isset( $value['time'] ) && ! isset($value['date'] ) ) {
+                unset($contact[$field]);
             }
         }
         return $contact;

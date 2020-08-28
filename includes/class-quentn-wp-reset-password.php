@@ -1,4 +1,5 @@
 <?php
+use QuentnWP\Admin\Utility\Helper;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -104,7 +105,11 @@ class Quentn_Wp_Reset_Password
         //if redirect url set by admin
         $quentn_auto_login_url = get_option( 'quentn_auto_login_url' );
         if ( $quentn_auto_login_url ) {
-            return $quentn_auto_login_url;
+            //Delete backslash if it is in the beginning of string
+            if ( substr( $quentn_auto_login_url, 0, 1 ) === "/" )
+                return substr($quentn_auto_login_url, 1 );
+            else
+                return $quentn_auto_login_url;
         }
 
         //if redirect url not set by admin, then take default redirect url for the user

@@ -20,6 +20,8 @@
  * @subpackage Quentn_Wp/admin
  * @author     Quentn Team < info@quentn.com>
  */
+use QuentnWP\Admin\Utility\Helper;
+
 class Quentn_Wp_Admin {
 
 
@@ -378,13 +380,13 @@ class Quentn_Wp_Admin {
                 'page'      => 'quentn-dashboard-web-tracking'
             ),
             array(
-                'id'       => 'qnentn_tags_option',
+                'id'       => 'quentn_tags_option',
                 'title'    => __( 'Select Quentn Tags', 'quentn-wp'),
                 'callback' => '__return_false',
                 'page'     => 'quentn-dashboard-tags'
             ),
             array(
-                'id'       => 'qnentn_auto_login_option',
+                'id'       => 'quentn_auto_login_option',
                 'title'    => __( 'Redirect after auto login', 'quentn-wp'),
                 'callback' => '__return_false',
                 'page'     => 'quentn-dashboard-auto-login'
@@ -435,7 +437,7 @@ class Quentn_Wp_Admin {
             'title'     => __( 'Redirect URL', 'quentn-wp' ),
             'callback'  => array( $this, 'field_quentn_auto_login_redirect_url' ),
             'page'      => 'quentn-dashboard-auto-login',
-            'section'   => 'qnentn_auto_login_option',
+            'section'   => 'quentn_auto_login_option',
         );
 
         //add tag fields for all wordpress roles
@@ -451,7 +453,7 @@ class Quentn_Wp_Admin {
                 'title'     =>  translate_user_role( $name ),
                 'callback'  =>  array( $this, 'input_add_wp_user_to_quentn' ),
                 'page'      =>  'quentn-dashboard-tags',
-                'section'   =>  'qnentn_tags_option',
+                'section'   =>  'quentn_tags_option',
                 'args'      =>  array( 'role' => $slug, 'role_title' => translate_user_role( $name ) )
             );
 
@@ -461,7 +463,7 @@ class Quentn_Wp_Admin {
                 'title'     => '',
                 'callback'  => array( $this, 'field_wp_role_quentn_tags' ),
                 'page'      => 'quentn-dashboard-tags',
-                'section'   => 'qnentn_tags_option',
+                'section'   => 'quentn_tags_option',
                 'args'      => array(
                     'label_for' => __('Please Select Tags', 'quentn-wp'),
                     'role'      => $slug,
@@ -475,7 +477,7 @@ class Quentn_Wp_Admin {
                 'title'     => '',
                 'callback'  => array( $this, 'input_delete_wp_user_to_quentn' ),
                 'page'      => 'quentn-dashboard-tags',
-                'section'   => 'qnentn_tags_option',
+                'section'   => 'quentn_tags_option',
                 'args'      => array( 'role' => $slug )
             );
         }

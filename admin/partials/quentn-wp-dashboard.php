@@ -13,16 +13,16 @@ if( isset( $_GET['tab'] ) ) {
         <!-- provides the styling for tabs. -->
         <h2 class="nav-tab-wrapper">
             <a href="?page=quentn-dashboard&tab=quentn_host_connection" class="nav-tab <?php if ( $active_tab == 'quentn_host_connection' ) { echo 'nav-tab-active'; } ?>"><?php _e( 'Connect', 'quentn-wp' ); ?></a>
-            <a href="?page=quentn-dashboard&tab=qnentn_tags_selection" class="nav-tab <?php if ( $active_tab == 'qnentn_tags_selection' ) { echo 'nav-tab-active'; } ?>"><?php _e( 'Roles', 'quentn-wp' ); ?></a>
-            <a href="?page=quentn-dashboard&tab=qnentn_web_tracking_tab" class="nav-tab <?php if ( $active_tab == 'qnentn_web_tracking_tab' ) { echo 'nav-tab-active'; } ?>"><?php _e( 'Web Tracking', 'quentn-wp' ); ?></a>
+            <a href="?page=quentn-dashboard&tab=quentn_tags_selection" class="nav-tab <?php if ( $active_tab == 'quentn_tags_selection' ) { echo 'nav-tab-active'; } ?>"><?php _e( 'Roles', 'quentn-wp' ); ?></a>
+            <a href="?page=quentn-dashboard&tab=quentn_web_tracking_tab" class="nav-tab <?php if ( $active_tab == 'quentn_web_tracking_tab' ) { echo 'nav-tab-active'; } ?>"><?php _e( 'Web Tracking', 'quentn-wp' ); ?></a>
             <a href="?page=quentn-dashboard&tab=quentn_settings" class="nav-tab <?php if ( $active_tab == 'quentn_settings' ) { echo 'nav-tab-active'; } ?>"><?php _e( 'Misc', 'quentn-wp' ); ?></a>
             <?php if( $this->is_learndash_plugin_active() ) { ?>
-            <a href="?page=quentn-dashboard&tab=qnentn_learndash_course_settings" class="nav-tab <?php if ( $active_tab == 'qnentn_learndash_course_settings' ) { echo 'nav-tab-active'; } ?>"><?php _e( 'LearnDash', 'quentn-wp' ); ?></a>
+            <a href="?page=quentn-dashboard&tab=quentn_learndash_course_settings" class="nav-tab <?php if ( $active_tab == 'quentn_learndash_course_settings' ) { echo 'nav-tab-active'; } ?>"><?php _e( 'LearnDash', 'quentn-wp' ); ?></a>
             <?php } ?>
         </h2>
         <?php
         $submit_button_attributes = array();
-        if( $active_tab != "quentn_settings" && $active_tab != "qnentn_learndash_course_settings" && ! $this->api_handler->is_connected_with_quentn() ) {
+        if( $active_tab != "quentn_settings" && $active_tab != "quentn_learndash_course_settings" && ! $this->api_handler->is_connected_with_quentn() ) {
             $submit_button_attributes =  array(
                 'disabled' => true
             );
@@ -40,19 +40,19 @@ if( isset( $_GET['tab'] ) ) {
         <?php
         }
         //display quentn tags selection options for wp user roles
-        if ( $active_tab == "qnentn_tags_selection" ) {
+        if ( $active_tab == "quentn_tags_selection" ) {
             echo '<form method="post" action="options.php">';
             settings_fields( "quentn_tags_options_group" );
             do_settings_sections( "quentn-dashboard-tags" );
             submit_button( NULL, 'primary', 'submit', true, $submit_button_attributes );
             echo '</form>';
-        } elseif ( $active_tab == "qnentn_learndash_course_settings" && $this->is_learndash_plugin_active() ) {
+        } elseif ( $active_tab == "quentn_learndash_course_settings" && $this->is_learndash_plugin_active() ) {
             echo '<form method="post" action="options.php">';
             settings_fields( "quentn_learndash_options_group" );
             do_settings_sections( "quentn-learn-dash" );
             submit_button( NULL, 'primary', 'submit', true, $submit_button_attributes );
             echo '</form>';
-        } elseif ( $active_tab == "qnentn_web_tracking_tab" ) { //display web tracking options
+        } elseif ( $active_tab == "quentn_web_tracking_tab" ) { //display web tracking options
             echo '<form method="post" action="options.php">';
             if( get_option('quentn_web_tracking_enabled') ) {
                 update_option("quentn_web_tracking_code", $this->get_quentn_web_tracking_code() );
