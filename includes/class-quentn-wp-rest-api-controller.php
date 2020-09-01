@@ -358,6 +358,10 @@ class Quentn_Wp_Rest_Api
                 $qn_userdata['role'] = '';
                 //insert user in wordpress
                 $user_id = wp_insert_user( $qn_userdata );
+                // On success, add user meta last login as false
+                if ( ! is_wp_error( $user_id ) ) {
+                    update_user_meta( $user_id, 'quentn_last_login', 0 );
+                }
             }
 
             //if user could not created
@@ -384,8 +388,6 @@ class Quentn_Wp_Rest_Api
             }
 
             do_action( 'quentn_user_register', $new_user );
-            //add user meta last login as false
-            update_user_meta( $new_user->ID, 'quentn_last_login', 0 );
 
             //send email if set by quentn call
             if ( $is_send_user_email && isset( $request_data['data']['notify'] ) && $request_data['data']['notify'] ) {
