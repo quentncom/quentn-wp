@@ -781,7 +781,7 @@ class Quentn_Wp_Admin {
     }
 
     /**
-     * Display web tracking consent methods dropdown
+     * Display redirect url after auto login
      *
      * @since  1.1.0
      * @access public
