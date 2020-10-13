@@ -60,6 +60,15 @@ class Quentn_Wp_Rest_Api
      */
     private $get_user_roles;
 
+    /**
+     * The base URL for route to update web tracking code
+     *
+     * @since  1.1.1
+     * @access private
+     * @var    string
+     */
+    private $get_tracking;
+
 
     /**
      * Initialize our namespace and resource name.
@@ -76,7 +85,7 @@ class Quentn_Wp_Rest_Api
         $this->revoke_access = '/pages/revoke-access';
         $this->get_page_restrictions = '/get-page-restrictions';
         $this->get_user_roles = '/get-user-roles';
-
+        $this->get_tracking = '/get-tracking';
     }
 
     /**
@@ -213,6 +222,28 @@ class Quentn_Wp_Rest_Api
             ),
 
         ));
+
+        //register route to get tracking code when settings is saved in Quentn
+        register_rest_route( $this->namespace, $this->get_tracking, array(
+            // By using this constant we ensure that when the WP_REST_Server changes our readable endpoints will work as intended.
+            'methods' => \WP_REST_Server::CREATABLE,
+            // Here we register our callback. The callback is fired when this endpoint is matched by the WP_REST_Server class.
+            'callback' => array( $this, 'quentn_get_tracking_code' ),
+            // Here we register our permissions callback. The callback is fired before the main callback to check if the current user can access the endpoint.
+            'permission_callback' => array( $this, 'quentn_check_credentials' ),
+
+            'args' => array(
+                'data' => array(
+                    'required' => true,
+                    'type' => 'string',
+                ),
+                'vu' => array(
+                    'required' => true,
+                    'type' => 'integer',
+                ),
+            ),
+
+        ));
     }
 
     /**
@@ -304,8 +335,6 @@ class Quentn_Wp_Rest_Api
             }
         }
         return rest_ensure_response( json_encode( $restricted_pages ) );
-
-
     }
 
     /**
@@ -400,6 +429,22 @@ class Quentn_Wp_Rest_Api
         }
 
         return rest_ensure_response( 'Data Successfully Updated' );
+    }
+
+    /**
+     * Get list of all wp roles
+     *
+     * @since  1.1.1
+     * @access public
+     * @return array
+     */
+    public function quentn_get_tracking_code( ) {
+        $web_tracking = new Quentn_Wp_Web_Tracking();
+        if( ! get_option('quentn_web_tracking_enabled') ) {
+            return rest_ensure_response( array( 'saved' => 0 ) );
+        }
+        update_option("quentn_web_tracking_code", $web_tracking->get_quentn_web_tracking_code() );
+        return rest_ensure_response( array( 'saved' => 1 ) );
     }
 
     /**

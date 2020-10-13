@@ -159,6 +159,11 @@ class Quentn_Wp {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'vendor/autoload.php';
 
         /**
+         * The class responsible for handling web tracking code
+         */
+        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-quentn-wp-web-tracking.php';
+
+        /**
          * The class responsible to handle uninstallation
          */
         require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-quentn-wp-uninstall.php';

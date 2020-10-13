@@ -53,9 +53,10 @@ if( isset( $_GET['tab'] ) ) {
             submit_button( NULL, 'primary', 'submit', true, $submit_button_attributes );
             echo '</form>';
         } elseif ( $active_tab == "quentn_web_tracking_tab" ) { //display web tracking options
+            $web_tracking = new Quentn_Wp_Web_Tracking();
             echo '<form method="post" action="options.php">';
             if( get_option('quentn_web_tracking_enabled') ) {
-                update_option("quentn_web_tracking_code", $this->get_quentn_web_tracking_code() );
+                update_option("quentn_web_tracking_code", $web_tracking->get_quentn_web_tracking_code() );
             } else { //if web tracking option is disabled, we will delete previously saved tracking code
                 delete_option('quentn_web_tracking_code');
             }
@@ -69,7 +70,7 @@ if( isset( $_GET['tab'] ) ) {
                     'disabled' => true
                 );
             }
-            elseif( $this->api_handler->is_connected_with_quentn() && ! $this->is_domain_registered( $_SERVER['HTTP_HOST'], $this->api_handler->get_registered_domains() ) ) {
+            elseif( $this->api_handler->is_connected_with_quentn() && ! $web_tracking->is_domain_registered( $_SERVER['HTTP_HOST'], $this->api_handler->get_registered_domains() ) ) {
                 if ( ! empty( $this->api_handler->error_messages ) ) {
                     $this->show_errors( $this->api_handler->error_messages );
                 }
