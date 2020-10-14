@@ -247,20 +247,23 @@ class Quentn_Wp_Elementor_Integration extends Integration_Base {
 
         //if contact data includes date,time mapped with quentn datetime field, convert it into Unix timestamp
         foreach ( $contact as $field => $value ) {
-            if ( isset($value['date'] ) ) {
-                $date_time = isset( $value['time'] ) ? $value['date'] . ' ' . $value['time'] : $value['date'];
-                $format = isset( $value['time'] ) ? 'Y-m-d H:i' : 'Y-m-d';
+            if ( isset( $value['date'] ) ) {
+                if ( isset( $value['time'] ) && $value['time'] != '' ) {
+                    $date_time = $value['date'] . ' ' . $value['time'];
+                    $format = 'Y-m-d H:i';
 
-                /**
-                 * @var $site_time_zone_obj \DateTimeZone
-                 */
-                $site_time_zone_obj = Helper::get_wp_site_timezone();
-                $date = DateTime::createFromFormat( $format, $date_time, $site_time_zone_obj );
-                if ( $date !== false ) {
-                    $contact[$field] = $date->getTimestamp(); //update contact date field from array to Unix timestamp
+                    /**
+                     * @var $site_time_zone_obj \DateTimeZone
+                     */
+                    $site_time_zone_obj = Helper::get_wp_site_timezone();
+                    $date = DateTime::createFromFormat( $format, $date_time, $site_time_zone_obj );
+                    if ( $date !== false ) {
+                        $contact[$field] = $date->getTimestamp(); //update contact date field from array to Unix timestamp
+                    }
+                } else {
+                    $contact[$field] = $value['date'];
                 }
             }
-
             //if only elementor time field is set against Quentn date field but no elementor date field is found, then we will ignore it as we don't have time field in Quentn
             if ( isset( $value['time'] ) && ! isset($value['date'] ) ) {
                 unset($contact[$field]);
@@ -410,7 +413,6 @@ class Quentn_Wp_Elementor_Integration extends Integration_Base {
             return false;
         }
     }
-
 
     /**
      * Split a name into first and last.
