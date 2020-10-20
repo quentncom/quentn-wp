@@ -2,12 +2,12 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Quentn wp\n"
 "POT-Creation-Date: 2019-08-07 17:34+0200\n"
-"PO-Revision-Date: 2020-08-19 10:51+0200\n"
+"PO-Revision-Date: 2020-10-19 15:12+0200\n"
 "Language-Team: Quentn GmbH\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.3.1\n"
+"X-Generator: Poedit 2.4.1\n"
 "X-Poedit-Basepath: ..\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-KeywordsList: __;_e;_n;esc_html__;esc_html_e\n"
@@ -540,6 +540,42 @@ msgstr "Für die Integration mit unseren Formularen benötigen Sie einen %s"
 #: includes/class-quentn-wp-elementor-integration.php:154
 msgid "API Key"
 msgstr "API-Schlüssel"
+
+#: includes/class-quentn-wp-elementor-integration.php:186
+msgid "Flood Protection"
+msgstr "Schutz vor Benachrichtigungsflut"
+
+#: includes/class-quentn-wp-elementor-integration.php:191
+msgid "Enter the maximum form submissions per hour and unique IP-Adresses (default: 5, 0 to diable)"
+msgstr "Geben Sie die maximale Anzahl der Formular-Eintragungen pro Stunde und pro eindeutige IP-Adresse ein (Standard: 5, 0 bis deaktiviert)"
+
+#: includes/class-quentn-wp-elementor-integration.php:200
+msgid "Use Spam Protection"
+msgstr "Spam-Schutz verwenden"
+
+#: includes/class-quentn-wp-elementor-integration.php:202
+msgid "Form submissions of known Spam-Bots will be ignored"
+msgstr "Formulareinsendungen von bekannten Spam-Bots werden ignoriert"
+
+#: includes/class-quentn-wp-elementor-integration.php:212
+msgid "Quentn Redirect"
+msgstr "Quentn Weiterleitung"
+
+#: includes/class-quentn-wp-elementor-integration.php:221
+msgid "Redirection URL (default Redirection)"
+msgstr "Weiterleitungs-URL (Standard-Weiterleitung)"
+
+#: includes/class-quentn-wp-elementor-integration.php:229
+msgid "Redirection URL for confirmed contact"
+msgstr "Weiterleitungs-URL für bestätigten Kontakt"
+
+#: includes/class-quentn-wp-elementor-integration.php:237
+msgid "Attach contact info to URL"
+msgstr "Kontaktinformationen an URL anhängen"
+
+#: includes/class-quentn-wp-elementor-integration.php:239
+msgid "Attaches Contact's ID and Email to the URL. This is used for tracking tools (e.g. splittest tools) to verify the opt-in."
+msgstr "Hängt die ID und E-Mail des Kontakts an die URL an. Dies wird für Tracking-Tools (z.B. Splittest-Tools) zur Überprüfung des Opt-In verwendet."
 
 #: includes/class-quentn-wp-elementor-integration.php:452
 msgid "Validate API Key"

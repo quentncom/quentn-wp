@@ -121,24 +121,12 @@ class Quentn_Wp_Elementor_Handler {
 	 * create contact at quentn via api
 	 *
 	 * @param array $subscriber_data
-	 * @param array $quentn_terms
-	 * @param array $new_terms
 	 *
 	 * @return array|mixed
 	 * @throws \Exception
 	 */
-	public function create_subscriber( $subscriber_data = [], $quentn_terms = [] ) {
-        $data = array();
-        //add ip address and terms to subscriber data
-        $subscriber_data['request_ip'] = $_SERVER["REMOTE_ADDR"];
-
-        if( ! empty( $quentn_terms ) ) {
-            $subscriber_data['terms'] = $quentn_terms;
-        }
-
-        $data['contact'] = $subscriber_data;
-
+	public function create_subscriber( $subscriber_data = [] ) {
         //add contact at quentn
-        $this->rest_client->post( 'contact', $data );
+        return $this->rest_client->post( 'contact', $subscriber_data );
 	}
 }

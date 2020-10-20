@@ -547,6 +547,42 @@ msgstr ""
 msgid "API Key"
 msgstr ""
 
+#: includes/class-quentn-wp-elementor-integration.php:186
+msgid "Flood Protection"
+msgstr ""
+
+#: includes/class-quentn-wp-elementor-integration.php:191
+msgid "Enter the maximum form submissions per hour and unique IP-Adresses (default: 5, 0 to diable)"
+msgstr ""
+
+#: includes/class-quentn-wp-elementor-integration.php:200
+msgid "Use Spam Protection"
+msgstr ""
+
+#: includes/class-quentn-wp-elementor-integration.php:202
+msgid "Form submissions of known Spam-Bots will be ignored"
+msgstr ""
+
+#: includes/class-quentn-wp-elementor-integration.php:212
+msgid "Quentn Redirect"
+msgstr ""
+
+#: includes/class-quentn-wp-elementor-integration.php:221
+msgid "Redirection URL (default Redirection)"
+msgstr ""
+
+#: includes/class-quentn-wp-elementor-integration.php:229
+msgid "Redirection URL for confirmed contact"
+msgstr ""
+
+#: includes/class-quentn-wp-elementor-integration.php:237
+msgid "Attach contact info to URL"
+msgstr ""
+
+#: includes/class-quentn-wp-elementor-integration.php:239
+msgid "Attaches Contact's ID and Email to the URL. This is used for tracking tools (e.g. splittest tools) to verify the opt-in."
+msgstr ""
+
 #: includes/class-quentn-wp-elementor-integration.php:452
 msgid "Validate API Key"
 msgstr ""

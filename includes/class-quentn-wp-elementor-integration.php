@@ -183,6 +183,62 @@ class Quentn_Wp_Elementor_Integration extends Integration_Base {
             ]
         );
 
+        $widget->add_control(
+            'quentn_flood_limit',
+            [
+                'label' => __( 'Flood Protection', 'quentn-wp' ),
+                'type' => Controls_Manager::NUMBER,
+                'description' => __( 'Enter the maximum form submissions per hour and unique IP-Adresses (default: 5, 0 to diable)', 'quentn-wp' ),
+                'min' => 0,
+                'default' => 5,
+                'separator' => 'before'
+            ]
+        );
+        $widget->add_control(
+            'quentn_spam_protection',
+            [
+                'label' => __( 'Use Spam Protection', 'quentn-wp' ),
+                'type' => Controls_Manager::SWITCHER,
+                'description' => __( 'Form submissions of known Spam-Bots will be ignored', 'quentn-wp' ),
+                'separator' => 'before'
+            ]
+        );
+        $widget->end_controls_section();
+
+        //Quentn redirect settins section
+        $widget->start_controls_section(
+            'section_quentn_redirect_elementor',
+            [
+                'label' => __( 'Quentn Redirect', 'quentn-wp' ),
+                'condition' => [
+                    'submit_actions' => $this->get_name(),
+                ],
+            ]
+        );
+        $widget->add_control(
+            'quentn_default_redirect_url',
+            [
+                'label' => __( 'Redirection URL (default Redirection)', 'quentn-wp' ),
+                'type' => Controls_Manager::TEXT,
+                'label_block' => true
+            ]
+        );
+        $widget->add_control(
+            'quentn_confirmed_redirect_url',
+            [
+                'label' => __( 'Redirection URL for confirmed contact', 'quentn-wp' ),
+                'type' => Controls_Manager::TEXT,
+                'label_block' => true
+            ]
+        );
+        $widget->add_control(
+            'quentn_attach_contact_information',
+            [
+                'label' => __( 'Attach contact info to URL', 'quentn-wp' ),
+                'type' => Controls_Manager::SWITCHER,
+                'description' => __( "Attaches Contact's ID and Email to the URL. This is used for tracking tools (e.g. splittest tools) to verify the opt-in.", 'quentn-wp' ),
+            ]
+        );
         $widget->end_controls_section();
     }
 
@@ -192,7 +248,12 @@ class Quentn_Wp_Elementor_Integration extends Integration_Base {
             $element['settings']['quentn_api_key'],
             $element['settings']['quentn_api_url'],
             $element['settings']['quentn_list'],
-            $element['settings']['quentn_fields_map']
+            $element['settings']['quentn_fields_map'],
+            $element['settings']['quentn_flood_limit'],
+            $element['settings']['quentn_spam_protection'],
+            $element['settings']['quentn_default_redirect_url'],
+            $element['settings']['quentn_confirmed_redirect_url'],
+            $element['settings']['quentn_attach_contact_information']
         );
 
         return $element;
@@ -218,30 +279,32 @@ class Quentn_Wp_Elementor_Integration extends Integration_Base {
 
         try {
             $handler = new Quentn_Wp_Elementor_Handler( $api_key, $api_url );
-            $handler->create_subscriber( $subscriber, $form_settings['quentn_list'] );
-
+            $response = $handler->create_subscriber( $subscriber );
+            //redirect user if redirect url set in Quentn reponse
+            if ( isset( $response['body']['redirection_url'] ) &&  filter_var( $response['body']['redirection_url'], FILTER_VALIDATE_URL ) ) {
+                $redirect_to = $record->replace_setting_shortcodes( $response['body']['redirection_url'], true );
+                $ajax_handler->add_response_data( 'redirect_url', $redirect_to );
+            }
         } catch ( \Exception $exception ) {
-            $ajax_handler->add_admin_error_message( 'Quentn ' . $exception->getMessage() );
+                $ajax_handler->add_admin_error_message( 'Quentn ' . $exception->getMessage() );
         }
+   }
 
-    }
-
-
-    /**
-     * Create subscriber array from submitted data and form settings
-     * returns a subscriber array or false on error
-     *
-     * @param Form_Record $record
-     *
-     * @return array|bool
-     */
+   /**
+    * Create subscriber array from submitted data and form settings
+    * returns a subscriber array or false on error
+    *
+    * @param Form_Record $record
+    *
+    * @return array|bool
+    */
     private function create_subscriber_object( Form_Record $record ) {
          $map = $this->map_fields( $record );
 
         if ( ! in_array( 'mail', $map ) ) {
             return false;
         }
-
+        $request_data = array();
         $fields = $this->get_normalized_fields( $record );
         $contact = $this->generate_contact_with_map( $fields, $map );
 
@@ -269,7 +332,28 @@ class Quentn_Wp_Elementor_Integration extends Integration_Base {
                 unset($contact[$field]);
             }
         }
-        return $contact;
+
+        //add addtional contact data fields
+        $quentn_terms = $record->get_form_settings( 'quentn_list' );
+        $quentn_flood_limit = $record->get_form_settings( 'quentn_flood_limit' );
+        $quentn_spam_protection = $record->get_form_settings( 'quentn_spam_protection' );
+        $quentn_default_redirect_url = $record->get_form_settings( 'quentn_default_redirect_url' );
+        $quentn_confirmed_redirect_url = $record->get_form_settings( 'quentn_confirmed_redirect_url' );
+        $quentn_attach_contact_information = $record->get_form_settings( 'quentn_attach_contact_information' );
+
+        if( ! empty( $quentn_terms ) ) {
+            $contact['terms'] = $quentn_terms;
+        }
+        $contact['request_ip'] = $_SERVER["REMOTE_ADDR"]; //add ip address and terms to subscriber data
+        $request_data['contact'] = $contact;
+        $request_data['flood_limit'] = ( $quentn_flood_limit === '' ) ? 5 : $quentn_flood_limit;
+        $request_data['spam_protection'] = ( $quentn_spam_protection == 'yes' ) ? 1 : 0;
+        $request_data['qntn'] = [
+            "redirection_url" => ( $quentn_default_redirect_url && filter_var( $quentn_default_redirect_url, FILTER_VALIDATE_URL ) ) ? $quentn_default_redirect_url : '',
+            "redirection_url_confirmed" => ( $quentn_confirmed_redirect_url && filter_var( $quentn_confirmed_redirect_url, FILTER_VALIDATE_URL ) ) ? $quentn_confirmed_redirect_url : '',
+            "append_contact_info" => ( $quentn_attach_contact_information == 'yes' ) ? 1 : 0,
+        ];
+        return $request_data;
     }
 
 
