@@ -66,7 +66,7 @@ Answer to foo bar dilemma.
 
 == Changelog ==
 = 1.1.2 =
-* Implement Quentn redirect, flood protection and spam protection in Elementor forms.
+* Implements Quentn redirect, flood protection and spam protection in Elementor forms.
 
 = 1.1.1 =
 * Add: Web tracking code updated in WP when user updates settings in Quentn.
