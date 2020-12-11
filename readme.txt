@@ -3,7 +3,7 @@ Contributors: quentn
 Tags: Quentn, countdown, page restriction, email, elementor integration, email marketing tool, integration, email automation, marketing automation
 Requires at least: 4.6.0
 Tested up to: 5.4.2
-Stable tag: 1.1.2
+Stable tag: 1.1.3
 Requires PHP: 5.6.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -65,6 +65,9 @@ Answer to foo bar dilemma.
 4. Integration Elementor PRO forms with Quentn
 
 == Changelog ==
+= 1.1.3 =
+* Fix: Load element integration file after elementor instance has been initiated.
+
 = 1.1.2 =
 * Implements Quentn redirect, flood protection and spam protection in Elementor forms.
 
@@ -111,6 +114,10 @@ Answer to foo bar dilemma.
 * Initial version.
 
 == Upgrade Notice ==
+
+= 1.1.3 =
+Thanks for using Quentn Plugin! Please update the plugin to fix issue with load elementor PRO forms integration file.
+
 = 1.1.2 =
 Thanks for using Quentn Plugin! Please update the plugin to implement Quentn redirect, flood protection and spam protection in Elementor forms.
 
