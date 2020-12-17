@@ -43,8 +43,15 @@ class Quentn_Wp_Elementor_Field_Mapping extends Control_Repeater {
 
 	public function enqueue()
     {
-        wp_register_script( 'quentn.elementor.integration.js', QUENTN_WP_PLUGIN_URL . 'admin/js/quentn-elementor-integration.js', array(), '', true );
-        wp_enqueue_script( 'quentn.elementor.integration.js' );
+        $wp_version = get_bloginfo( 'version' );
+        //Add different file for elementor integration for wordpress version equal or greater than 5.6
+        if ( version_compare( $wp_version, '5.6', '>=' ) ) {
+            wp_register_script( 'quentn.elementor.integration.js', QUENTN_WP_PLUGIN_URL . 'admin/js/quentn-elementor-integration-5.6.js', array(), '', true );
+            wp_enqueue_script( 'quentn.elementor.integration.js' );
+        } else {
+            wp_register_script( 'quentn.elementor.integration.js', QUENTN_WP_PLUGIN_URL . 'admin/js/quentn-elementor-integration.js', array(), '', true );
+            wp_enqueue_script( 'quentn.elementor.integration.js' );
+        }
 
         $mappable_fields = $this->get_mappable_fields();
         $fields = [];

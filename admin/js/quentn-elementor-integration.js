@@ -1,4 +1,4 @@
-jQuery( window ).on( 'elementor/frontend/init', function ( e, ep, fields, $ ) {
+(function ( e, ep, fields, $ ) {
     var QuentnIntegration = {
         fields: fields,
         customFields: {},
@@ -203,4 +203,4 @@ jQuery( window ).on( 'elementor/frontend/init', function ( e, ep, fields, $ ) {
 
     e.addControlView( 'Qntn_fields_map', QntnFieldsMap );
 
-}( elementor, elementorPro, QntnMappableFields.fields, jQuery ) );
+})( elementor, elementorPro, QntnMappableFields.fields, jQuery );
