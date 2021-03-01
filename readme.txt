@@ -66,7 +66,7 @@ Answer to foo bar dilemma.
 
 == Changelog ==
 = 1.1.5 =
-* Improve method how cookie value is fetched to check page access permission.
+* Improve the method of how cookie value is fetched to check page access permission.
 
 = 1.1.4 =
 * Fix: Elementor integration for WordPress version 5.6.
