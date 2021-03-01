@@ -281,10 +281,16 @@ class Quentn_Wp_Restrict_Access
 
         //get already saved cookie value if dont find in url
         if( empty( $get_access_emails ) ) {
-
             $cookie_saved_data = $this->get_json_cookie( 'qntn_wp_access' );
-
-            $get_access_emails = ( isset( $cookie_saved_data['access'][get_the_ID()] ) ) ?  $cookie_saved_data['access'][get_the_ID()] : array();
+            //get access emails of all pages from cookie
+            $get_all_access_emails = ( isset( $cookie_saved_data['access'] ) ) ?  $cookie_saved_data['access'] : array();
+            if ( ! empty( $get_all_access_emails ) ) {
+                foreach ( $get_all_access_emails as $get_access_page_emails ) { //loop through all access for each page
+                    foreach ( $get_access_page_emails as $get_access_page_email ) { //each page can have multiple access emails, add all of them
+                        $get_access_emails[] = $get_access_page_email;
+                    }
+                }
+            }
         }
         return $get_access_emails;
     }
