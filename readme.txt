@@ -2,8 +2,8 @@
 Contributors: quentn
 Tags: Quentn, countdown, page restriction, email, elementor integration, email marketing tool, integration, email automation, marketing automation
 Requires at least: 4.6.0
-Tested up to: 5.6
-Stable tag: 1.1.5
+Tested up to: 5.7
+Stable tag: 1.1.6
 Requires PHP: 5.6.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -65,6 +65,9 @@ Answer to foo bar dilemma.
 4. Integration Elementor PRO forms with Quentn
 
 == Changelog ==
+= 1.1.6 =
+* Slash at start of the namespace of rest API route is removed.
+
 = 1.1.5 =
 * Improve the method of how cookie value is fetched to check page access permission.
 
@@ -120,6 +123,9 @@ Answer to foo bar dilemma.
 * Initial version.
 
 == Upgrade Notice ==
+
+= 1.1.6 =
+Thanks for using Quentn Plugin! Please update the plugin to improve the namespace of the rest API routes.
 
 = 1.1.5 =
 Thanks for using Quentn Plugin! Please update the plugin to improve handling of page access permission.

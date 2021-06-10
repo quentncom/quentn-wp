@@ -79,7 +79,7 @@ class Quentn_Wp_Rest_Api
     {
         add_action( 'rest_api_init', array( $this, 'register_page_routes' ) );
 
-        $this->namespace = '/quentn/api/v1';
+        $this->namespace = 'quentn/api/v1';
         $this->create_user = '/users';
         $this->grant_access = '/pages/grant-access';
         $this->revoke_access = '/pages/revoke-access';
