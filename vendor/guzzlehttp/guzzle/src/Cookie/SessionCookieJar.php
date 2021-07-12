@@ -1,5 +1,5 @@
 <?php
-namespace GuzzleHttp\Cookie;
+namespace QuentnWPGuzzleHttp\Cookie;
 
 /**
  * Persists cookies in the client session

@@ -1,5 +1,5 @@
 <?php
-namespace GuzzleHttp\Exception;
+namespace QuentnWPGuzzleHttp\Exception;
 
 /**
  * @method string getMessage()

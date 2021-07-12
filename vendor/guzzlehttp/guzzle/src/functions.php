@@ -1,10 +1,10 @@
 <?php
-namespace GuzzleHttp;
+namespace QuentnWPGuzzleHttp;
 
-use GuzzleHttp\Handler\CurlHandler;
-use GuzzleHttp\Handler\CurlMultiHandler;
-use GuzzleHttp\Handler\Proxy;
-use GuzzleHttp\Handler\StreamHandler;
+use QuentnWPGuzzleHttp\Handler\CurlHandler;
+use QuentnWPGuzzleHttp\Handler\CurlMultiHandler;
+use QuentnWPGuzzleHttp\Handler\Proxy;
+use QuentnWPGuzzleHttp\Handler\StreamHandler;
 
 /**
  * Expands a URI template
@@ -133,7 +133,7 @@ function default_user_agent()
     static $defaultAgent = '';
 
     if (!$defaultAgent) {
-        $defaultAgent = 'GuzzleHttp/' . Client::VERSION;
+        $defaultAgent = 'QuentnWPGuzzleHttp/' . Client::VERSION;
         if (extension_loaded('curl') && function_exists('curl_version')) {
             $defaultAgent .= ' curl/' . \curl_version()['version'];
         }

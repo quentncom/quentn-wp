@@ -32,13 +32,13 @@
     },
     "autoload": {
         "psr-4": {
-            "GuzzleHttp\\Psr7\\": "src/"
+            "QuentnWPGuzzleHttp\\Psr7\\": "src/"
         },
         "files": ["src/functions_include.php"]
     },
     "autoload-dev": {
         "psr-4": {
-            "GuzzleHttp\\Tests\\Psr7\\": "tests/"
+            "QuentnWPGuzzleHttp\\Tests\\Psr7\\": "tests/"
         }
     },
     "extra": {

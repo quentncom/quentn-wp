@@ -1,8 +1,8 @@
 <?php
-namespace GuzzleHttp;
+namespace QuentnWPGuzzleHttp;
 
-use GuzzleHttp\Promise\PromiseInterface;
-use GuzzleHttp\Psr7;
+use QuentnWPGuzzleHttp\Promise\PromiseInterface;
+use QuentnWPGuzzleHttp\Psr7;
 use Psr\Http\Message\RequestInterface;
 
 /**

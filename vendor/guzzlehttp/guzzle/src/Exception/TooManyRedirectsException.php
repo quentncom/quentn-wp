@@ -1,4 +1,4 @@
 <?php
-namespace GuzzleHttp\Exception;
+namespace QuentnWPGuzzleHttp\Exception;
 
 class TooManyRedirectsException extends RequestException {}

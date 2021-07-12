@@ -1,9 +1,9 @@
 <?php
-namespace GuzzleHttp;
+namespace QuentnWPGuzzleHttp;
 
-use GuzzleHttp\Promise\PromiseInterface;
-use GuzzleHttp\Promise\RejectedPromise;
-use GuzzleHttp\Psr7;
+use QuentnWPGuzzleHttp\Promise\PromiseInterface;
+use QuentnWPGuzzleHttp\Promise\RejectedPromise;
+use QuentnWPGuzzleHttp\Psr7;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -97,7 +97,7 @@ class RetryMiddleware
                 null,
                 $reason
             )) {
-                return \GuzzleHttp\Promise\rejection_for($reason);
+                return \QuentnWPGuzzleHttp\Promise\rejection_for($reason);
             }
             return $this->doRetry($req, $options);
         };

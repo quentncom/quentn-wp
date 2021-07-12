@@ -1,7 +1,7 @@
 <?php
-namespace GuzzleHttp\Handler;
+namespace QuentnWPGuzzleHttp\Handler;
 
-use GuzzleHttp\RequestOptions;
+use QuentnWPGuzzleHttp\RequestOptions;
 use Psr\Http\Message\RequestInterface;
 
 /**

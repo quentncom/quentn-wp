@@ -1,7 +1,7 @@
 <?php
 namespace Quentn\Client;
-use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\Exception\ClientException;
+use QuentnWPGuzzleHttp\Exception\GuzzleException;
+use QuentnWPGuzzleHttp\Exception\ClientException;
 
 class ContactClient extends AbstractQuentnClient {
     

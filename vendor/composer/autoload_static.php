@@ -11,6 +11,9 @@ class ComposerStaticInita605f666563ac9933041231244daec68
         'c964ee0ededf28c96ebd9db5099ef910' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
         'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
+        '9489e01daf1c4fea15191b1fa66ae1d5' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
+        '42f29e5b17a2fb90587482aa5dc87da1' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
+        '174f0c49b6b88969abdb283fd27db628' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -19,16 +22,13 @@ class ComposerStaticInita605f666563ac9933041231244daec68
             'Quentn\\' => 7,
             'QuentnWP\\Inc\\' => 13,
             'QuentnWP\\' => 9,
+            'QuentnWPGuzzleHttp\\Psr7\\' => 24,
+            'QuentnWPGuzzleHttp\\Promise\\' => 27,
+            'QuentnWPGuzzleHttp\\' => 19,
         ),
         'P' => 
         array (
             'Psr\\Http\\Message\\' => 17,
-        ),
-        'G' => 
-        array (
-            'GuzzleHttp\\Psr7\\' => 16,
-            'GuzzleHttp\\Promise\\' => 19,
-            'GuzzleHttp\\' => 11,
         ),
     );
 
@@ -45,21 +45,21 @@ class ComposerStaticInita605f666563ac9933041231244daec68
         array (
             0 => __DIR__ . '/../..' . '/',
         ),
-        'Psr\\Http\\Message\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/psr/http-message/src',
-        ),
-        'GuzzleHttp\\Psr7\\' => 
+        'QuentnWPGuzzleHttp\\Psr7\\' => 
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/psr7/src',
         ),
-        'GuzzleHttp\\Promise\\' => 
+        'QuentnWPGuzzleHttp\\Promise\\' => 
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/promises/src',
         ),
-        'GuzzleHttp\\' => 
+        'QuentnWPGuzzleHttp\\' => 
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/guzzle/src',
+        ),
+        'Psr\\Http\\Message\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
     );
 

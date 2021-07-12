@@ -1,9 +1,9 @@
 <?php
-namespace GuzzleHttp\Handler;
+namespace QuentnWPGuzzleHttp\Handler;
 
-use GuzzleHttp\Promise as P;
-use GuzzleHttp\Promise\Promise;
-use GuzzleHttp\Psr7;
+use QuentnWPGuzzleHttp\Promise as P;
+use QuentnWPGuzzleHttp\Promise\Promise;
+use QuentnWPGuzzleHttp\Psr7;
 use Psr\Http\Message\RequestInterface;
 
 /**

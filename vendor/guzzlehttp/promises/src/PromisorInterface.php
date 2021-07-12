@@ -1,5 +1,5 @@
 <?php
-namespace GuzzleHttp\Promise;
+namespace QuentnWPGuzzleHttp\Promise;
 
 /**
  * Interface used with classes that return a promise.

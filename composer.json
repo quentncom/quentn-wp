@@ -1,12 +1,13 @@
 {
-    "require": {
-        "quentn/php-sdk": "1.0.*",
-        "mustache/mustache": "~2.5"
+  "require": {
+    "quentn/php-sdk": "1.0.*",
+    "mustache/mustache": "~2.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "QuentnWP\\": "",
+      "QuentnWP\\Inc\\": "inc"
     },
-    "autoload": {
-        "psr-4": {
-            "QuentnWP\\": "",
-            "QuentnWP\\Inc\\": "inc"
-        }
-    }
+    "files": ["vendor/guzzlehttp/guzzle/src/functions_include.php", "vendor/guzzlehttp/promises/src/functions_include.php", "vendor/guzzlehttp/psr7/src/functions_include.php"]
+  }
 }

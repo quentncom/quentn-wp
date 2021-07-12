@@ -9,8 +9,8 @@ return array(
     'Quentn\\' => array($vendorDir . '/quentn/php-sdk/src'),
     'QuentnWP\\Inc\\' => array($baseDir . '/inc'),
     'QuentnWP\\' => array($baseDir . '/'),
+    'QuentnWPGuzzleHttp\\Psr7\\' => array($vendorDir . '/guzzlehttp/psr7/src'),
+    'QuentnWPGuzzleHttp\\Promise\\' => array($vendorDir . '/guzzlehttp/promises/src'),
+    'QuentnWPGuzzleHttp\\' => array($vendorDir . '/guzzlehttp/guzzle/src'),
     'Psr\\Http\\Message\\' => array($vendorDir . '/psr/http-message/src'),
-    'GuzzleHttp\\Psr7\\' => array($vendorDir . '/guzzlehttp/psr7/src'),
-    'GuzzleHttp\\Promise\\' => array($vendorDir . '/guzzlehttp/promises/src'),
-    'GuzzleHttp\\' => array($vendorDir . '/guzzlehttp/guzzle/src'),
 );

@@ -1,9 +1,9 @@
 <?php
 namespace Quentn;
 
-use GuzzleHttp\Client;
+use QuentnWPGuzzleHttp\Client;
 use Exception;
-use GuzzleHttp\Exception\GuzzleException;
+use QuentnWPGuzzleHttp\Exception\GuzzleException;
 use Quentn\Client\CustomFieldClient;
 use Quentn\Exceptions\QuentnException;
 use Quentn\Client\ContactClient;

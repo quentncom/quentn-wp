@@ -1,9 +1,9 @@
 <?php
-namespace GuzzleHttp\Exception;
+namespace QuentnWPGuzzleHttp\Exception;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use GuzzleHttp\Promise\PromiseInterface;
+use QuentnWPGuzzleHttp\Promise\PromiseInterface;
 use Psr\Http\Message\UriInterface;
 
 /**

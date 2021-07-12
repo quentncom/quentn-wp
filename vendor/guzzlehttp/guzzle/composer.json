@@ -25,12 +25,12 @@
     "autoload": {
         "files": ["src/functions_include.php"],
         "psr-4": {
-            "GuzzleHttp\\": "src/"
+            "QuentnWPGuzzleHttp\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "GuzzleHttp\\Tests\\": "tests/"
+            "QuentnWPGuzzleHttp\\Tests\\": "tests/"
         }
     },
     "suggest": {

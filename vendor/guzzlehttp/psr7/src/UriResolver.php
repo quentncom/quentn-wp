@@ -1,5 +1,5 @@
 <?php
-namespace GuzzleHttp\Psr7;
+namespace QuentnWPGuzzleHttp\Psr7;
 
 use Psr\Http\Message\UriInterface;
 

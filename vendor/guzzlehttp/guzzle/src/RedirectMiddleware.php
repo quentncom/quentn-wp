@@ -1,10 +1,10 @@
 <?php
-namespace GuzzleHttp;
+namespace QuentnWPGuzzleHttp;
 
-use GuzzleHttp\Exception\BadResponseException;
-use GuzzleHttp\Exception\TooManyRedirectsException;
-use GuzzleHttp\Promise\PromiseInterface;
-use GuzzleHttp\Psr7;
+use QuentnWPGuzzleHttp\Exception\BadResponseException;
+use QuentnWPGuzzleHttp\Exception\TooManyRedirectsException;
+use QuentnWPGuzzleHttp\Promise\PromiseInterface;
+use QuentnWPGuzzleHttp\Psr7;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UriInterface;
@@ -13,7 +13,7 @@ use Psr\Http\Message\UriInterface;
  * Request redirect middleware.
  *
  * Apply this middleware like other middleware using
- * {@see GuzzleHttp\Middleware::redirect()}.
+ * {@see QuentnWPGuzzleHttp\Middleware::redirect()}.
  */
 class RedirectMiddleware
 {

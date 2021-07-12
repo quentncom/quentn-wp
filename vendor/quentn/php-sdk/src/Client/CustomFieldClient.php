@@ -1,7 +1,7 @@
 <?php
 namespace Quentn\Client;
-use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Exception\GuzzleException;
+use QuentnWPGuzzleHttp\Exception\ClientException;
+use QuentnWPGuzzleHttp\Exception\GuzzleException;
 use Quentn\Exceptions\QuentnException;
 
 class CustomFieldClient extends AbstractQuentnClient {
