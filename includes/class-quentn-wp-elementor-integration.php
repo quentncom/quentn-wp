@@ -372,8 +372,16 @@ class Quentn_Wp_Elementor_Integration extends Integration_Base {
             if ( $field['type'] == 'checkbox' ) { //convert multi select values into array
                 $fields[ $id ] = explode( ",", $field['value'] );
             } elseif ( $field['type'] == 'acceptance' && $field['value'] == 'on' ) {
+                //get ip address
+                if ( isset( $_SERVER['HTTP_CLIENT_IP'] ) ) {
+                    $ip = $_SERVER['HTTP_CLIENT_IP'];
+                } elseif ( isset( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
+                    $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+                } else {
+                    $ip = $_SERVER['REMOTE_ADDR'];
+                }
                 $fields[ $id ] = array(
-                    "ip" => isset( $_SERVER['HTTP_CLIENT_IP'] ) ? $_SERVER['HTTP_CLIENT_IP'] : isset( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR'],
+                    "ip" => $ip,
                     "created" => time(),
                     "source" => Helper::get_current_host_name(),
                 );
