@@ -2,7 +2,9 @@
 use ElementorPro\Modules\Forms\Classes\Integration_Base as Integration_Base;
 use Elementor\Controls_Manager;
 use Elementor\Settings;
+use Elementor\Repeater;
 use ElementorPro\Modules\Forms\Classes\Form_Record;
+use ElementorPro\Modules\Forms\Widgets\Form;
 use ElementorPro\Modules\Forms\Module;
 use QuentnWP\Admin\Utility\Helper;
 
@@ -164,24 +166,7 @@ class Quentn_Wp_Elementor_Integration extends Integration_Base {
             ]
         );
 
-        $widget->add_control(
-            'quentn_fields_map',
-            [
-                'label' => __( 'Field Mapping', 'quentn-wp' ),
-                'type' => Quentn_Wp_Elementor_Field_Mapping::CONTROL_TYPE,
-                'separator' => 'before',
-                'fields' => [
-                    [
-                        'name' => 'local_id',
-                        'type' => Controls_Manager::HIDDEN,
-                    ],
-                    [
-                        'name' => 'remote_id',
-                        'type' => Controls_Manager::SELECT,
-                    ],
-                ],
-            ]
-        );
+        $this->register_quentn_fields_map_control( $widget );
 
         $widget->add_control(
             'quentn_flood_limit',
@@ -240,6 +225,27 @@ class Quentn_Wp_Elementor_Integration extends Integration_Base {
             ]
         );
         $widget->end_controls_section();
+    }
+
+    private function register_quentn_fields_map_control( Form $form ) {
+        $repeater = new Repeater();
+
+        $repeater->add_control( 'local_id', [ 'type' => Controls_Manager::HIDDEN ] );
+
+        $repeater->add_control( 'remote_id', [ 'type' => Controls_Manager::SELECT ] );
+
+        $fields_map_control_options = [
+            'label' => __( 'Field Mapping', 'elementor-pro' ),
+            'type' => Quentn_Wp_Elementor_Field_Mapping::CONTROL_TYPE,
+            'separator' => 'before',
+            'fields' => $repeater->get_controls(),
+        ];
+
+        if ( method_exists( $this,'get_fields_map_control_options' ) ) {
+            $fields_map_control_options = array_merge( $fields_map_control_options, $this->get_fields_map_control_options() );
+        }
+
+        $form->add_control( $this->get_name() . '_fields_map', $fields_map_control_options );
     }
 
     public function on_export( $element ) {
