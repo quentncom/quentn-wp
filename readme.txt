@@ -3,7 +3,7 @@ Contributors: quentn
 Tags: Quentn, countdown, page restriction, email, elementor integration, email marketing tool, integration, email automation, marketing automation
 Requires at least: 4.6.0
 Tested up to: 5.8
-Stable tag: 1.1.9
+Stable tag: 1.2.0
 Requires PHP: 5.6.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -65,6 +65,9 @@ Answer to foo bar dilemma.
 4. Integration Elementor PRO forms with Quentn
 
 == Changelog ==
+= 1.2.0 =
+* Fix: The thrive theme bug for user restriction pages.
+
 = 1.1.9 =
 * Fix: The styling bug when using the Form widget of Elementor PRO.
 * Tweak: Improved method of loading field mapping in Form widget of Elementor PRO.
@@ -133,6 +136,9 @@ Answer to foo bar dilemma.
 * Initial version.
 
 == Upgrade Notice ==
+
+= 1.2.0 =
+Thanks for using Quentn Plugin! Please update the plugin to fix the thrive theme bug in user restriction pages.
 
 = 1.1.9 =
 Thanks for using Quentn Plugin! Please update the plugin to fix the styling bug when using the Form widget of Elementor PRO
