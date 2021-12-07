@@ -177,8 +177,11 @@ class Quentn_Wp_Restrict_Access
             $user_data = array();
             //try to find if there is any valid email address in the url
             foreach ( $_GET as $value ) {
+                if ( ! is_string( $value ) ) {
+                    continue;
+                }
                 if ( is_email( str_replace(" ","+", sanitize_email( $value ) ) ) ) {
-                    $valid_email_in_url = sanitize_email( $value );
+                    $valid_email_in_url =  $value ;
                     break;
                 }
             }
