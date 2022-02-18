@@ -70,6 +70,14 @@ class Quentn_Wp_Reset_Password
                     exit();
                 } else { //ask user to reset password
                     $key = get_password_reset_key( $user );
+                    if ( is_wp_error( $key ) ) {
+                        $error_message = $key->get_error_message();
+                        add_filter( 'authenticate', function( $key ) use ( $error_message ) {
+                            $user = new WP_Error( 'denied', sprintf( __( "<strong>ERROR</strong>: ". $error_message, 'quentn-wp' ) ) );
+                            return $user;
+                        }, 10 );
+                        return;
+                    }
                     $user_login = rawurlencode( $user->user_login );
                     $qntn_rp_cookie = 'qntn-wp-resetpass-'.$key;
                     $value = $data['vu'];
