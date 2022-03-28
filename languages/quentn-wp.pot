@@ -552,7 +552,7 @@ msgid "Flood Protection"
 msgstr ""
 
 #: includes/class-quentn-wp-elementor-integration.php:191
-msgid "Enter the maximum form submissions per hour and unique IP-Adresses (default: 5, 0 to diable)"
+msgid "Enter the maximum form submissions per hour and unique IP-Address (default: 5, 0 to diable)"
 msgstr ""
 
 #: includes/class-quentn-wp-elementor-integration.php:200

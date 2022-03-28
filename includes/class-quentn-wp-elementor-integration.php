@@ -173,7 +173,7 @@ class Quentn_Wp_Elementor_Integration extends Integration_Base {
             [
                 'label' => __( 'Flood Protection', 'quentn-wp' ),
                 'type' => Controls_Manager::NUMBER,
-                'description' => __( 'Enter the maximum form submissions per hour and unique IP-Adresses (default: 5, 0 to diable)', 'quentn-wp' ),
+                'description' => __( 'Enter the maximum form submissions per hour and unique IP-Address (default: 5, 0 to diable)', 'quentn-wp' ),
                 'min' => 0,
                 'default' => 5,
                 'separator' => 'before'
