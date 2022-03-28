@@ -3,7 +3,7 @@ Contributors: quentn
 Tags: Quentn, countdown, page restriction, email, elementor integration, email marketing tool, integration, email automation, marketing automation
 Requires at least: 4.6.0
 Tested up to: 5.8
-Stable tag: 1.2.1
+Stable tag: 1.2.2
 Requires PHP: 5.6.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -65,6 +65,9 @@ Answer to foo bar dilemma.
 4. Integration Elementor PRO forms with Quentn
 
 == Changelog ==
+= 1.2.2 =
+* Fix: Make compatible for Elementor Pro versions >= 3.5
+
 = 1.2.1 =
 * Fix: Error handling while getting password reset key.
 
@@ -139,6 +142,9 @@ Answer to foo bar dilemma.
 * Initial version.
 
 == Upgrade Notice ==
+
+= 1.2.2 =
+Thanks for using Quentn Plugin! Please update the plugin to make compatible for Elementor Pro versions >= 3.5.
 
 = 1.2.1 =
 Thanks for using Quentn Plugin! Please update the plugin to fix the error handling while getting password reset key.
