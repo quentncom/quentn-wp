@@ -74,7 +74,7 @@ class Quentn_Wp {
 		if ( defined( 'QUENTN_WP_VERSION' ) ) {
 			$this->version = QUENTN_WP_VERSION;
 		} else {
-			$this->version = '1.2.2';
+			$this->version = '1.2.3';
 		}
 		$this->plugin_name = 'quentn-wp';
 
@@ -189,14 +189,9 @@ class Quentn_Wp {
         /**
          * Add classes responsible to handle elementor integration
          */
-        add_action('elementor_pro/init', function () {
-            if( defined('ELEMENTOR_VERSION' ) && defined('ELEMENTOR_PRO_VERSION' )  && ELEMENTOR_VERSION >= '2.0.0' ) {
-                //sometimes elementor pro plugin is active but not working because of compatibility with elementor free version
-                if ( class_exists('ElementorPro\Modules\Forms\Classes\Integration_Base' ) ) {
-                    require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-quentn-wp-elementor.php';
-                }
-            }
-        }, 5);
+        if( defined('ELEMENTOR_VERSION' ) && defined('ELEMENTOR_PRO_VERSION' )  && ELEMENTOR_VERSION >= '2.0.0' ) {
+            require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-quentn-wp-elementor.php';
+        }
 
 		$this->loader = new Quentn_Wp_Loader();
 	}
