@@ -2,8 +2,8 @@
 Contributors: quentn
 Tags: Quentn, countdown, page restriction, email, elementor integration, email marketing tool, integration, email automation, marketing automation
 Requires at least: 4.6.0
-Tested up to: 5.9.2
-Stable tag: 1.2.3
+Tested up to: 6.1.1
+Stable tag: 1.2.4
 Requires PHP: 5.6.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -65,6 +65,9 @@ Answer to foo bar dilemma.
 4. Integration Elementor PRO forms with Quentn
 
 == Changelog ==
+= 1.2.4 =
+* Test with new wordpress ( 6.1.1 ), Elementor ( 3.9.0 ) and Elemnetor PRO ( 3.9.0 ) versions.
+
 = 1.2.3 =
 * Fix: Field mapping issues in Form widget of Elementor PRO
 
@@ -145,6 +148,9 @@ Answer to foo bar dilemma.
 * Initial version.
 
 == Upgrade Notice ==
+
+= 1.2.4 =
+Thanks for using Quentn Plugin! Please update the plugin. It is now tested with new wordpress ( 6.1.1 ), Elementor ( 3.9.0 ) and Elemnetor PRO ( 3.9.0 ) versions.
 
 = 1.2.3 =
 Thanks for using Quentn Plugin! Please update the plugin to fix field mapping issues in form widget of Elementor PRO.

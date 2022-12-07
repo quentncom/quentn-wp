@@ -53,15 +53,20 @@ class Quentn_Wp_Restrict_Access
      */
      public function quentn_content_permission_check( $content ) {
 
-         $m = new Mustache_Engine;
-         $this->set_replacement_values();
-         $content = $m->render($content, $this->get_replacement_values());
+       $m = new Mustache_Engine;
+       $this->set_replacement_values();
+       $content = $m->render($content, $this->get_replacement_values());
 
-        //if user can edit posts permission or page restriction is not avtive, return content
-        if( current_user_can( 'edit_pages' ) || ! $page_meta = $this->get_quentn_post_restrict_meta() ) {
+       //if user can edit posts permission or page restriction is not avtive, return content
+       if( current_user_can( 'edit_pages' ) || ! $page_meta = $this->get_quentn_post_restrict_meta() ) {
             return $content;
-        }
-       define( 'DONOTCACHEPAGE', 1 ); // Do not cache this page
+       }
+
+       // Do not cache this page
+       if ( ! defined( 'DONOTCACHEPAGE' ) ) {
+            define( 'DONOTCACHEPAGE', 1 );
+       }
+
        $is_display_content = false;
 
         //If page restriction is countdown then calculate expiry time
