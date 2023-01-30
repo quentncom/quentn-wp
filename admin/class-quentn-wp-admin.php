@@ -399,55 +399,62 @@ class Quentn_Wp_Admin {
      */
     public function register_custom_fields() {
 
+        $tab = ( !empty( $_GET['tab'] ) ) ? sanitize_key( $_GET['tab'] ) : '';
+
         $fields = array();
-        $fields[] = array(
-            'id'        => 'quentn_auto_login_redirect_url',
-            'title'     => __( 'Redirect URL', 'quentn-wp' ),
-            'callback'  => array( $this, 'field_quentn_auto_login_redirect_url' ),
-            'page'      => 'quentn-dashboard-auto-login',
-            'section'   => 'quentn_auto_login_option',
-        );
+        if ( $tab == 'quentn_settings' ) {
+            $fields[] = array(
+                'id' => 'quentn_auto_login_redirect_url',
+                'title' => __('Redirect URL', 'quentn-wp'),
+                'callback' => array($this, 'field_quentn_auto_login_redirect_url'),
+                'page' => 'quentn-dashboard-auto-login',
+                'section' => 'quentn_auto_login_option',
+            );
+        }
 
         //add tag fields for all wordpress roles
-        $wp_roles =  new WP_Roles;
+        if ( $tab == 'quentn_tags_selection' ) {
+           
+            $wp_roles = new WP_Roles;
 
-        $qntn_terms = $this->api_handler->get_terms();
+            $qntn_terms = $this->api_handler->get_terms();
 
-        //loop through all available roles of WP and set three options for each, add tag (bool), remove tag (bool), quentn tags (array)
-        //set enable/disable add user from wp to quentn
-        foreach ( $wp_roles->get_names() as $slug => $name ) {
-            $fields[] = array(
-                'id'        =>  'add_wp_user_'.$slug.'_to_quentn',
-                'title'     =>  translate_user_role( $name ),
-                'callback'  =>  array( $this, 'input_add_wp_user_to_quentn' ),
-                'page'      =>  'quentn-dashboard-tags',
-                'section'   =>  'quentn_tags_option',
-                'args'      =>  array( 'role' => $slug, 'role_title' => translate_user_role( $name ) )
-            );
+            //loop through all available roles of WP and set three options for each, add tag (bool), remove tag (bool), quentn tags (array)
+            //set enable/disable add user from wp to quentn
+            foreach ( $wp_roles->get_names() as $slug => $name ) {
+                $fields[] = array(
+                    'id' => 'add_wp_user_' . $slug . '_to_quentn',
+                    'title' => translate_user_role( $name ),
+                    'callback' => array( $this, 'input_add_wp_user_to_quentn' ),
+                    'page' => 'quentn-dashboard-tags',
+                    'section' => 'quentn_tags_option',
+                    'args' => array( 'role' => $slug, 'role_title' => translate_user_role( $name ) )
+                );
 
-            //set quentn terms selection option
-            $fields [] = array(
-                'id'        => 'quentn_tags'.$slug,
-                'title'     => '',
-                'callback'  => array( $this, 'field_wp_role_quentn_tags' ),
-                'page'      => 'quentn-dashboard-tags',
-                'section'   => 'quentn_tags_option',
-                'args'      => array(
-                    'label_for' => __('Please Select Tags', 'quentn-wp'),
-                    'role'      => $slug,
-                    'terms'     => $qntn_terms,
-                )
-            );
+                //set quentn terms selection option
+                $fields [] = array(
+                    'id' => 'quentn_tags' . $slug,
+                    'title' => '',
+                    'callback' => array( $this, 'field_wp_role_quentn_tags' ),
+                    'page' => 'quentn-dashboard-tags',
+                    'section' => 'quentn_tags_option',
+                    'args' => array(
+                        'label_for' => __('Please Select Tags', 'quentn-wp'),
+                        'role' => $slug,
+                        'terms' => $qntn_terms,
+                    )
+                );
 
-            //set enable/disable remove tags when user loses a role
-            $fields[] = array(
-                'id'        => 'delete_wp_user_'.$slug.'_from_quentn',
-                'title'     => '',
-                'callback'  => array( $this, 'input_delete_wp_user_to_quentn' ),
-                'page'      => 'quentn-dashboard-tags',
-                'section'   => 'quentn_tags_option',
-                'args'      => array( 'role' => $slug )
-            );
+                //set enable/disable remove tags when user loses a role
+                $fields[] = array(
+                    'id' => 'delete_wp_user_' . $slug . '_from_quentn',
+                    'title' => '',
+                    'callback' => array( $this, 'input_delete_wp_user_to_quentn' ),
+                    'page' => 'quentn-dashboard-tags',
+                    'section' => 'quentn_tags_option',
+                    'args' => array( 'role' => $slug )
+                );
+            }
         }
 
         // add settings field

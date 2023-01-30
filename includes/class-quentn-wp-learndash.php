@@ -16,14 +16,14 @@ class Quentn_Wp_Learndash
             add_action( 'wpmu_activate_user', array( $this, 'quentn_learndash_courses' ) );
             add_action( 'add_user_to_blog', array( $this, 'quentn_learndash_courses' ) );
         } else {
-            add_action( 'user_register', array( $this, 'quentn_learndash_courses', 100, 2 ) );
+            add_action( 'user_register', array( $this, 'quentn_learndash_courses' ), 100 );
         }
 
         //add learndash settings
         add_action( 'admin_init', array( $this, 'register_learndash_settings' ) );
 
         //update user lerandash courses
-        add_action( 'profile_update', array( $this, 'quentn_learndash_courses' ), 100, 2 );
+        add_action( 'profile_update', array( $this, 'quentn_learndash_courses' ), 100 );
 
         //remove learndash courses if user role is removed
         add_action( 'remove_user_role', array( $this, 'quentn_remove_learndash_courses' ), 10, 2 );

@@ -294,6 +294,7 @@ class Quentn_Wp_Page_Restriction_Meta_Box
 
             //if return url is not empty, then it must be valid
             if( $q_redirection_type != 'restricted_url' || ! filter_var( $q_redirect_url, FILTER_VALIDATE_URL ) ) {
+                //we are not stopping complete page to save if redirect url not valid. that's why we comment this code to avoid user confusion
                 //$q_redirect_url = '';
             }
 

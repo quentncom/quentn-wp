@@ -347,9 +347,22 @@ class Quentn_Wp_Elementor_Integration extends Integration_Base {
         $quentn_confirmed_redirect_url = $record->get_form_settings( 'quentn_confirmed_redirect_url' );
         $quentn_attach_contact_information = $record->get_form_settings( 'quentn_attach_contact_information' );
 
+        //add http as prefix if its not set in redirect_url
+        $parsed = parse_url( $quentn_default_redirect_url );
+        if ( empty( $parsed['scheme'] ) ) {
+            $quentn_default_redirect_url = 'http://' . ltrim( $quentn_default_redirect_url, '/' );
+        }
+
+        //add http as prefix if its not set in confirm redirect url
+        $parsed_confirmed_url = parse_url( $quentn_confirmed_redirect_url );
+        if ( empty( $parsed_confirmed_url['scheme'] ) ) {
+            $quentn_confirmed_redirect_url = 'http://' . ltrim( $quentn_confirmed_redirect_url, '/' );
+        }
+
         if( ! empty( $quentn_terms ) ) {
             $contact['terms'] = $quentn_terms;
         }
+
         $contact['request_ip'] = $_SERVER["REMOTE_ADDR"]; //add ip address and terms to subscriber data
         $request_data['contact'] = $contact;
         $request_data['flood_limit'] = ( $quentn_flood_limit === '' ) ? 5 : $quentn_flood_limit;
