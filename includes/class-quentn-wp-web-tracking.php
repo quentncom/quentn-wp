@@ -54,6 +54,23 @@ class Quentn_Wp_Web_Tracking
                 'page'      => 'quentn-dashboard-web-tracking'
         );
 
+        // register setting
+        foreach ( $settings as $setting ) {
+            register_setting( $setting["option_group"], $setting["option_name"], ( isset( $setting["callback"] ) ? $setting["callback"] : '' ) );
+        }
+
+        // add settings section
+        add_settings_section( $section["id"], $section["title"], ( isset( $section["callback"] ) ? $section["callback"] : '' ), $section["page"] );
+
+    }
+
+    /**
+     * Register fields
+     *
+     * @access public
+     * @return void
+     */
+    public function register_web_tracking_fields() {
         $fields = array();
         $fields[] = array(
             'id'        => 'quentn_web_tracking_enabled',
@@ -72,13 +89,6 @@ class Quentn_Wp_Web_Tracking
                 'section'   => 'quentn_web_tracking_option',
             );
         }
-        // register setting
-        foreach ( $settings as $setting ) {
-            register_setting( $setting["option_group"], $setting["option_name"], ( isset( $setting["callback"] ) ? $setting["callback"] : '' ) );
-        }
-
-        // add settings section
-        add_settings_section( $section["id"], $section["title"], ( isset( $section["callback"] ) ? $section["callback"] : '' ), $section["page"] );
 
         // add settings field
         foreach ( $fields as $field ) {

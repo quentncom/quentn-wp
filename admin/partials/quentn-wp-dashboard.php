@@ -54,6 +54,7 @@ if( isset( $_GET['tab'] ) ) {
             echo '</form>';
         } elseif ( $active_tab == "quentn_web_tracking_tab" ) { //display web tracking options
             $web_tracking = new Quentn_Wp_Web_Tracking();
+            $web_tracking->register_web_tracking_fields();
             echo '<form method="post" action="options.php">';
             if( get_option('quentn_web_tracking_enabled') ) {
                 update_option("quentn_web_tracking_code", $web_tracking->get_quentn_web_tracking_code() );
