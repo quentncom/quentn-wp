@@ -208,4 +208,19 @@ class Helper
 
         return new \DateTimeZone( $tzstring );
     }
+
+    /**
+     * Log error messages
+     *
+     * @return bool
+     */
+    public static function quentn_log_me($message) {
+        if ( WP_DEBUG === true ) {
+            if ( is_array($message) || is_object($message) ) {
+                error_log( print_r($message, true) );
+            } else {
+                error_log( $message );
+            }
+        }
+    }
 }
