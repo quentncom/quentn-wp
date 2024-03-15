@@ -125,25 +125,6 @@ class Helper
     }
 
     /**
-     * Get the list of pages having quentn restricted status active.
-     *
-     * @return null|string
-     */
-    public static function get_restriction_activated_pages() {
-
-        //get list of pages having meta_key _quentn_post_restrict_meta
-        $pages= get_pages( array(
-            'meta_key' => '_quentn_post_restrict_meta'
-        ) );
-        $restricted_pages = array();
-        foreach( $pages as $id )
-        {
-            $restricted_pages[] = $id->ID;
-        }
-        return $restricted_pages;
-    }
-
-    /**
      * Returns if plugin is enabled.
      *
      * @return bool

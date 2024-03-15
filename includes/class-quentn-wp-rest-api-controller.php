@@ -15,6 +15,15 @@ class Quentn_Wp_Rest_Api
      */
     private $namespace;
 
+	/**
+     * The first URL segment after core prefix
+     *
+     * @since  1.2.8
+     * @access private
+     * @var    string
+     */
+    private $namespace_v2;
+
     /**
      * The base URL for route to create new user
      *
@@ -69,6 +78,33 @@ class Quentn_Wp_Rest_Api
      */
     private $get_tracking;
 
+	/**
+     * The base URL for route to get quentn logs
+     *
+     * @since  1.2.8
+     * @access private
+     * @var    string
+     */
+    private $get_logs;
+
+	/**
+     * The base URL for route to get page access
+     *
+     * @since  1.2.8
+     * @access private
+     * @var    string
+     */
+    private $get_page_access;
+
+	/**
+     * The base URL for route to get a page restriction settings
+     *
+     * @since  1.2.8
+     * @access private
+     * @var    string
+     */
+    private $page_restriction_settings;
+
 
     /**
      * Initialize our namespace and resource name.
@@ -80,12 +116,16 @@ class Quentn_Wp_Rest_Api
         add_action( 'rest_api_init', array( $this, 'register_page_routes' ) );
 
         $this->namespace = 'quentn/api/v1';
+        $this->namespace_v2 = 'quentn/api/v2';
         $this->create_user = '/users';
         $this->grant_access = '/pages/grant-access';
         $this->revoke_access = '/pages/revoke-access';
         $this->get_page_restrictions = '/get-page-restrictions';
         $this->get_user_roles = '/get-user-roles';
         $this->get_tracking = '/get-tracking';
+        $this->get_logs = '/log';
+        $this->get_page_access = '/page-access';
+        $this->page_restriction_settings = '/page-restriction-settings';
     }
 
     /**
@@ -119,7 +159,7 @@ class Quentn_Wp_Rest_Api
             // By using this constant we ensure that when the WP_REST_Server changes our readable endpoints will work as intended.
             'methods' => \WP_REST_Server::CREATABLE,
             // Here we register our callback. The callback is fired when this endpoint is matched by the WP_REST_Server class.
-            'callback' => array( $this, 'quentn_grant_permission' ),
+            'callback' => array( $this, 'quentn_grant_access' ),
             // Here we register our permissions callback. The callback is fired before the main callback to check if the current user can access the endpoint.
             'permission_callback' => array( $this, 'quentn_check_credentials' ),
             'args' => array(
@@ -140,7 +180,7 @@ class Quentn_Wp_Rest_Api
             // By using this constant we ensure that when the WP_REST_Server changes our readable endpoints will work as intended.
             'methods' => \WP_REST_Server::CREATABLE,
             // Here we register our callback. The callback is fired when this endpoint is matched by the WP_REST_Server class.
-            'callback' => array( $this, 'quentn_revoke_page_countdown_permission' ),
+            'callback' => array( $this, 'quentn_revoke_access' ),
             // Here we register our permissions callback. The callback is fired before the main callback to check if the current user can access the endpoint.
             'permission_callback' => array( $this, 'quentn_check_credentials' ),
 
@@ -179,6 +219,28 @@ class Quentn_Wp_Rest_Api
 
         ));
 
+		//register route to get list of all pages having quentn restrictions active
+        register_rest_route( $this->namespace_v2, $this->get_page_restrictions, array(
+            // By using this constant we ensure that when the WP_REST_Server changes our readable endpoints will work as intended.
+            'methods' => \WP_REST_Server::CREATABLE,
+            // Here we register our callback. The callback is fired when this endpoint is matched by the WP_REST_Server class.
+            'callback' => array( $this, 'quentn_get_restricted_pages_v2' ),
+            // Here we register our permissions callback. The callback is fired before the main callback to check if the current user can access the endpoint.
+            'permission_callback' => array( $this, 'quentn_check_credentials' ),
+
+            'args' => array(
+                'data' => array(
+                    'required' => true,
+                    'type' => 'string',
+                ),
+                'vu' => array(
+                    'required' => true,
+                    'type' => 'integer',
+                ),
+            ),
+
+        ));
+
         //register route to get list of all user roles of wp site
         register_rest_route( $this->namespace, $this->get_user_roles, array(
             // By using this constant we ensure that when the WP_REST_Server changes our readable endpoints will work as intended.
@@ -201,7 +263,7 @@ class Quentn_Wp_Rest_Api
 
         ));
 
-        //register route to get create new user in wp
+        //register route to create new user in wp
         register_rest_route( $this->namespace, $this->create_user, array(
             // By using this constant we ensure that when the WP_REST_Server changes our readable endpoints will work as intended.
             'methods' => \WP_REST_Server::CREATABLE,
@@ -244,6 +306,69 @@ class Quentn_Wp_Rest_Api
             ),
 
         ));
+
+		//register route to get logs
+        register_rest_route( $this->namespace, $this->get_logs, array(
+            // By using this constant we ensure that when the WP_REST_Server changes our readable endpoints will work as intended.
+            'methods' => \WP_REST_Server::CREATABLE,
+            // Here we register our callback. The callback is fired when this endpoint is matched by the WP_REST_Server class.
+            'callback' => array( $this, 'quentn_get_logs' ),
+            // Here we register our permissions callback. The callback is fired before the main callback to check if the current user can access the endpoint.
+            'permission_callback' => array( $this, 'quentn_check_credentials' ),
+
+            'args' => array(
+                'data' => array(
+                    'required' => true,
+                    'type' => 'string',
+                ),
+                'vu' => array(
+                    'required' => true,
+                    'type' => 'integer',
+                ),
+            ),
+        ));
+
+	    //register route to get page access
+	    register_rest_route( $this->namespace, $this->get_page_access, array(
+		    // By using this constant we ensure that when the WP_REST_Server changes our readable endpoints will work as intended.
+		    'methods' => \WP_REST_Server::CREATABLE,
+		    // Here we register our callback. The callback is fired when this endpoint is matched by the WP_REST_Server class.
+		    'callback' => array( $this, 'quentn_get_page_access' ),
+		    // Here we register our permissions callback. The callback is fired before the main callback to check if the current user can access the endpoint.
+		    'permission_callback' => array( $this, 'quentn_check_credentials' ),
+
+		    'args' => array(
+			    'data' => array(
+				    'required' => true,
+				    'type' => 'string',
+			    ),
+			    'vu' => array(
+				    'required' => true,
+				    'type' => 'integer',
+			    ),
+		    ),
+	    ));
+
+		//register route to get page restriction settings
+	    register_rest_route( $this->namespace, $this->page_restriction_settings, array(
+		    // By using this constant we ensure that when the WP_REST_Server changes our readable endpoints will work as intended.
+		    'methods' => \WP_REST_Server::CREATABLE,
+		    // Here we register our callback. The callback is fired when this endpoint is matched by the WP_REST_Server class.
+		    'callback' => array( $this, 'quentn_get_page_restriction_settings' ),
+		    // Here we register our permissions callback. The callback is fired before the main callback to check if the current user can access the endpoint.
+		    'permission_callback' => array( $this, 'quentn_check_credentials' ),
+
+		    'args' => array(
+			    'data' => array(
+				    'required' => true,
+				    'type' => 'string',
+			    ),
+			    'vu' => array(
+				    'required' => true,
+				    'type' => 'integer',
+			    ),
+		    ),
+	    ));
     }
 
     /**
@@ -251,15 +376,15 @@ class Quentn_Wp_Rest_Api
      *
      * @since  1.0.0
      * @access public
-     * @return void
+     * @return WP_Error|WP_REST_Response
      */
-    public function quentn_grant_permission( $request ) {
+    public function quentn_grant_access( $request ) {
         global $wpdb;
         $request_body = json_decode( $request->get_body(), true );
         //decode and save request in array
         $quentn_page_timer_permission = json_decode( base64_decode( $request_body['data'] ), true );
-        $emails = isset( $quentn_page_timer_permission['data']['email'] ) ? $quentn_page_timer_permission['data']['email'] : array();
-        $pages = isset( $quentn_page_timer_permission['data']['page'] ) ? $quentn_page_timer_permission['data']['page'] : array();
+        $emails = $quentn_page_timer_permission['data']['email'] ?? array();
+        $pages = $quentn_page_timer_permission['data']['page'] ?? array();
 
         //set values and place holders to insert into database in one query
         $values = array();
@@ -278,7 +403,7 @@ class Quentn_Wp_Rest_Api
         $query = "INSERT INTO ".$wpdb->prefix . TABLE_QUENTN_RESTRICTIONS." ( page_id, email, email_hash, created_at ) VALUES ";
         $query .= implode( ', ', $place_holders );
         $wpdb->query( $wpdb->prepare( "$query ON DUPLICATE KEY UPDATE created_at= ".time(), $values ) );
-
+	    do_action( 'quentn_access_granted', $emails, $pages, QUENTN_WP_ACCESS_ADDED_BY_API );
         return rest_ensure_response( esc_html__( 'Permissions Timer Successfully Updated', 'quentn-wp' ) );
     }
 
@@ -287,9 +412,9 @@ class Quentn_Wp_Rest_Api
      *
      * @since  1.0.0
      * @access public
-     * @return void
+     * @return WP_Error|WP_REST_Response
      */
-    public function quentn_revoke_page_countdown_permission( $request ) {
+    public function quentn_revoke_access( $request ) {
         global $wpdb;
 
         $request_body = json_decode( $request->get_body(), true );
@@ -310,7 +435,11 @@ class Quentn_Wp_Rest_Api
 
         //delete permissions
         $query =  "DELETE FROM ".$wpdb->prefix . TABLE_QUENTN_RESTRICTIONS." where CONCAT_WS('|', page_id, email) IN ('".implode("','", $values)."')";
-        $wpdb->query( $wpdb->query( $query ) );
+        $affected_rows = $wpdb->query( $query );
+		if ( $affected_rows ) {
+			do_action( 'quentn_access_revoked', $emails, $pages, QUENTN_WP_ACCESS_REVOKED_BY_API );
+		}
+
         return rest_ensure_response( esc_html__( 'Permissions Timer Successfully Updated', 'quentn-wp' ) );
     }
 
@@ -319,7 +448,7 @@ class Quentn_Wp_Rest_Api
      *
      * @since  1.0.0
      * @access public
-     * @return string
+     * @return WP_Error|WP_REST_Response
      */
     public function quentn_get_restricted_pages() {
         $pages= get_pages();
@@ -337,17 +466,86 @@ class Quentn_Wp_Rest_Api
         return rest_ensure_response( json_encode( $restricted_pages ) );
     }
 
+	/**
+     * Get list of all pages where quentn restrictions are applied
+     *
+     * @since  1.2.8
+     * @access public
+     * @return WP_Error|WP_REST_Response
+     */
+    public function quentn_get_restricted_pages_v2( $request ) {
+	    $request_body = json_decode( $request->get_body(), true );
+	    $request_body_data = json_decode( base64_decode( $request_body['data'] ), true );
+	    $request_data = $request_body_data['data'];
+		$args = array(
+			'post_type' => 'page',
+			'meta_key' => '_quentn_post_restrict_meta'
+		);
+
+	    $limit = ! empty( $request_data['limit'] ) ? $request_data['limit'] : 50; // get all posts if not mentioned
+	    $args['posts_per_page'] = $limit;
+
+	    if ( ! empty( $request_data['order_by'] ) ) {
+		    $args['orderby'] = $request_data['order_by'];
+	    }
+		if ( ! empty( $request_data['sort'] ) ) {
+		    $args['order'] = $request_data['sort'];
+	    }
+		if ( ! empty( $request_data['offset'] ) ) {
+			$args['offset'] = $request_data['offset'];
+	    }
+
+		//get all restricted pages
+	    $restricted_pages_query = new WP_Query( $args );
+	    $restricted_pages = [];
+	    if ( $restricted_pages_query->have_posts() ) {
+
+			//get list of total access of restricted pages
+		    $page_ids = array_column( $restricted_pages_query->posts, 'ID' );
+		    global $wpdb;
+		    $sql = "SELECT page_id, COUNT(*) as totoal_access FROM ". $wpdb->prefix . TABLE_QUENTN_RESTRICTIONS. " where page_id IN (".implode(",",$page_ids).")  GROUP BY page_id";
+		    $rows = $wpdb->get_results( $sql );
+		    $pages_access_links = array();
+
+		    foreach ( $rows as $row ) {
+			    $pages_access_links[$row->page_id] =  $row->totoal_access;
+		    }
+
+		    foreach( $restricted_pages_query->posts as $restricted_page ) {
+			    $quentn_post_restrict_meta = get_post_meta( $restricted_page->ID, '_quentn_post_restrict_meta', true );
+			    $restricted_pages[] = array(
+				    "page_id"    => $restricted_page->ID,
+				    "page_title" => $restricted_page->post_title,
+				    "page_public_url" => get_page_link( $restricted_page->ID ),
+				    "restriction_type" =>  ! empty( $quentn_post_restrict_meta['countdown'] ) ? 'countdown' : 'access',
+				    "access_links" => ( isset( $pages_access_links[$restricted_page->ID] ) ) ? $pages_access_links[$restricted_page->ID] : 0 ,
+			    );
+		    }
+	    }
+
+	    $response = [
+		    'success' => true,
+		    'total' => count( $restricted_pages ),
+		    'limit' => $limit,
+		    'offset' =>  ! empty( $request_data['offset'] ) ? $request_data['offset'] : 0,
+		    'order_by' => ! empty( $request_data['order_by'] ) ? $request_data['order_by'] : 'date',
+		    'sort' => ! empty( $request_data['sort'] ) ? $request_data['sort'] : 'DESC',
+		    'data' => $restricted_pages,
+	    ];
+	    return rest_ensure_response( $response );
+    }
+
     /**
      * Get list of all wp roles
      *
      * @since  1.0.0
      * @access public
-     * @return string
+     * @return WP_Error|WP_REST_Response
      */
     public function quentn_get_user_roles( ) {
         $wp_roles = new WP_Roles();
         $all_roles = $wp_roles->get_names();
-        return rest_ensure_response(json_encode($all_roles));
+        return rest_ensure_response( json_encode( $all_roles ) );
     }
 
     /**
@@ -356,7 +554,8 @@ class Quentn_Wp_Rest_Api
      * @since  1.0.0
      * @access public
      * @param string $request request received from quentn
-     * @return void
+     * @return WP_Error|WP_REST_Response
+     *
      */
     public function quentn_create_user( $request ) {
         $request_body = json_decode( $request->get_body(), true );
@@ -380,7 +579,10 @@ class Quentn_Wp_Rest_Api
                 $is_send_user_email = false;
                 //update meta_value
                 foreach ( $qn_userdata as $meta_key => $meta_value ) {
-                    update_user_meta( $user_id, $meta_key, $meta_value );
+                    $user_updated = update_user_meta( $user_id, $meta_key, $meta_value );
+					if ( $user_updated ) {
+						do_action( 'quentn_user_updated', $qn_userdata['user_email'], $user_id );
+					}
                 }
             } else {
                 //no default role set
@@ -391,6 +593,7 @@ class Quentn_Wp_Rest_Api
                 if ( ! is_wp_error( $user_id ) ) {
                     update_user_meta( $user_id, 'quentn_last_login', 0 );
                 }
+	            do_action( 'quentn_user_created', $qn_userdata['user_email'], $user_id );
             }
 
             //if user could not created
@@ -405,6 +608,7 @@ class Quentn_Wp_Rest_Api
                 $new_roles = $request_data['data']['roles']['add_roles'];
                 foreach ( $new_roles as $new_role ) {
                     $new_user->add_role( trim( $new_role ) );
+	                do_action( 'quentn_user_role_added', $new_user->user_email, $user_id, trim( $new_role ) );
                 }
             }
 
@@ -413,6 +617,7 @@ class Quentn_Wp_Rest_Api
                 $remove_roles = $request_data['data']['roles']['remove_roles'];
                 foreach ( $remove_roles as $remove_role ) {
                     $new_user->remove_role( trim( $remove_role ) );
+	                do_action( 'quentn_user_role_removed', $new_user->user_email, $user_id, trim( $remove_role ) );
                 }
             }
 
@@ -446,6 +651,207 @@ class Quentn_Wp_Rest_Api
         update_option("quentn_web_tracking_code", $web_tracking->get_quentn_web_tracking_code() );
         return rest_ensure_response( array( 'saved' => 1 ) );
     }
+
+	/**
+	 * Get list of logs
+	 *
+	 * @since  1.2.8
+	 * @access public
+	 * @return WP_Error|WP_REST_Response
+	 */
+	public function quentn_get_logs( $request ) {
+		$request_body = json_decode( $request->get_body(), true );
+		$request_body_data = json_decode( base64_decode( $request_body['data'] ), true );
+		$request_data = $request_body_data['data'];
+		$conditions = [];
+		$response = [];
+
+		global $wpdb;
+		$sql = "SELECT * FROM " . $wpdb->prefix . TABLE_QUENTN_LOG ;
+
+		if ( ! empty( $request_data['events'] ) ) {
+			$conditions[] = "event IN (" . implode(',', array_map('intval', $request_data['events'] ) ) . ")";
+		}
+
+		if ( ! empty( $request_data['emails'] ) ) {
+			$escaped_emails = array_map( function( $val ) use ( $wpdb ) {
+				return $wpdb->prepare('%s', $val);
+			}, $request_data['emails'] );
+			$conditions[] = "email IN (" . implode(',', $escaped_emails) . ")";
+		}
+
+		if ( ! empty( $request_data['pages'] ) ) {
+			$conditions[] = "page_id IN (" . implode(',', array_map('intval', $request_data['pages'] ) ) . ")";
+		}
+
+		if ( ! empty( $request_data['from'] ) ) {
+			$conditions[] = "created_at >= ". intval( $request_data['from'] );
+		}
+
+		if ( ! empty( $request_data['to'] ) ) {
+			$conditions[] = "created_at <= ". intval( $request_data['to'] );
+		}
+
+		if ( ! empty( $conditions ) ) {
+			$sql .= " WHERE " . implode( " AND ", $conditions );
+		}
+
+		//order by
+		$order_by = ! empty( $request_data['order_by'] ) ? $request_data['order_by'] : 'created_at';
+		$sort_by = ! empty( $request_data['sort'] ) ? $request_data['sort'] : 'desc';
+		$sql .= " order by ". $order_by. " ". $sort_by;
+
+		//limit
+		$limit = ! empty( $request_data['limit'] ) ? intval( $request_data['limit'] ) : 50;
+		$offset = ! empty( $request_data['offset'] ) ? intval( $request_data['offset'] ) : 0;
+		$sql .= " limit ". $offset . ", " . $limit;
+
+		$results = $wpdb->get_results( $sql, 'ARRAY_A' );
+		if ( $wpdb->last_error ) {
+			return new WP_Error( 'log_call_failed', $wpdb->last_error );
+		}
+
+		//prepare response data key
+		$logs = [];
+		foreach ( $results as $log ) {
+			if ( ! empty( $log['page_id'] ) ) {
+				$log['page_title'] = get_the_title( $log['page_id'] );
+				$log['page_public_url'] = get_page_link( $log['page_id'] );
+			} else {
+				$log['page_title'] = '';
+				$log['page_public_url'] = '';
+			}
+
+			$logs[] = $log;
+		}
+
+		if ( ! empty( $request_data['events'] ) ) {
+			include_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/config.php';
+			$requested_events = [];
+			foreach ( $request_data['events'] as $event ) {
+				$requested_events[$event] = $events[ $event ];
+			}
+		}
+
+		$response = [
+			'success' => true,
+			'total' => count( $results ),
+			'limit' => $limit,
+			'offset' => $offset,
+			'order_by' => $order_by,
+			'sort' => $sort_by,
+			'events' => $requested_events,
+			'data' => $logs,
+		];
+
+		return rest_ensure_response( $response );
+	}
+	/**
+	 * Get list of get page access
+	 *
+	 * @since  1.2.8
+	 * @access public
+	 * @return WP_Error|WP_REST_Response
+	 */
+	public function quentn_get_page_access( $request ) {
+		$request_body = json_decode( $request->get_body(), true );
+		$request_body_data = json_decode( base64_decode( $request_body['data'] ), true );
+		$request_data = $request_body_data['data'];
+
+		if ( empty( $request_data['page_id'] ) ) {
+			return new WP_Error( 'page_id_missing', esc_html__( 'Page id is missing', 'quentn-wp' ), array( 'status' => 400 ) );
+		}
+		$page_id = intval( $request_data['page_id'] );
+
+		global $wpdb;
+		$sql = "SELECT * FROM " . $wpdb->prefix . TABLE_QUENTN_RESTRICTIONS. " where page_id='". $page_id . "'";
+
+		//order by
+		$order_by = ! empty( $request_data['order_by'] ) ? $request_data['order_by'] : 'email';
+		$sort_by = ! empty( $request_data['sort'] ) ? $request_data['sort'] : 'desc';
+		$sql .= " order by ". $order_by. " ". $sort_by;
+
+		//limit
+		$limit = ! empty( $request_data['limit'] ) ? intval( $request_data['limit'] ) : 50;
+		$offset = ! empty( $request_data['offset'] ) ? intval( $request_data['offset'] ) : 0;
+		$sql .= " limit ". $offset . ", " . $limit;
+
+		$results = $wpdb->get_results( $sql, 'ARRAY_A' );
+		if ( $wpdb->last_error ) {
+			return new WP_Error( 'page_access_call_failed', $wpdb->last_error );
+		}
+
+		//prepare response data
+		$page_accesses = [];
+		$separator = ( parse_url( get_page_link( $page_id ), PHP_URL_QUERY ) ) ? '&' : '?';
+		foreach ( $results as $page_access ) {
+			$page_access['access_link'] = get_page_link( $_GET['page_id'] ) . $separator.'qntn_wp=' . $page_access['email_hash'];
+			unset( $page_access['email_hash'] ); //email not included in response
+			$page_accesses[] = $page_access;
+		}
+
+		$response = [
+			'success' => true,
+			'page_id' => $page_id,
+			'page_title' => get_the_title( $page_id ),
+			'page_public_url' => get_page_link( $page_id ),
+			'total' => count( $page_accesses ),
+			'limit' => $limit,
+			'offset' => $offset,
+			'order_by' => $order_by,
+			'sort' => $sort_by,
+			'data' => $page_accesses,
+		];
+
+		return rest_ensure_response( $response );
+	}
+
+	/**
+	 * Get list of get page restriction settings
+	 *
+	 * @since  1.2.8
+	 * @access public
+	 * @return WP_Error|WP_REST_Response
+	 */
+	public function quentn_get_page_restriction_settings( $request ) {
+		$request_body = json_decode( $request->get_body(), true );
+		$request_body_data = json_decode( base64_decode( $request_body['data'] ), true );
+		$request_data = $request_body_data['data'];
+
+		if ( empty( $request_data['page_id'] ) ) {
+			return new WP_Error( 'page_id_missing', esc_html__( 'Page id is missing', 'quentn-wp' ), array( 'status' => 400 ) );
+		}
+		$page_id = intval( $request_data['page_id'] );
+
+		$restricted_data = get_post_meta( $page_id, '_quentn_post_restrict_meta', true );
+		//unset($restricted_data['status']);
+		$response[] = true;
+		$response = [
+			'success' => true,
+			'page_id' => $page_id,
+			'page_title' => get_the_title( $page_id ),
+			'page_public_url' => get_page_link( $page_id ),
+		];
+		$response['restriction_enabled'] = boolval( $restricted_data['status'] );
+		if ( ! empty( $restricted_data ) ) {
+			$response['restriction_type'] = ! empty( $restricted_data['countdown'] ) ? 'countdown' : 'access';
+			$response['countdown_type'] = $restricted_data['countdown_type'];
+			$response['countdown_absolute_date'] = $restricted_data['absolute_date'];
+			$response['countdown_relative_settings'] = [
+				'hours' => $restricted_data['hours'],
+				'minutes' => $restricted_data['minutes'],
+				'seconds' => $restricted_data['seconds'],
+			];
+			$response['countdown_relative_start_type'] = $restricted_data['access_mode'] == 'permission_granted_mode' ? 'permission_granted' : 'first_visit';
+			$response['display_countdown'] = $restricted_data['display_countdown_default_status'];
+			$response['countdown_top_page'] = $restricted_data['quentn_countdown_stick_on_top'];
+			$response['redirection_type'] = $restricted_data['redirection_type'] == 'restricted_message' ? 'message' : 'url';
+			$response['redirection_url'] = $restricted_data['redirect_url'];
+			$response['redirection_message'] = $restricted_data['error_message'];
+		}
+
+		return rest_ensure_response( $response );
+	}
 
     /**
      * Validate a request argument based on details registered to the route.
@@ -508,7 +914,7 @@ class Quentn_Wp_Rest_Api
 
         //check time validation for request
         if( $request_body['vu'] <= time() ) {
-            return new WP_Error( 'Time Invalid', esc_html__( 'Time has expired', 'quentn-wp' ), array( 'status' => 401 ) );
+            return new WP_Error( 'time_expired', esc_html__( 'Time has expired', 'quentn-wp' ), array( 'status' => 401 ) );
         }
 
 
@@ -519,7 +925,7 @@ class Quentn_Wp_Rest_Api
         }
 
         if ( $hash != $request_body['hash'] ) {
-            return new WP_Error( __( 'API key is not valid' ), esc_html__( 'Incorrect Api Key', 'quentn-wp' ), array( 'status' => 401 ) );
+            return new WP_Error( 'invalid_key', esc_html__( 'Incorrect Api Key', 'quentn-wp' ), array( 'status' => 401 ) );
         }
 
         return true;

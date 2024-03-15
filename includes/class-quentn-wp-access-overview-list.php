@@ -153,7 +153,7 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
                 return  sprintf( '<a href="?page=%s&action=%s&page_id=%s&email=%s&_wpnonce=%s" onclick="return confirm(\'%s\')" >%s</a>', esc_attr( $_REQUEST['page'] ), 'qntn-delete', $page_id, trim($item['email']), $delete_nonce, __( "Are you sure you want to delete?", 'quentn-wp' ),  __( "Delete", 'quentn-wp' ) );
             case 'view_access':
                 $separator = ( parse_url( get_page_link( sanitize_text_field( $_GET['page_id'] ) ), PHP_URL_QUERY ) ) ? '&' : '?';
-                return  sprintf( "<input type='text' class='get_access_url' readonly  value='%s' /><button class='copy_access_url'>%s</button>", get_page_link( sanitize_text_field( $_GET['page_id'] ) ).$separator.'qntn_wp='.$item['email_hash'], __( 'Copy URL' ) );
+                return  sprintf( "<input type='text' class='get_access_url' readonly  value='%s' /><button class='copy_access_url'>%s</button>", get_page_link( sanitize_text_field( $_GET['page_id'] ) ) . $separator.'qntn_wp=' . $item['email_hash'], __( 'Copy URL' ) );
             default:
                 return __( "no value", 'quentn-wp' );
         }
@@ -182,7 +182,7 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
      */
     public function get_sortable_columns() {
         $sortable_columns = array(
-            'email'                    => array( 'email', true ),
+            'email' => array( 'email', true ),
             'created_at' => array( 'created_at', true )
         );
 
@@ -362,8 +362,15 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
                 die( 'Nope! Security check failed' );
             }
 
-            $num_records_deleted = $this->delete_restriction( sanitize_text_field( $_GET['page_id'] ), str_replace(" ", "+", sanitize_email( $_GET['email'] ) ) );
-            wp_redirect( esc_url_raw( remove_query_arg( ['action', 'email', '_wpnonce'], esc_url_raw(add_query_arg( ['page_id' => $this->page_id, 'update' => 'quentn-access-deleted', 'deleted' => $num_records_deleted ] ) ) ) ) );
+	        $page_id = sanitize_text_field( $_GET['page_id'] );
+	        $email = str_replace(" ", "+", $_GET['email'] );
+	        global $wpdb;
+	        $num_records_deleted = $wpdb->delete( $wpdb->prefix . TABLE_QUENTN_RESTRICTIONS, array( 'page_id' => $page_id, 'email' => $email ), array( '%d', '%s' ) );
+            if ( $num_records_deleted ) {
+	            do_action( 'quentn_access_revoked', array( $email ), array( $page_id ), QUENTN_WP_ACCESS_REVOKED_MANUALLY );
+            }
+
+            wp_redirect( esc_url_raw( remove_query_arg( array( 'action', 'email', '_wpnonce' ), esc_url_raw( add_query_arg( array( 'page_id' => $this->page_id, 'update' => 'quentn-access-deleted', 'delete_count' => $num_records_deleted ) ) ) ) ) );
             exit;
 
         }
@@ -383,7 +390,7 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
                 //$wpdb->query( $wpdb->query( $query ) );
                 $num_records_deleted = $wpdb->query( $query );
                 //add and remove items from a query string
-                wp_redirect( esc_url_raw(remove_query_arg( ['action', 'action2', '_wpnonce', '_wp_http_referer', 'quentn-bulk-delete-access'], esc_url_raw(add_query_arg( ['page_id' => $this->page_id, 'update' => 'quentn-access-deleted', 'deleted' => $num_records_deleted ] ) ) ) ) );
+                wp_redirect( esc_url_raw( remove_query_arg( array( 'action', 'action2', '_wpnonce', '_wp_http_referer', 'quentn-bulk-delete-access' ), esc_url_raw(add_query_arg( array( 'page_id' => $this->page_id, 'update' => 'quentn-access-deleted', 'delete_count' => $num_records_deleted ) ) ) ) ) );
                 exit;
             }
         }
@@ -398,20 +405,20 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
             $email = sanitize_email( $_REQUEST['email_direct_access'] );
             //if email is not valid, then display error message and redirect
             if ( ! is_email( $email ) ) {
-                wp_redirect( esc_url_raw( add_query_arg( ['page_id' => $this->page_id, 'update' => 'quentn-direct-access-email-invalid' ] ) ) );
+                wp_redirect( esc_url_raw( add_query_arg( array( 'page_id' => $this->page_id, 'update' => 'quentn-direct-access-email-invalid' ) ) ) );
                 exit;
             }
 
             //add/update access, if email address already exist, then only its creation date will be updated
-            if( $wpdb->replace( $wpdb->prefix . TABLE_QUENTN_RESTRICTIONS,['page_id' => $this->page_id, 'email' => $email, 'email_hash' => hash( 'sha256', $email ), 'created_at' => time()], ['%d', '%s', '%s', '%d'] ) ) {
-                wp_redirect( esc_url_raw(remove_query_arg( ['qntn_direct_access_submit_nonce', 'email_direct_access'], esc_url_raw(add_query_arg( [ 'update' => 'quentn-direct-access-add-success' ] ) ) ) ) );
+            if( $wpdb->replace( $wpdb->prefix . TABLE_QUENTN_RESTRICTIONS, array( 'page_id' => $this->page_id, 'email' => $email, 'email_hash' => hash( 'sha256', $email ), 'created_at' => time() ), array( '%d', '%s', '%s', '%d' ) ) ) {
+	            do_action( 'quentn_access_granted', array( $email ), array( $this->page_id ), QUENTN_WP_ACCESS_ADDED_MANUALLY );
+                wp_redirect( esc_url_raw( remove_query_arg( array( 'qntn_direct_access_submit_nonce', 'email_direct_access' ), esc_url_raw( add_query_arg( array( 'update' => 'quentn-direct-access-add-success' ) ) ) ) ) );
                 exit;
             } else {
-                wp_redirect( esc_url_raw(remove_query_arg( ['qntn_direct_access_submit_nonce', 'email_direct_access'], esc_url_raw(add_query_arg( [ 'update' => 'quentn-direct-access-add-failed' ] ) ) ) ) );
+                wp_redirect( esc_url_raw( remove_query_arg( array( 'qntn_direct_access_submit_nonce', 'email_direct_access' ), esc_url_raw( add_query_arg( array( 'update' => 'quentn-direct-access-add-failed' ) ) ) ) ) );
                 exit;
             }
         }
-
     }
 
     /**

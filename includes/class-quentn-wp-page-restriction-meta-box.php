@@ -15,7 +15,7 @@ class Quentn_Wp_Page_Restriction_Meta_Box
      */
     public function __construct() {
 
-        add_action( 'add_meta_boxes', array($this, 'quentn_register_meta_boxes' ) );
+        add_action( 'add_meta_boxes', array( $this, 'quentn_register_meta_boxes' ) );
         add_action( 'save_post', array( $this, 'save_page_meta' ) );
     }
 

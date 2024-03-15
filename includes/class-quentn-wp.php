@@ -74,7 +74,7 @@ class Quentn_Wp {
 		if ( defined( 'QUENTN_WP_VERSION' ) ) {
 			$this->version = QUENTN_WP_VERSION;
 		} else {
-			$this->version = '1.2.7';
+			$this->version = '1.2.8';
 		}
 		$this->plugin_name = 'quentn-wp';
 
@@ -144,6 +144,11 @@ class Quentn_Wp {
          * The class responsible to reset user password redirect
          */
         require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-quentn-wp-reset-password.php';
+
+		/**
+		 * The class responsible for quentn log
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-quentn-wp-log.php';
 
         /**
          * The class responsible for cron job
@@ -277,6 +282,11 @@ class Quentn_Wp {
         //when cookie notice plugin is not installed and user didn't dismiss notice, then display notice
         $this->loader->add_action( 'admin_init', $plugin_admin, 'check_member_plugin' );
 
+		//todo try to use upgrader_process_complete hook to upgrade database, but this hook is not triggered when site is multisite and plugin
+		// is not activated 'network wide'
+		//when our plugin updated by user
+		//$this->loader->add_action( 'upgrader_process_complete', $plugin_admin, 'quentn_plugin_upgrade_completed', 10, 2  );
+
         //add ajax endpoint for cookie notice dismiss
         $this->loader->add_action( 'wp_ajax_quentn_dismiss_cookie_notice', $plugin_admin, 'cookie_plugin_notice_dismiss_handler' );
 
@@ -297,6 +307,9 @@ class Quentn_Wp {
 	private function define_public_hooks() {
 
 		$plugin_public = new Quentn_Wp_Public( $this->get_plugin_name(), $this->get_version() );
+
+		//update database
+		$this->loader->add_action( 'plugins_loaded', $plugin_public, 'quentn_update_db_check' );
 
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );

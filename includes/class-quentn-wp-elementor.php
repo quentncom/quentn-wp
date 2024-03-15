@@ -75,14 +75,23 @@ class Quentn_Wp_Elementor
      * @since  1.0.6
      * @access public
      */
-    public function init_elementor()
-    {
-        if ( class_exists('\Quentn_Wp_Elementor_Integration' ) ) {
-            $quentn_action = new \Quentn_Wp_Elementor_Integration;
-            // Register the action with form widget
-            \ElementorPro\Plugin::instance()->modules_manager->get_modules('forms')->add_form_action( $quentn_action->get_name(), $quentn_action );
-        }
-    }
+	public function init_elementor()
+	{
+		if ( class_exists('\Quentn_Wp_Elementor_Integration' ) ) {
+			$quentn_action = new \Quentn_Wp_Elementor_Integration;
+			// Register the action with form widget
+			\ElementorPro\Plugin::instance()->modules_manager->get_modules('forms')->add_form_action( $quentn_action->get_name(), $quentn_action );
+		}
+		//If quentn api data was never added to elementor plugin
+		if ( ! get_option( 'quentn_elementor_api_data_auto_update_flag' ) ) {
+			$elementor_api_key = 'elementor_'. Quentn_Wp_Elementor_Integration::OPTION_NAME_API_KEY;
+			$elementor_api_url = 'elementor_'. Quentn_Wp_Elementor_Integration::OPTION_NAME_API_URL;
+
+			update_option( $elementor_api_key, get_option( 'quentn_app_key' ) );
+			update_option( $elementor_api_url, get_option( 'quentn_base_url' ) );
+			update_option( 'quentn_elementor_api_data_auto_update_flag', true);
+		}
+	}
 }
 
 Quentn_Wp_Elementor::get_instance();

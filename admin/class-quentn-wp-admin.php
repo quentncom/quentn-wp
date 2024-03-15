@@ -249,9 +249,11 @@ class Quentn_Wp_Admin {
 
             //if a user access was deleted
             if ( $action == 'quentn-access-deleted' ) {
-                //$this->notices[] = array( 'message' => __( 'User accesses have been deleted', 'quentn-wp' ), 'type' => 'success' );
-                $this->notices[] = array( 'message' =>  sprintf( esc_html( _n( '%d user access is deleted', '%d user accesses are deleted', $_GET['deleted'], 'quentn-wp'  ) ), $_GET['deleted'] ), 'type' => 'success' );
-
+                if ( $_GET['delete_count'] ) {
+	                $this->notices[] = array( 'message' =>  sprintf( esc_html( _n( '%d user access is deleted', '%d user accesses are deleted', $_GET['delete_count'], 'quentn-wp'  ) ), $_GET['delete_count'] ), 'type' => 'success' );
+                } else {
+	                $this->notices[] = array( 'message' => __( 'User access could not be deleted', 'quentn-wp' ), 'type' => 'error' );
+                }
             }
 
             //if a user data was deleted
@@ -358,8 +360,16 @@ class Quentn_Wp_Admin {
                 'option_name'  => 'quentn_add_remove_wp_user_from_host'
             ),
             array(
-                'option_group' => 'quentn_auto_login_options_group',
+                'option_group' => 'quentn_miscellaneous_options_group',
                 'option_name'  => 'quentn_auto_login_url'
+            ),
+            array(
+                'option_group' => 'quentn_miscellaneous_options_group',
+                'option_name'  => 'quentn_add_log'
+            ),
+            array(
+                'option_group' => 'quentn_miscellaneous_options_group',
+                'option_name'  => 'quentn_log_expire_days'
             ),
         );
 
@@ -372,10 +382,10 @@ class Quentn_Wp_Admin {
                 'page'     => 'quentn-dashboard-tags'
             ),
             array(
-                'id'       => 'quentn_auto_login_option',
-                'title'    => __( 'Redirect after auto login', 'quentn-wp'),
+                'id'       => 'quentn_miscellaneous_option',
+                'title'    => __( 'Miscellaneous Options', 'quentn-wp'),
                 'callback' => '__return_false',
-                'page'     => 'quentn-dashboard-auto-login'
+                'page'     => 'quentn-dashboard-miscellaneous'
             ),
         );
 
@@ -405,10 +415,24 @@ class Quentn_Wp_Admin {
         if ( $tab == 'quentn_settings' ) {
             $fields[] = array(
                 'id' => 'quentn_auto_login_redirect_url',
-                'title' => __('Redirect URL', 'quentn-wp'),
-                'callback' => array($this, 'field_quentn_auto_login_redirect_url'),
-                'page' => 'quentn-dashboard-auto-login',
-                'section' => 'quentn_auto_login_option',
+                'title' => __( 'Redirect URL', 'quentn-wp' ),
+                'callback' => array( $this, 'field_quentn_auto_login_redirect_url' ),
+                'page' => 'quentn-dashboard-miscellaneous',
+                'section' => 'quentn_miscellaneous_option',
+            );
+            $fields[] = array(
+                'id' => 'quentn_add_log',
+                'title' => __( 'Add Log', 'quentn-wp' ),
+                'callback' => array( $this, 'field_quentn_add_log' ),
+                'page' => 'quentn-dashboard-miscellaneous',
+                'section' => 'quentn_miscellaneous_option',
+            );
+            $fields[] = array(
+                'id' => 'quentn_log_expire_days',
+                'title' => __( 'Add Log Expire Days', 'quentn-wp' ),
+                'callback' => array( $this, 'field_quentn_log_expire_days' ),
+                'page' => 'quentn-dashboard-miscellaneous',
+                'section' => 'quentn_miscellaneous_option',
             );
         }
 
@@ -803,6 +827,44 @@ class Quentn_Wp_Admin {
         <?php
     }
 
+	/**
+	 * Display add log checkbox field
+	 *
+	 * @since  1.2.8
+	 * @access public
+	 * @return void
+	 */
+	public function field_quentn_add_log()
+	{
+		$value = get_option( 'quentn_add_log', true );
+		?>
+        <input type="checkbox" class="form-control" value="1" name="quentn_add_log" id="quentn_add_log" <?php checked( $value); ?>>
+        <label for="quentn_add_log" style="display:inline" > <?php printf( __( 'Add logs.', 'quentn-wp'  ) ); ?></label>
+		<?php
+	}
+
+    /**
+	 * Display options for expire days of logs
+	 *
+	 * @since  1.2.8
+	 * @access public
+	 * @return void
+	 */
+	public function field_quentn_log_expire_days() {
+		$value = get_option( 'quentn_log_expire_days', 365 );
+		?>
+        <select name="quentn_log_expire_days" id="quentn_log_expire_days">
+            <option value="30" <?php selected ( $value, 30  )  ?>> 30 <?php __( 'days', 'quentn-wp' ) ?></option>
+            <option value="60" <?php selected ($value, 60  )  ?>> 60 <?php __( 'days', 'quentn-wp' ) ?></option>
+            <option value="90" <?php selected ( $value, 90  )  ?>> 90 <?php __( 'days', 'quentn-wp' ) ?></option>
+            <option value="150" <?php selected ( $value, 150  )  ?>> 150 <?php __( 'days', 'quentn-wp' ) ?></option>
+            <option value="365" <?php selected ( $value, 365  )  ?>> 365 <?php __( 'days', 'quentn-wp' ) ?></option>
+        </select>
+
+        <label for="quentn_log_expire_days" > <?php printf( __( 'Number of days the log should be kept.', 'quentn-wp'  ) ); ?></label>
+		<?php
+	}
+
     /**
      * Display create/update checkbox field
      *
@@ -926,6 +988,70 @@ class Quentn_Wp_Admin {
         require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-quentn-wp-access-overview-list.php';
 
     }
+
+	/**
+	 * Update database on plugin update if required
+	 *
+	 * @since  1.2.8
+	 * @access public
+	 * @return void
+	 */
+
+	public function quentn_plugin_upgrade_completed( $upgrader_object, $options ) {
+		update_option( "quentn_db_version", '1.0' );
+		// Check if the update process was for quentn plugin
+		if ( isset( $options['action'] ) && $options['action'] === 'update' && isset( $options['type'] ) && $options['type'] === 'plugin' ) {
+			// Check if quentn plugin was updated
+			if ( isset( $options['plugins'] ) && in_array( 'quentn-wp/quentn-wp.php', $options['plugins'] ) ) {
+				// Call your database update function
+				$this->quentn_database_update();
+			}
+		}
+	}
+
+    public function quentn_database_update() {
+	    if ( ! version_compare(get_option( 'quentn_db_version' ), QUENTN_WP_DB_VERSION, '<' ) ) {
+            return;
+        }
+	    if ( is_multisite() ) {
+            $site_ids = get_sites( array( 'fields' => 'ids' ) );
+		    foreach ( $site_ids as $site_id ) {
+			    switch_to_blog( $site_id );
+			    if ( Helper::is_plugin_enabled() ){
+                    if ( version_compare(QUENTN_WP_DB_VERSION, '1.2', '<' ) ) {
+                        $this->quentn_database_update_log_table();
+                    }
+			    }
+			    restore_current_blog();
+		    }
+		    update_option( "quentn_db_version", QUENTN_WP_DB_VERSION );
+	    } else {
+		    if ( version_compare(QUENTN_WP_DB_VERSION, '1.2', '<' ) ) {
+			    $this->quentn_database_update_log_table();
+		    }
+		    update_option( "quentn_db_version", QUENTN_WP_DB_VERSION );
+	    }
+    }
+
+    public function quentn_database_update_log_table() {
+	    global $wpdb;
+	    $table_qntn_log = $wpdb->prefix. TABLE_QUENTN_LOG;
+	    $charset_collate = $wpdb->get_charset_collate();
+
+	    $sql_create_table_log = "CREATE TABLE IF NOT EXISTS $table_qntn_log (
+    	  id int NOT NULL AUTO_INCREMENT,
+    	  event TINYINT  NOT NULL,
+          email varchar(150),
+          page_id int,
+    	  created_at int NOT NULL,
+          context mediumtext,                
+          PRIMARY KEY  (id)
+        )  $charset_collate;";
+
+	    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+	    dbDelta( $sql_create_table_log );
+    }
+
 
     /**
      * Display error messages

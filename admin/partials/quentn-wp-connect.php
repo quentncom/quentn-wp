@@ -111,6 +111,7 @@ if( isset( $_GET['state'] ) ) {
 
                 update_option( $elementor_api_key, $this->api_handler->get_oauth_client()->getApiKey() );
                 update_option( $elementor_api_url, $this->api_handler->get_oauth_client()->getBaseUrl() );
+	            update_option( 'quentn_elementor_api_data_auto_update_flag', true);
             }
         }
         delete_option( 'quentn_client_id');

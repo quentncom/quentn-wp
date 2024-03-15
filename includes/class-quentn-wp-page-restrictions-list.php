@@ -1,5 +1,4 @@
 <?php
-use QuentnWP\Admin\Utility\Helper;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -48,7 +47,7 @@ class Quentn_Wp_Page_Restrictions_List extends \WP_List_Table {
         //apply pagination
         $per_page     = $this->get_items_per_page( 'quentn_restricted_records_per_page', 20 );
         $current_page = $this->get_pagenum();
-        $total_items  = count( Helper::get_restriction_activated_pages() );
+        $total_items  = count( $this->get_restricted_pages() );
 
         $this->set_pagination_args( array(
             "total_items" => $total_items,
@@ -141,38 +140,16 @@ class Quentn_Wp_Page_Restrictions_List extends \WP_List_Table {
      */
     public function get_quentn_restrictions( $per_page = 20, $page_number = 1 ) {
 
-        $restriction_activated_pages = Helper::get_restriction_activated_pages();
-        if( count( $restriction_activated_pages ) < 1 ) {
+	    $restricted_pages = $this->get_restricted_pages();
+        if( count( $restricted_pages ) < 1 ) {
             return array();
         }
-
-        //set order by
-        $args = array();
-        if ( ! empty( $_REQUEST['orderby'] ) ) {
-            $sort_column  = ( $_REQUEST['orderby'] == 'page_title' ) ? 'post_title' : esc_sql( $_REQUEST['orderby'] );
-
-            $sort_order  = ! empty( $_REQUEST['order'] ) ? esc_sql( $_REQUEST['order'] ) : 'asc';
-            $args = array(
-                'sort_order'  => $sort_order,
-                'sort_column' => $sort_column,
-            );
-        }
-
-        //add args to set pagination
-        $args['number']   = $per_page;
-
-        $args['offset']   = ( $page_number - 1 ) * $per_page;
-
-        $args['include']  = $restriction_activated_pages;
-
-        $restricted_pages= get_pages( array(
-            'meta_key' => '_quentn_post_restrict_meta'
-        ) );
 
         $result = array();
 
         //get number of access links for all restricted pages
-        $number_of_access_links = $this->access_links_count( Helper::get_restriction_activated_pages() );
+	    $restricted_pages_ids = array_column( $restricted_pages, 'ID' );
+        $number_of_access_links = $this->access_links_count( $restricted_pages_ids );
 
         foreach( $restricted_pages as $restricted_page )
         {
@@ -185,7 +162,7 @@ class Quentn_Wp_Page_Restrictions_List extends \WP_List_Table {
                 "page_id"            => $restricted_page->ID,
                 "page_title"         => $restricted_page->post_title,
                 "restriction_type"   => $restriction_type,
-                "total_access_links" => ( isset( $number_of_access_links[$restricted_page->ID] ) )? $number_of_access_links[$restricted_page->ID] : 0 ,
+                "total_access_links" => isset( $number_of_access_links[$restricted_page->ID] ) ? $number_of_access_links[$restricted_page->ID] : 0 ,
             );
         }
         return $result;
@@ -198,6 +175,13 @@ class Quentn_Wp_Page_Restrictions_List extends \WP_List_Table {
      * @return array
      */
     public function access_links_count( $page_ids ) {
+
+	    $args = [
+		    'post_type' => 'page',
+		    'meta_key' => '_quentn_post_restrict_meta'
+	    ];
+	    $restricted_pages_query = new WP_Query( $args );
+	    $page_ids = array_column( $restricted_pages_query->posts, 'ID' );
         global $wpdb;
 
         $sql = "SELECT page_id, COUNT(*) as totoal_access FROM ". $wpdb->prefix . TABLE_QUENTN_RESTRICTIONS. " where page_id IN (".implode(",",$page_ids).")  GROUP BY page_id";
@@ -239,6 +223,28 @@ class Quentn_Wp_Page_Restrictions_List extends \WP_List_Table {
         }
 
     }
+
+	/**
+	 * get restricted pages list
+	 *
+	 * @since  1.2.8
+	 * @access public
+	 * @return void
+	 */
+	public function get_restricted_pages() {
+
+        $restricted_pages_query = new WP_Query( array(
+            'post_type' => 'page',
+            'meta_key' => '_quentn_post_restrict_meta',
+            'orderby' => 'title',
+            'order' => 'ASC',
+        ) );
+        $restricted_pages = [];
+        if ( $restricted_pages_query->have_posts() ) {
+            $restricted_pages = $restricted_pages_query->posts;
+        }
+        return $restricted_pages;
+	}
 }
 
 /**

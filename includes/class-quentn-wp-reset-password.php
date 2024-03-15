@@ -5,14 +5,13 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-class Quentn_Wp_Reset_Password
-{
+class Quentn_Wp_Reset_Password {
     /**
      * Constructor method.
      */
     public function __construct() {
         add_action( 'login_init', array( $this, 'quentn_reset_password' ) );
-        add_action( 'after_password_reset', array( $this, 'quentn_after_reset_password' ), 10 );
+        add_action( 'after_password_reset', array( $this, 'quentn_after_reset_password' ) );
     }
 
     /**
@@ -35,11 +34,13 @@ class Quentn_Wp_Reset_Password
             $hash =  hash( 'sha256', $data['vu'].$data['email'].$api_key.$data['force_login'] );
             //Validate hash
             if ( $hash !== $data["hash"] ) {
+	            do_action( 'quentn_user_autologin_failed', sanitize_email( $data['email'] ), QUENTN_WP_LOGIN_SECURITY_FAILURE );
                 wp_redirect( site_url( 'wp-login.php?action=lostpassword&error=invalidkey' ) );
                 exit;
             }
             //check expiry time
             if( $data['vu'] <= time() ) {
+	            do_action( 'quentn_user_autologin_failed', sanitize_email( $data['email'] ), QUENTN_WP_LOGIN_KEY_EXPIRED );
                 wp_redirect( site_url( 'wp-login.php?action=lostpassword&error=expiredkey' ) );
                 exit;
             }
@@ -50,10 +51,11 @@ class Quentn_Wp_Reset_Password
                 add_filter( 'authenticate', function( $user ) use ( $qntn_user_email ) {
                     $user = new WP_Error( 'denied', sprintf( __( "<strong>ERROR</strong>: Link invalid. Email '%s' does not exist.", 'quentn-wp' ), $qntn_user_email ) );
                     return $user;
-                }, 10 );
+                } );
             } else  {
                 //check if key already been used
                 if ( in_array($data['vu'], get_user_meta( $user->ID, 'quentn_reset_pwd_vu' ) ) ) {
+	                do_action( 'quentn_user_autologin_failed', $user->user_email, QUENTN_WP_LOGIN_KEY_ALREADY_USED );
                     wp_redirect( site_url( 'wp-login.php?action=lostpassword&error=invalidkey' ) );
                     exit;
                 }
@@ -66,6 +68,8 @@ class Quentn_Wp_Reset_Password
                     update_user_meta( $user->ID, 'quentn_last_login', time() );
                     update_user_caches( $user );
                     $redirect_to = $this->get_redirect_url( $user );
+
+	                do_action( 'quentn_user_autologin', $user->user_email );
                     wp_safe_redirect( $redirect_to );
                     exit();
                 } else { //ask user to reset password
@@ -75,7 +79,7 @@ class Quentn_Wp_Reset_Password
                         add_filter( 'authenticate', function( $key ) use ( $error_message ) {
                             $user = new WP_Error( 'denied', sprintf( __( "<strong>ERROR</strong>: ". $error_message, 'quentn-wp' ) ) );
                             return $user;
-                        }, 10 );
+                        } );
                         return;
                     }
                     $user_login = rawurlencode( $user->user_login );

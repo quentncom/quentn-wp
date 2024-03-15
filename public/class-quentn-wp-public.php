@@ -76,10 +76,6 @@ class Quentn_Wp_Public {
 		 */
 
 
-        //if(is_page(Pages_Restrictions_List::get_restriction_activated_pages())) {
-
-
-
         wp_register_style( 'quentn.flipclock.css', plugin_dir_url( __FILE__ ) . 'css/flipclock.css' );
         wp_enqueue_style( 'quentn.flipclock.css' );
 
@@ -121,5 +117,34 @@ class Quentn_Wp_Public {
             echo get_option('quentn_web_tracking_code');
         }
     }
+
+	/**
+	 * Update database if required
+	 *
+	 * @since    1.2.8
+	 */
+	public function quentn_update_db_check() {
+		if ( version_compare( get_option( 'quentn_db_version', '1.0' ), QUENTN_WP_DB_VERSION, '<' ) ) {
+
+			global $wpdb;
+			$table_qntn_log = $wpdb->prefix. TABLE_QUENTN_LOG;
+			$charset_collate = $wpdb->get_charset_collate();
+
+			$sql_create_table_log = "CREATE TABLE IF NOT EXISTS $table_qntn_log (
+    	  id int NOT NULL AUTO_INCREMENT,
+    	  event TINYINT  NOT NULL,
+          email varchar(150),
+          page_id int,
+    	  created_at int NOT NULL,
+          context mediumtext,                
+          PRIMARY KEY  (id)
+        )  $charset_collate;";
+
+			require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+			dbDelta( $sql_create_table_log );
+
+			update_option( "quentn_db_version", QUENTN_WP_DB_VERSION );
+		}
+	}
 
 }

@@ -98,8 +98,8 @@ if( isset( $_GET['tab'] ) ) {
         }
         elseif ( $active_tab == "quentn_settings" ) {
             echo '<form method="post" action="options.php" class="qntn-form">';
-            settings_fields( "quentn_auto_login_options_group" );
-            do_settings_sections( "quentn-dashboard-auto-login" );
+            settings_fields( "quentn_miscellaneous_options_group" );
+            do_settings_sections( "quentn-dashboard-miscellaneous" );
             submit_button( NULL, 'primary', 'submit', true, $submit_button_attributes );
             echo '</form>';
             echo "<hr >";
