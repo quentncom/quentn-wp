@@ -2,7 +2,7 @@
 namespace QuentnWPGuzzleHttp\Handler;
 
 use QuentnWPGuzzleHttp\Psr7;
-use Psr\Http\Message\RequestInterface;
+use QuentnWP\Psr\Http\Message\RequestInterface;
 
 /**
  * HTTP handler that uses cURL easy handles as a transport layer.

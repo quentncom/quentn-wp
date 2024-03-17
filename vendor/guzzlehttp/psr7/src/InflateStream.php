@@ -1,7 +1,7 @@
 <?php
 namespace QuentnWPGuzzleHttp\Psr7;
 
-use Psr\Http\Message\StreamInterface;
+use QuentnWP\Psr\Http\Message\StreamInterface;
 
 /**
  * Uses PHP's zlib.inflate filter to inflate deflate or gzipped content.

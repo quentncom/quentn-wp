@@ -1,7 +1,7 @@
 <?php
 namespace QuentnWPGuzzleHttp\Psr7;
 
-use Psr\Http\Message\UriInterface;
+use QuentnWP\Psr\Http\Message\UriInterface;
 
 /**
  * Resolves a URI reference in the context of a base URI and the opposite way.

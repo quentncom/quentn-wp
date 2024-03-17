@@ -2,9 +2,9 @@
 namespace QuentnWPGuzzleHttp\Handler;
 
 use QuentnWPGuzzleHttp\Psr7\Response;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\StreamInterface;
+use QuentnWP\Psr\Http\Message\RequestInterface;
+use QuentnWP\Psr\Http\Message\ResponseInterface;
+use QuentnWP\Psr\Http\Message\StreamInterface;
 
 /**
  * Represents a cURL easy handle and the data it populates.

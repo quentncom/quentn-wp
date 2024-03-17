@@ -1,7 +1,7 @@
 <?php
 namespace QuentnWPGuzzleHttp\Psr7;
 
-use Psr\Http\Message\UriInterface;
+use QuentnWP\Psr\Http\Message\UriInterface;
 
 /**
  * PSR-7 URI implementation.
@@ -89,7 +89,7 @@ class Uri implements UriInterface
      * Composes a URI reference string from its various components.
      *
      * Usually this method does not need to be called manually but instead is used indirectly via
-     * `Psr\Http\Message\UriInterface::__toString`.
+     * `QuentnWP\Psr\Http\Message\UriInterface::__toString`.
      *
      * PSR-7 UriInterface treats an empty component the same as a missing component as
      * getQuery(), getFragment() etc. always return a string. This explains the slight
@@ -140,7 +140,7 @@ class Uri implements UriInterface
     /**
      * Whether the URI has the default port of the current scheme.
      *
-     * `Psr\Http\Message\UriInterface::getPort` may return null or the standard port. This method can be used
+     * `QuentnWP\Psr\Http\Message\UriInterface::getPort` may return null or the standard port. This method can be used
      * independently of the implementation.
      *
      * @param UriInterface $uri

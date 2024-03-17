@@ -1,7 +1,7 @@
 <?php
 namespace QuentnWPGuzzleHttp\Psr7;
 
-use Psr\Http\Message\StreamInterface;
+use QuentnWP\Psr\Http\Message\StreamInterface;
 
 /**
  * Trait implementing functionality common to requests and responses.

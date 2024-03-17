@@ -3,10 +3,10 @@
 namespace QuentnWPGuzzleHttp\Psr7;
 
 use InvalidArgumentException;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\UriInterface;
-use Psr\Http\Message\StreamInterface;
-use Psr\Http\Message\UploadedFileInterface;
+use QuentnWP\Psr\Http\Message\ServerRequestInterface;
+use QuentnWP\Psr\Http\Message\UriInterface;
+use QuentnWP\Psr\Http\Message\StreamInterface;
+use QuentnWP\Psr\Http\Message\UploadedFileInterface;
 
 /**
  * Server-side HTTP request

@@ -224,8 +224,8 @@ Initial release.
 
 Currently unsupported:
 
-- `Psr\Http\Message\ServerRequestInterface`
-- `Psr\Http\Message\UploadedFileInterface`
+- `QuentnWP\Psr\Http\Message\ServerRequestInterface`
+- `QuentnWP\Psr\Http\Message\UploadedFileInterface`
 
 
 

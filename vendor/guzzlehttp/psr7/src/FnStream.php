@@ -1,7 +1,7 @@
 <?php
 namespace QuentnWPGuzzleHttp\Psr7;
 
-use Psr\Http\Message\StreamInterface;
+use QuentnWP\Psr\Http\Message\StreamInterface;
 
 /**
  * Compose stream implementations based on a hash of functions.

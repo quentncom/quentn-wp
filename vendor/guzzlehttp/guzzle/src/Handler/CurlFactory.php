@@ -7,7 +7,7 @@ use QuentnWPGuzzleHttp\Promise\FulfilledPromise;
 use QuentnWPGuzzleHttp\Psr7;
 use QuentnWPGuzzleHttp\Psr7\LazyOpenStream;
 use QuentnWPGuzzleHttp\TransferStats;
-use Psr\Http\Message\RequestInterface;
+use QuentnWP\Psr\Http\Message\RequestInterface;
 
 /**
  * Creates curl resources from a request

@@ -2,8 +2,8 @@
 namespace QuentnWPGuzzleHttp\Psr7;
 
 use InvalidArgumentException;
-use Psr\Http\Message\StreamInterface;
-use Psr\Http\Message\UploadedFileInterface;
+use QuentnWP\Psr\Http\Message\StreamInterface;
+use QuentnWP\Psr\Http\Message\UploadedFileInterface;
 use RuntimeException;
 
 class UploadedFile implements UploadedFileInterface

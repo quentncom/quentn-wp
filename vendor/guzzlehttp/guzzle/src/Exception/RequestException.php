@@ -1,10 +1,10 @@
 <?php
 namespace QuentnWPGuzzleHttp\Exception;
 
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
+use QuentnWP\Psr\Http\Message\RequestInterface;
+use QuentnWP\Psr\Http\Message\ResponseInterface;
 use QuentnWPGuzzleHttp\Promise\PromiseInterface;
-use Psr\Http\Message\UriInterface;
+use QuentnWP\Psr\Http\Message\UriInterface;
 
 /**
  * HTTP Request exception

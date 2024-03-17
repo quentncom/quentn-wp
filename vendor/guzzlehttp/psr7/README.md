@@ -228,7 +228,7 @@ false when there is no more data to read.
 
 Creating a stream decorator is very easy thanks to the
 `GuzzleHttp\Psr7\StreamDecoratorTrait`. This trait provides methods that
-implement `Psr\Http\Message\StreamInterface` by proxying to an underlying
+implement `QuentnWP\Psr\Http\Message\StreamInterface` by proxying to an underlying
 stream. Just `use` the `StreamDecoratorTrait` and implement your custom
 methods.
 
@@ -237,7 +237,7 @@ byte is read from a stream. This could be implemented by overriding the
 `read()` method.
 
 ```php
-use Psr\Http\Message\StreamInterface;
+use QuentnWP\Psr\Http\Message\StreamInterface;
 use GuzzleHttp\Psr7\StreamDecoratorTrait;
 
 class EofCallbackStream implements StreamInterface
@@ -324,7 +324,7 @@ echo GuzzleHttp\Psr7\str($request);
 
 `function uri_for($uri)`
 
-This function accepts a string or `Psr\Http\Message\UriInterface` and returns a
+This function accepts a string or `QuentnWP\Psr\Http\Message\UriInterface` and returns a
 UriInterface for the given value. If the value is already a `UriInterface`, it
 is returned as-is.
 
@@ -347,7 +347,7 @@ Options is an associative array that can contain the following keys:
 
 This method accepts the following `$resource` types:
 
-- `Psr\Http\Message\StreamInterface`: Returns the value as-is.
+- `QuentnWP\Psr\Http\Message\StreamInterface`: Returns the value as-is.
 - `string`: Creates a stream object that uses the given string as the contents.
 - `resource`: Creates a stream object that wraps the given PHP stream resource.
 - `Iterator`: If the provided value implements `Iterator`, then a read-only
@@ -521,12 +521,12 @@ Maps a file extensions to a mimetype.
 
 # Additional URI Methods
 
-Aside from the standard `Psr\Http\Message\UriInterface` implementation in form of the `GuzzleHttp\Psr7\Uri` class,
+Aside from the standard `QuentnWP\Psr\Http\Message\UriInterface` implementation in form of the `GuzzleHttp\Psr7\Uri` class,
 this library also provides additional functionality when working with URIs as static methods.
 
 ## URI Types
 
-An instance of `Psr\Http\Message\UriInterface` can either be an absolute URI or a relative reference.
+An instance of `QuentnWP\Psr\Http\Message\UriInterface` can either be an absolute URI or a relative reference.
 An absolute URI has a scheme. A relative reference is used to express a URI relative to another URI,
 the base URI. Relative references can be divided into several forms according to
 [RFC 3986 Section 4.2](https://tools.ietf.org/html/rfc3986#section-4.2):
@@ -580,7 +580,7 @@ Additional methods to work with URI components.
 
 `public static function isDefaultPort(UriInterface $uri): bool`
 
-Whether the URI has the default port of the current scheme. `Psr\Http\Message\UriInterface::getPort` may return null
+Whether the URI has the default port of the current scheme. `QuentnWP\Psr\Http\Message\UriInterface::getPort` may return null
 or the standard port. This method can be used independently of the implementation.
 
 ### `GuzzleHttp\Psr7\Uri::composeComponents`
@@ -589,7 +589,7 @@ or the standard port. This method can be used independently of the implementatio
 
 Composes a URI reference string from its various components according to
 [RFC 3986 Section 5.3](https://tools.ietf.org/html/rfc3986#section-5.3). Usually this method does not need to be called
-manually but instead is used indirectly via `Psr\Http\Message\UriInterface::__toString`.
+manually but instead is used indirectly via `QuentnWP\Psr\Http\Message\UriInterface::__toString`.
 
 ### `GuzzleHttp\Psr7\Uri::fromParts`
 

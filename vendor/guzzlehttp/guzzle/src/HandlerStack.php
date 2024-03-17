@@ -1,7 +1,7 @@
 <?php
 namespace QuentnWPGuzzleHttp;
 
-use Psr\Http\Message\RequestInterface;
+use QuentnWP\Psr\Http\Message\RequestInterface;
 
 /**
  * Creates a composed Guzzle handler function by stacking middlewares on top of

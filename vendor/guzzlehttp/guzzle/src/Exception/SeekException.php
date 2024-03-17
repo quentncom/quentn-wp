@@ -1,7 +1,7 @@
 <?php
 namespace QuentnWPGuzzleHttp\Exception;
 
-use Psr\Http\Message\StreamInterface;
+use QuentnWP\Psr\Http\Message\StreamInterface;
 
 /**
  * Exception thrown when a seek fails on a stream.

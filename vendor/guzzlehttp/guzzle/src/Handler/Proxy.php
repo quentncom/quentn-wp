@@ -2,7 +2,7 @@
 namespace QuentnWPGuzzleHttp\Handler;
 
 use QuentnWPGuzzleHttp\RequestOptions;
-use Psr\Http\Message\RequestInterface;
+use QuentnWP\Psr\Http\Message\RequestInterface;
 
 /**
  * Provides basic proxies for handlers.

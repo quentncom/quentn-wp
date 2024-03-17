@@ -3,9 +3,9 @@ namespace QuentnWPGuzzleHttp;
 
 use QuentnWPGuzzleHttp\Promise\PromiseInterface;
 use QuentnWPGuzzleHttp\Exception\GuzzleException;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\UriInterface;
+use QuentnWP\Psr\Http\Message\RequestInterface;
+use QuentnWP\Psr\Http\Message\ResponseInterface;
+use QuentnWP\Psr\Http\Message\UriInterface;
 
 /**
  * Client interface for sending HTTP requests.

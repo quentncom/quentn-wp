@@ -6,8 +6,8 @@ use QuentnWPGuzzleHttp\HandlerStack;
 use QuentnWPGuzzleHttp\Promise\PromiseInterface;
 use QuentnWPGuzzleHttp\Promise\RejectedPromise;
 use QuentnWPGuzzleHttp\TransferStats;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
+use QuentnWP\Psr\Http\Message\RequestInterface;
+use QuentnWP\Psr\Http\Message\ResponseInterface;
 
 /**
  * Handler that returns responses or throw exceptions from a queue.
@@ -108,7 +108,7 @@ class MockHandler implements \Countable
                         fwrite($sink, $contents);
                     } elseif (is_string($sink)) {
                         file_put_contents($sink, $contents);
-                    } elseif ($sink instanceof \Psr\Http\Message\StreamInterface) {
+                    } elseif ($sink instanceof \QuentnWP\Psr\Http\Message\StreamInterface) {
                         $sink->write($contents);
                     }
                 }

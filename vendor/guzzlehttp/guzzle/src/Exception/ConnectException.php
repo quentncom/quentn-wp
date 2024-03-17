@@ -1,7 +1,7 @@
 <?php
 namespace QuentnWPGuzzleHttp\Exception;
 
-use Psr\Http\Message\RequestInterface;
+use QuentnWP\Psr\Http\Message\RequestInterface;
 
 /**
  * Exception thrown when a connection cannot be established.

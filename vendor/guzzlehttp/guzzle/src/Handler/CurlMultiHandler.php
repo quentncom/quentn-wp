@@ -4,7 +4,7 @@ namespace QuentnWPGuzzleHttp\Handler;
 use QuentnWPGuzzleHttp\Promise as P;
 use QuentnWPGuzzleHttp\Promise\Promise;
 use QuentnWPGuzzleHttp\Psr7;
-use Psr\Http\Message\RequestInterface;
+use QuentnWP\Psr\Http\Message\RequestInterface;
 
 /**
  * Returns an asynchronous response using curl_multi_* functions.

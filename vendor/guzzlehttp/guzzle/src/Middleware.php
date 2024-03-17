@@ -5,7 +5,7 @@ use QuentnWPGuzzleHttp\Cookie\CookieJarInterface;
 use QuentnWPGuzzleHttp\Exception\RequestException;
 use QuentnWPGuzzleHttp\Promise\RejectedPromise;
 use QuentnWPGuzzleHttp\Psr7;
-use Psr\Http\Message\ResponseInterface;
+use QuentnWP\Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 

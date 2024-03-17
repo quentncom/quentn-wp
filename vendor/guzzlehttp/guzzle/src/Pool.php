@@ -2,7 +2,7 @@
 namespace QuentnWPGuzzleHttp;
 
 use QuentnWPGuzzleHttp\Promise\PromisorInterface;
-use Psr\Http\Message\RequestInterface;
+use QuentnWP\Psr\Http\Message\RequestInterface;
 use QuentnWPGuzzleHttp\Promise\EachPromise;
 
 /**

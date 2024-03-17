@@ -1,7 +1,7 @@
 <?php
 namespace QuentnWPGuzzleHttp\Handler;
 
-use Psr\Http\Message\RequestInterface;
+use QuentnWP\Psr\Http\Message\RequestInterface;
 
 interface CurlFactoryInterface
 {

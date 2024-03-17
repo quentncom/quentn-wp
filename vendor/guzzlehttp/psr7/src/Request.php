@@ -2,9 +2,9 @@
 namespace QuentnWPGuzzleHttp\Psr7;
 
 use InvalidArgumentException;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\StreamInterface;
-use Psr\Http\Message\UriInterface;
+use QuentnWP\Psr\Http\Message\RequestInterface;
+use QuentnWP\Psr\Http\Message\StreamInterface;
+use QuentnWP\Psr\Http\Message\UriInterface;
 
 /**
  * PSR-7 request implementation.

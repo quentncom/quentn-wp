@@ -1,8 +1,8 @@
 <?php
 namespace QuentnWPGuzzleHttp\Cookie;
 
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
+use QuentnWP\Psr\Http\Message\RequestInterface;
+use QuentnWP\Psr\Http\Message\ResponseInterface;
 
 /**
  * Cookie jar that stores cookies as an array

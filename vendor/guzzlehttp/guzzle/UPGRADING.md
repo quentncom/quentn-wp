@@ -75,7 +75,7 @@ functions that wrap handlers (or are injected into a
     `GuzzleHttp\PrepareBodyMiddleware`
   - `GuzzleHttp\Subscriber\Redirect` is now provided by
     `GuzzleHttp\RedirectMiddleware`
-- Guzzle now uses `Psr\Http\Message\UriInterface` (implements in
+- Guzzle now uses `QuentnWP\Psr\Http\Message\UriInterface` (implements in
   `GuzzleHttp\Psr7\Uri`) for URI support. `GuzzleHttp\Url` is now gone.
 - Static functions in `GuzzleHttp\Utils` have been moved to namespaced
   functions under the `GuzzleHttp` namespace. This requires either a Composer

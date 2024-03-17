@@ -7,9 +7,9 @@ use QuentnWPGuzzleHttp\Promise\FulfilledPromise;
 use QuentnWPGuzzleHttp\Promise\PromiseInterface;
 use QuentnWPGuzzleHttp\Psr7;
 use QuentnWPGuzzleHttp\TransferStats;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\StreamInterface;
+use QuentnWP\Psr\Http\Message\RequestInterface;
+use QuentnWP\Psr\Http\Message\ResponseInterface;
+use QuentnWP\Psr\Http\Message\StreamInterface;
 
 /**
  * HTTP handler that uses PHP's HTTP stream wrapper.

@@ -17,15 +17,12 @@ class ComposerStaticInita605f666563ac9933041231244daec68
         'Q' => 
         array (
             'Quentn\\' => 7,
+            'QuentnWP\\Psr\\Http\\Message\\' => 26,
             'QuentnWP\\Inc\\' => 13,
             'QuentnWP\\' => 9,
             'QuentnWPGuzzleHttp\\Psr7\\' => 24,
             'QuentnWPGuzzleHttp\\Promise\\' => 27,
             'QuentnWPGuzzleHttp\\' => 19,
-        ),
-        'P' => 
-        array (
-            'Psr\\Http\\Message\\' => 17,
         ),
     );
 
@@ -33,6 +30,10 @@ class ComposerStaticInita605f666563ac9933041231244daec68
         'Quentn\\' => 
         array (
             0 => __DIR__ . '/..' . '/quentn/php-sdk/src',
+        ),
+        'QuentnWP\\Psr\\Http\\Message\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
         'QuentnWP\\Inc\\' => 
         array (
@@ -54,10 +55,6 @@ class ComposerStaticInita605f666563ac9933041231244daec68
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/guzzle/src',
         ),
-        'Psr\\Http\\Message\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/psr/http-message/src',
-        ),
     );
 
     public static $prefixesPsr0 = array (
@@ -70,12 +67,17 @@ class ComposerStaticInita605f666563ac9933041231244daec68
         ),
     );
 
+    public static $classMap = array (
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+    );
+
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInita605f666563ac9933041231244daec68::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInita605f666563ac9933041231244daec68::$prefixDirsPsr4;
             $loader->prefixesPsr0 = ComposerStaticInita605f666563ac9933041231244daec68::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInita605f666563ac9933041231244daec68::$classMap;
 
         }, null, ClassLoader::class);
     }

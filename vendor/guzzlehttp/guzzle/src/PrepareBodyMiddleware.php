@@ -3,7 +3,7 @@ namespace QuentnWPGuzzleHttp;
 
 use QuentnWPGuzzleHttp\Promise\PromiseInterface;
 use QuentnWPGuzzleHttp\Psr7;
-use Psr\Http\Message\RequestInterface;
+use QuentnWP\Psr\Http\Message\RequestInterface;
 
 /**
  * Prepares requests that contain a body, adding the Content-Length,

@@ -1,7 +1,7 @@
 <?php
 namespace QuentnWPGuzzleHttp\Psr7;
 
-use Psr\Http\Message\UriInterface;
+use QuentnWP\Psr\Http\Message\UriInterface;
 
 /**
  * Provides methods to normalize and compare URIs.

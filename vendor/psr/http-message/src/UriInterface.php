@@ -1,5 +1,5 @@
 <?php
-namespace Psr\Http\Message;
+namespace QuentnWP\Psr\Http\Message;
 
 /**
  * Value object representing a URI.

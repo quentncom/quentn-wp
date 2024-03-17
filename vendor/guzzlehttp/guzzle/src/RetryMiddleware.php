@@ -4,8 +4,8 @@ namespace QuentnWPGuzzleHttp;
 use QuentnWPGuzzleHttp\Promise\PromiseInterface;
 use QuentnWPGuzzleHttp\Promise\RejectedPromise;
 use QuentnWPGuzzleHttp\Psr7;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
+use QuentnWP\Psr\Http\Message\RequestInterface;
+use QuentnWP\Psr\Http\Message\ResponseInterface;
 
 /**
  * Middleware that retries requests based on the boolean result of

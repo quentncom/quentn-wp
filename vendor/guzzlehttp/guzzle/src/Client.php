@@ -4,9 +4,9 @@ namespace QuentnWPGuzzleHttp;
 use QuentnWPGuzzleHttp\Cookie\CookieJar;
 use QuentnWPGuzzleHttp\Promise;
 use QuentnWPGuzzleHttp\Psr7;
-use Psr\Http\Message\UriInterface;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
+use QuentnWP\Psr\Http\Message\UriInterface;
+use QuentnWP\Psr\Http\Message\RequestInterface;
+use QuentnWP\Psr\Http\Message\ResponseInterface;
 
 /**
  * @method ResponseInterface get(string|UriInterface $uri, array $options = [])
