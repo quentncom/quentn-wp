@@ -422,14 +422,14 @@ class Quentn_Wp_Admin {
             );
             $fields[] = array(
                 'id' => 'quentn_add_log',
-                'title' => __( 'Add Log', 'quentn-wp' ),
+                'title' => __( 'Log', 'quentn-wp' ),
                 'callback' => array( $this, 'field_quentn_add_log' ),
                 'page' => 'quentn-dashboard-miscellaneous',
                 'section' => 'quentn_miscellaneous_option',
             );
             $fields[] = array(
                 'id' => 'quentn_log_expire_days',
-                'title' => __( 'Add Log Expire Days', 'quentn-wp' ),
+                'title' => __( 'Expiration', 'quentn-wp' ),
                 'callback' => array( $this, 'field_quentn_log_expire_days' ),
                 'page' => 'quentn-dashboard-miscellaneous',
                 'section' => 'quentn_miscellaneous_option',
@@ -839,7 +839,7 @@ class Quentn_Wp_Admin {
 		$value = get_option( 'quentn_add_log', true );
 		?>
         <input type="checkbox" class="form-control" value="1" name="quentn_add_log" id="quentn_add_log" <?php checked( $value); ?>>
-        <label for="quentn_add_log" style="display:inline" > <?php printf( __( 'Add logs.', 'quentn-wp'  ) ); ?></label>
+        <label for="quentn_add_log" style="display:inline" > <?php printf( __( 'Save logs in the database.', 'quentn-wp'  ) ); ?></label>
 		<?php
 	}
 
@@ -861,7 +861,7 @@ class Quentn_Wp_Admin {
             <option value="365" <?php selected ( $value, 365  )  ?>> 365 <?php __( 'days', 'quentn-wp' ) ?></option>
         </select>
 
-        <label for="quentn_log_expire_days" > <?php printf( __( 'Number of days the log should be kept.', 'quentn-wp'  ) ); ?></label>
+        <label for="quentn_log_expire_days" > <?php printf( __( 'Number of days to keep the logs.', 'quentn-wp'  ) ); ?></label>
 		<?php
 	}
 
