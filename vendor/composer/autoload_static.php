@@ -58,6 +58,13 @@ class ComposerStaticInita605f666563ac9933041231244daec68
     );
 
     public static $prefixesPsr0 = array (
+        'Q' => 
+        array (
+            'QuentnWP\\Psr\\Log\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/psr/log',
+            ),
+        ),
         'M' => 
         array (
             'Mustache' => 

@@ -6,8 +6,8 @@ use QuentnWPGuzzleHttp\Exception\RequestException;
 use QuentnWPGuzzleHttp\Promise\RejectedPromise;
 use QuentnWPGuzzleHttp\Psr7;
 use QuentnWP\Psr\Http\Message\ResponseInterface;
-use Psr\Log\LoggerInterface;
-use Psr\Log\LogLevel;
+use QuentnWP\Psr\Log\LoggerInterface;
+use QuentnWP\Psr\Log\LogLevel;
 
 /**
  * Functions used to create and wrap handlers with handler middleware.

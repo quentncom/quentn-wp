@@ -6,5 +6,6 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'QuentnWP\\Psr\\Log\\' => array($vendorDir . '/psr/log'),
     'Mustache' => array($vendorDir . '/mustache/mustache/src'),
 );

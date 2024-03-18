@@ -3,7 +3,7 @@ Contributors: quentn
 Tags: Quentn, countdown, page restriction, email, elementor integration, email marketing tool, integration, email automation, marketing automation
 Requires at least: 4.6.0
 Tested up to: 6.3
-Stable tag: 1.2.7
+Stable tag: 1.2.8
 Requires PHP: 5.6.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -65,6 +65,11 @@ Answer to foo bar dilemma.
 4. Integration Elementor PRO forms with Quentn
 
 == Changelog ==
+
+= 1.2.8 =
+* Add: Log option to trace different user quentn related activities.
+* Fix: Prefix psr/http-message and psr/log libraries namespaces to avoid conflict with other plugins.
+
 = 1.2.7 =
 * Fix: Reduce number of API calls.
 
@@ -157,6 +162,9 @@ Answer to foo bar dilemma.
 * Initial version.
 
 == Upgrade Notice ==
+
+= 1.2.8 =
+Thanks for using Quentn Plugin! Please update the plugin to add log quentn activities. It will also fix any namespace conflict with other plugins.
 
 = 1.2.7 =
 Thanks for using Quentn Plugin! Please update the plugin. It reduced the number of API calls and tested with new wordpress ( 6.3 )
