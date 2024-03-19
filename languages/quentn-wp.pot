@@ -590,3 +590,24 @@ msgstr ""
 #: includes/class-quentn-wp-elementor-integration.php:452
 msgid "<strong>ERROR</strong>: Link invalid. Email '%s' does not exist."
 msgstr ""
+
+msgid "Log"
+msgstr ""
+
+msgid "Save logs in the database."
+msgstr ""
+
+msgid "Miscellaneous Options"
+msgstr ""
+
+msgid "Expiration"
+msgstr ""
+
+msgid "Number of days to keep the logs."
+msgstr ""
+
+msgid "Permissions successfully updated"
+msgstr ""
+
+msgid "User access could not be deleted."
+msgstr ""

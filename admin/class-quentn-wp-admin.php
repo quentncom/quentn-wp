@@ -252,7 +252,7 @@ class Quentn_Wp_Admin {
                 if ( $_GET['delete_count'] ) {
 	                $this->notices[] = array( 'message' =>  sprintf( esc_html( _n( '%d user access is deleted', '%d user accesses are deleted', $_GET['delete_count'], 'quentn-wp'  ) ), $_GET['delete_count'] ), 'type' => 'success' );
                 } else {
-	                $this->notices[] = array( 'message' => __( 'User access could not be deleted', 'quentn-wp' ), 'type' => 'error' );
+	                $this->notices[] = array( 'message' => __( 'User access could not be deleted.', 'quentn-wp' ), 'type' => 'error' );
                 }
             }
 
