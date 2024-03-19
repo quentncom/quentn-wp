@@ -124,8 +124,8 @@ class Quentn_Wp_Rest_Api
         $this->get_user_roles = '/get-user-roles';
         $this->get_tracking = '/get-tracking';
         $this->get_logs = '/log';
-        $this->get_page_access = '/page-access';
-        $this->page_restriction_settings = '/page-restriction-settings';
+        $this->get_page_access = '/page-access/(?P<pid>\d+)';
+        $this->page_restriction_settings = '/page-restriction-settings/(?P<pid>\d+)';
     }
 
     /**
@@ -376,6 +376,7 @@ class Quentn_Wp_Rest_Api
      *
      * @since  1.0.0
      * @access public
+     * @param WP_REST_Request $request The current request object.
      * @return WP_Error|WP_REST_Response
      */
     public function quentn_grant_access( $request ) {
@@ -412,6 +413,7 @@ class Quentn_Wp_Rest_Api
      *
      * @since  1.0.0
      * @access public
+     * @param WP_REST_Request $request The current request object.
      * @return WP_Error|WP_REST_Response
      */
     public function quentn_revoke_access( $request ) {
@@ -471,7 +473,8 @@ class Quentn_Wp_Rest_Api
      *
      * @since  1.2.8
      * @access public
-     * @return WP_Error|WP_REST_Response
+	 * @param WP_REST_Request $request The current request object.
+	 * @return WP_Error|WP_REST_Response
      */
     public function quentn_get_restricted_pages_v2( $request ) {
 	    $request_body = json_decode( $request->get_body(), true );
@@ -553,7 +556,7 @@ class Quentn_Wp_Rest_Api
      *
      * @since  1.0.0
      * @access public
-     * @param string $request request received from quentn
+     * @param WP_REST_Request $request $request The current request object.
      * @return WP_Error|WP_REST_Response
      *
      */
@@ -657,6 +660,7 @@ class Quentn_Wp_Rest_Api
 	 *
 	 * @since  1.2.8
 	 * @access public
+	 * @param WP_REST_Request $request The current request object.
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function quentn_get_logs( $request ) {
@@ -725,14 +729,13 @@ class Quentn_Wp_Rest_Api
 			$logs[] = $log;
 		}
 
+		include_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/config.php';
 		if ( ! empty( $request_data['events'] ) ) {
-			include_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/config.php';
 			$requested_events = [];
 			foreach ( $request_data['events'] as $event ) {
 				$requested_events[$event] = $events[ $event ];
 			}
 		}
-
 		$response = [
 			'success' => true,
 			'total' => count( $results ),
@@ -740,7 +743,8 @@ class Quentn_Wp_Rest_Api
 			'offset' => $offset,
 			'order_by' => $order_by,
 			'sort' => $sort_by,
-			'events' => $requested_events,
+			'events' => $events,
+			'requested_events' => $requested_events,
 			'data' => $logs,
 		];
 
@@ -751,6 +755,7 @@ class Quentn_Wp_Rest_Api
 	 *
 	 * @since  1.2.8
 	 * @access public
+	 * param WP_REST_Request $request The current request object.
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function quentn_get_page_access( $request ) {
@@ -758,13 +763,10 @@ class Quentn_Wp_Rest_Api
 		$request_body_data = json_decode( base64_decode( $request_body['data'] ), true );
 		$request_data = $request_body_data['data'];
 
-		if ( empty( $request_data['page_id'] ) ) {
-			return new WP_Error( 'page_id_missing', esc_html__( 'Page id is missing', 'quentn-wp' ), array( 'status' => 400 ) );
-		}
-		$page_id = intval( $request_data['page_id'] );
+		$page_id = $request->get_param('pid');
 
 		global $wpdb;
-		$sql = "SELECT * FROM " . $wpdb->prefix . TABLE_QUENTN_RESTRICTIONS. " where page_id='". $page_id . "'";
+		$sql = "SELECT email, email_hash, created_at FROM " . $wpdb->prefix . TABLE_QUENTN_RESTRICTIONS. " where page_id='". $page_id . "'";
 
 		//order by
 		$order_by = ! empty( $request_data['order_by'] ) ? $request_data['order_by'] : 'email';
@@ -785,7 +787,7 @@ class Quentn_Wp_Rest_Api
 		$page_accesses = [];
 		$separator = ( parse_url( get_page_link( $page_id ), PHP_URL_QUERY ) ) ? '&' : '?';
 		foreach ( $results as $page_access ) {
-			$page_access['access_link'] = get_page_link( $_GET['page_id'] ) . $separator.'qntn_wp=' . $page_access['email_hash'];
+			$page_access['access_link'] = get_page_link( $page_id ) . $separator.'qntn_wp=' . $page_access['email_hash'];
 			unset( $page_access['email_hash'] ); //email not included in response
 			$page_accesses[] = $page_access;
 		}
@@ -811,20 +813,15 @@ class Quentn_Wp_Rest_Api
 	 *
 	 * @since  1.2.8
 	 * @access public
+	 * @param WP_REST_Request $request The current request object.
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function quentn_get_page_restriction_settings( $request ) {
-		$request_body = json_decode( $request->get_body(), true );
-		$request_body_data = json_decode( base64_decode( $request_body['data'] ), true );
-		$request_data = $request_body_data['data'];
 
-		if ( empty( $request_data['page_id'] ) ) {
-			return new WP_Error( 'page_id_missing', esc_html__( 'Page id is missing', 'quentn-wp' ), array( 'status' => 400 ) );
-		}
-		$page_id = intval( $request_data['page_id'] );
+		$page_id = $request->get_param('pid');
 
 		$restricted_data = get_post_meta( $page_id, '_quentn_post_restrict_meta', true );
-		//unset($restricted_data['status']);
+
 		$response[] = true;
 		$response = [
 			'success' => true,
@@ -904,11 +901,12 @@ class Quentn_Wp_Rest_Api
      *
      * @since  1.0.0
      * @access public
+     * @param WP_REST_Request $request The current request object.
      * @return bool|WP_Error
      */
-    public function quentn_check_credentials($request) {
+    public function quentn_check_credentials( $request ) {
 
-        $request_body = json_decode($request->get_body(), true);
+        $request_body = json_decode( $request->get_body(), true );
 
         $api_key = ( get_option('quentn_app_key') ) ? get_option('quentn_app_key') : '';
 
