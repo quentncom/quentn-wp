@@ -465,6 +465,7 @@ class Quentn_Wp_Rest_Api
                                         );
             }
         }
+	    //todo remove json_encode function
         return rest_ensure_response( json_encode( $restricted_pages ) );
     }
 
@@ -548,6 +549,7 @@ class Quentn_Wp_Rest_Api
     public function quentn_get_user_roles( ) {
         $wp_roles = new WP_Roles();
         $all_roles = $wp_roles->get_names();
+		//todo remove json_encode function
         return rest_ensure_response( json_encode( $all_roles ) );
     }
 
