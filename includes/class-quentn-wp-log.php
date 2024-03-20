@@ -204,8 +204,6 @@ class Quentn_Wp_Log {
 		$query = "INSERT INTO " . $wpdb->prefix . TABLE_QUENTN_LOG . " ( event, email, page_id, created_at, context ) VALUES ";
 		$query .= implode( ', ', $place_holders );
 		$wpdb->query( $wpdb->prepare( $query, $values ) );
-
-
 	}
 
 	/**

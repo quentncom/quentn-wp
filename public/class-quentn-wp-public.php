@@ -137,7 +137,11 @@ class Quentn_Wp_Public {
           page_id int,
     	  created_at int NOT NULL,
           context mediumtext,                
-          PRIMARY KEY  (id)
+          PRIMARY KEY  (id),
+     	  INDEX email_index (email),
+          INDEX event_index (event),
+  		  INDEX page_id_index (page_id),
+  		  INDEX created_at_index (created_at)
         )  $charset_collate;";
 
 			require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
