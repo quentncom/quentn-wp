@@ -47,10 +47,11 @@ class Quentn_Wp_Uninstall {
         //todo use table named with constant
         $table_qntn_restrictions = $wpdb->prefix . 'qntn_restrictions';
         $table_qntn_user_data = $wpdb->prefix . 'qntn_user_data';
+        $table_log = $wpdb->prefix . 'qntn_log';
 
         //delete quentn table
         $wpdb->query(
-            "Drop table IF EXISTS ". $table_qntn_restrictions.",".$table_qntn_user_data
+            "Drop table IF EXISTS ". $table_qntn_restrictions.",".$table_qntn_user_data.",".$table_log
         );
 
 
