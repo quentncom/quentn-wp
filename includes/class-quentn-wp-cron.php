@@ -22,18 +22,27 @@ class Quentn_Wp_Cron
     }
 
     /**
-     * Delete all expired vu dates from wp_usermeta table
+     * Delete expired data
      *
      * @return void
      */
     public function quentn_cron_exec() {
-        //delete user meta
+        //Delete all expired vu dates from wp_usermeta table
         global $wpdb;
         $wpdb->query($wpdb->prepare(
             "DELETE FROM $wpdb->usermeta WHERE
              meta_key = %s and meta_value < %d",
             'quentn_reset_pwd_vu',
             time()
+        ));
+
+		//delete logs
+	    $expiry_days = get_option( 'quentn_log_expire_days', 365 );
+	    $expiry_days_ago = time() - ( $expiry_days * 86400 ); // Calculate days as a Unix timestamp
+	    $table_log = $wpdb->prefix . 'qntn_log';
+		$wpdb->query($wpdb->prepare(
+            "DELETE FROM $table_log WHERE created_at < %d",
+			$expiry_days_ago
         ));
     }
 

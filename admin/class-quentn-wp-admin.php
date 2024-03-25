@@ -855,9 +855,9 @@ class Quentn_Wp_Admin {
 		?>
         <select name="quentn_log_expire_days" id="quentn_log_expire_days">
             <option value="30" <?php selected ( $value, 30  )  ?>> 30 <?php __( 'days', 'quentn-wp' ) ?></option>
-            <option value="60" <?php selected ($value, 60  )  ?>> 60 <?php __( 'days', 'quentn-wp' ) ?></option>
+            <option value="60" <?php selected ( $value, 60  )  ?>> 60 <?php __( 'days', 'quentn-wp' ) ?></option>
             <option value="90" <?php selected ( $value, 90  )  ?>> 90 <?php __( 'days', 'quentn-wp' ) ?></option>
-            <option value="150" <?php selected ( $value, 150  )  ?>> 150 <?php __( 'days', 'quentn-wp' ) ?></option>
+            <option value="180" <?php selected ( $value, 180  )  ?>> 180 <?php __( 'days', 'quentn-wp' ) ?></option>
             <option value="365" <?php selected ( $value, 365  )  ?>> 365 <?php __( 'days', 'quentn-wp' ) ?></option>
         </select>
 
