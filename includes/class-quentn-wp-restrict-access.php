@@ -62,7 +62,6 @@ class Quentn_Wp_Restrict_Access
 		$this->set_replacement_values();
 		$content = $m->render( $content, $this->get_replacement_values() );
 
-
 		//if user can edit posts permission or page restriction is not avtive, return content
 		if ( current_user_can( 'edit_pages' ) || ! $page_meta = $this->get_quentn_post_restrict_meta() ) {
 			return $content;
@@ -75,36 +74,36 @@ class Quentn_Wp_Restrict_Access
 
 		$is_display_content = false;
 
+		$complete_access_emails_list  = $this->get_access_emails();
 		//If page restriction is countdown then check expiry time
 		if ( isset( $page_meta['countdown'] ) && $page_meta['countdown'] ) {
-			$get_countdown_access = $this->get_countdown_access();
-			$access_email = $get_countdown_access['email'];
-			if ( $get_countdown_access['remaining_time'] > 0 ) {
+			$countdown_access = $this->get_countdown_access();
+			$access_email = $countdown_access['email'];
+			if ( $countdown_access['remaining_time'] > 0 ) {
 				$is_display_content = true;
 			}
 		} else { //if it is not countdown then check its access from database
-			$get_access_emails = $this->get_access_emails();
-			$get_user_access = $this->get_user_access( $get_access_emails );
+			$get_user_access = $this->get_user_access( $complete_access_emails_list );
 			$access_email = $get_user_access['email'];
 			if ( ! empty( $get_user_access ) ) {
 				$is_display_content = true;
 			}
 		}
 
+		//set cookie if it is new email address
+		$get_access_email = $this->get_new_access();
+		if ( $get_access_email ) {
+			$this->set_cookie_data( $get_access_email );
+		}
 		//return content if user is authorized
 		if ( $is_display_content ) {
-			//set cookie if it is new email address
-			$get_access_email = $this->get_new_access();
-			if ( $get_access_email ) {
-				$this->set_cookie_data( $get_access_email );
-			}
 			do_action( 'quentn_user_visit_restricted_page', get_the_ID(), $access_email );
-
 			return $content;
 		}
 
-		if ( $access_email != '' ) {
-			do_action( 'quentn_user_access_denied', get_the_ID(), $access_email );
+		//when countdown is 'first_visit_mode' then we don't save any log because it has nothing to do with email
+		if ( ! empty( $complete_access_emails_list ) && ( empty( $countdown_access ) || $countdown_access['access_mode'] != 'first_visit_mode' ) ) {
+			do_action( 'quentn_user_access_denied', get_the_ID(), $complete_access_emails_list );
 		}
 		//page user is not allowed, then redirect/display message
 		if ( $page_meta['redirection_type'] == 'restricted_url' && $page_meta['redirect_url'] != '' ) {
@@ -384,10 +383,10 @@ class Quentn_Wp_Restrict_Access
 		$set_visitors_data['is_visited'] = $set_visited_time;
 
 		//merge all data into existing quentn cookie data
-		$set_cookie_data = array_merge( $cookie_saved_data, $set_visitors_data );
+		$cookie_data = array_merge( $cookie_saved_data, $set_visitors_data );
 
 		//set cookie
-		$this->set_json_cookie( 'qntn_wp_access', $set_cookie_data );
+		$this->set_json_cookie( 'qntn_wp_access', $cookie_data );
 	}
 
     /**
@@ -448,7 +447,7 @@ class Quentn_Wp_Restrict_Access
 			}
 
 			//add page id to access
-			$add_page_id                 = array(
+			$add_page_id = array(
 				get_the_ID() => [ $access_email ],
 			);
 			$cookie_saved_data['access'] = $cookie_saved_data['access'] + $add_page_id;
@@ -480,7 +479,6 @@ class Quentn_Wp_Restrict_Access
 		global $wpdb;
 		//if email address is authroized to visit the page, get its creation date, in case of multiple email addresses, latest creation date will be considered
 		$sql = "SELECT page_id, email, created_at FROM " . $wpdb->prefix . TABLE_QUENTN_RESTRICTIONS . " where page_id='" . $page_id . "' and email_hash in ('" . $emails . "') order by created_at DESC LIMIT 1";
-		//$qntn_access = $wpdb->get_row( $sql );
 		$results = $wpdb->get_results( $sql, 'ARRAY_A' );
 
 		return ! empty( $results ) ? $results[0] : [];
@@ -503,8 +501,8 @@ class Quentn_Wp_Restrict_Access
 		$is_display_clock = false;
 		//if restriction type is countdown
 		if ( isset( $quentn_post_restrict_meta['countdown'] ) && $quentn_post_restrict_meta['countdown'] ) {
-			$get_countdown_access = $this->get_countdown_access();
-			$quentn_expiry_page_inseconds = $get_countdown_access['remaining_time'];
+			$countdown_access = $this->get_countdown_access();
+			$quentn_expiry_page_inseconds = $countdown_access['remaining_time'];
 			if ( $quentn_expiry_page_inseconds > 0 ) {
 				$is_display_clock = true;
 			}
@@ -579,7 +577,7 @@ class Quentn_Wp_Restrict_Access
      * @access public
      * @return array
      */
-    public function get_countdown_access(){
+    public function get_countdown_access() {
 
 		$remaining_time = - 1;
 		$quentn_page_restrict_meta = $this->get_quentn_post_restrict_meta();
@@ -593,11 +591,13 @@ class Quentn_Wp_Restrict_Access
 			//get starting time
 			$created_at = $this->get_json_cookie( 'qntn_wp_access' )['is_visited'][ get_the_ID() ];
 			$access_email = '';
+			$access_mode = 'first_visit_mode';
 		} else { //countdown is not stat from fist time visit but permission granted, then get starting point from database
 			$get_access_emails = $this->get_access_emails();
 			$user_access       = $this->get_user_access( $get_access_emails ); //check if user is authorised to visit the page
 			$access_email      = isset( $user_access['email'] ) ? $user_access['email'] : '';
 			$created_at        = isset( $user_access['created_at'] ) ? $user_access['created_at'] : false;
+			$access_mode = 'permission_granted_mode';
 		}
 
 		//if user is authorised to vist the page, and page restriction type is countdown, then calculate expiry time
@@ -617,6 +617,7 @@ class Quentn_Wp_Restrict_Access
 		return array(
 			'remaining_time' => $remaining_time,
 			'email'   => $access_email,
+			'access_mode'   => $access_mode,
 		);
 	}
 

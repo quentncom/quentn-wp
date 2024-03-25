@@ -96,7 +96,7 @@ class Quentn_Wp_Reset_Password {
                     if ( is_multisite() && ! Helper::is_plugin_active_for_network() ) {
                         add_user_meta( $user->ID, 'quentn_reset_pwd_vu', $data['vu'] );
                     }
-
+	                do_action( 'quentn_user_reset_password', $user->user_email );
                     $rp_link = network_site_url( "wp-login.php?action=rp&key=$key&login=" . $user_login, 'login' );
                     wp_safe_redirect( $rp_link );
                     exit;

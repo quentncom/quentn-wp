@@ -30,6 +30,7 @@ class Quentn_Wp_Log {
 	const USER_DENIED_RESTRICTED_PAGE_ACCESS = 13;
 	const USER_LOGGED_IN_BY_AUTOLOGIN_LINK = 14;
 	const USER_TRIED_REUSE_AUTOLOGIN_LINK = 15;
+	const USER_REDIRECTED_TO_RESET_PASSWORD_PAGE = 16;
 
 	/**
 	 * Constructor method.
@@ -56,11 +57,16 @@ class Quentn_Wp_Log {
 			add_action( 'quentn_user_access_denied', array( $this, 'quentn_user_access_denied' ), 10, 2 );
 
 			add_action( 'quentn_user_autologin', array( $this, 'quentn_user_autologin' ) );
+			add_action( 'quentn_user_reset_password', array( $this, 'quentn_user_reset_password' ) );
+
 			add_action( 'quentn_user_autologin_failed', array( $this, 'quentn_user_autologin_failed' ), 10, 2 );
 		}
 	}
 
 
+	/**
+	 * Add log when user first time update is log option
+	 */
 	public function quentn_add_log_option_added( $option, $value ) {
 		//if log is disabled by user which by default is enabled
 		if ( ! $value ) {
@@ -68,6 +74,9 @@ class Quentn_Wp_Log {
 		}
 	}
 
+	/**
+	 * Add log when user update is log option
+	 */
 	public function quentn_add_log_option_updated( $old_value, $value ) {
 		if ( $old_value !== $value ) {
 			$event_id = $value ? self::LOG_ENABLED : self::LOG_DISABLED;
@@ -75,24 +84,50 @@ class Quentn_Wp_Log {
 		}
 	}
 
+	/**
+	 * Add log when user created by quentn API
+	 */
 	public function quentn_user_created( $email, $user_id ) {
-		$this->add_quentn_log( self::USER_CREATED_BY_API, [ 'email' => $email, 'context' => "user id: " . $user_id ] );
+		$this->add_quentn_log( self::USER_CREATED_BY_API, [ 'email' => $email, 'context' => "User ID: " . $user_id ] );
 	}
 
+	/**
+	 * Add log when user update by quentn API
+	 */
 	public function quentn_user_updated( $email, $user_id ) {
-		$this->add_quentn_log( self::USER_UPDATED_BY_API, [ 'email' => $email, 'context' => "user id: " . $user_id ] );
+		$this->add_quentn_log( self::USER_UPDATED_BY_API, [ 'email' => $email, 'context' => "User ID: " . $user_id ] );
 	}
 
+	/**
+	 * Add log when user role added by quentn API
+	 */
 	public function quentn_user_role_added( $email, $user_id, $role ) {
-		$this->add_quentn_log( self::ROLE_ADDED_BY_API, [ 'email' => $email, 'context' => "user id: " . $user_id . " role set = " . $role ] );
+		$this->add_quentn_log( self::ROLE_ADDED_BY_API, [ 'email' => $email, 'context' => "User ID: " . $user_id . " Role: " . $role ] );
 	}
 
+	/**
+	 * Add log when user role removed by quentn API
+	 */
 	public function quentn_user_role_removed( $email, $user_id, $role ) {
-		$this->add_quentn_log( self::ROLE_REMOVED_BY_API, [ 'email' => $email, 'context' => "user id: " . $user_id . " role removed = " . $role ] );
+		$this->add_quentn_log( self::ROLE_REMOVED_BY_API, [ 'email' => $email, 'context' => "User ID: " . $user_id . " Role: " . $role ] );
 	}
+
+	/**
+	 * Add log when user automatically logged using quentn generated url
+	 */
 	public function quentn_user_autologin( $email ) {
 		$this->add_quentn_log( self::USER_LOGGED_IN_BY_AUTOLOGIN_LINK, [ 'email' => $email ] );
 	}
+	/**
+	 * Add log when user try to auto login but redirected to reset password page
+	 */
+	public function quentn_user_reset_password( $email ) {
+		$this->add_quentn_log( self::USER_REDIRECTED_TO_RESET_PASSWORD_PAGE, [ 'email' => $email ] );
+	}
+
+	/**
+	 * Add log when user try to auto login but failed
+	 */
 	public function quentn_user_autologin_failed( $email, $reason ) {
 
 		$context = '';
@@ -107,22 +142,52 @@ class Quentn_Wp_Log {
 		$this->add_quentn_log( self::USER_TRIED_REUSE_AUTOLOGIN_LINK, [ 'email' => $email, 'context' => $context ] );
 	}
 
+	/**
+	 * Add log when user visited a restricted page
+	 */
 	public function quentn_user_visit_restricted_page( $page_id, $email ) {
 		$this->add_quentn_log( self::USER_VISITS_RESTRICTED_PAGE, [ 'email' => $email, 'page_id' => $page_id ]  );
 	}
 
-	public function quentn_user_access_denied( $page_id, $email ) {
-		$this->add_quentn_log( self::USER_DENIED_RESTRICTED_PAGE_ACCESS, [ 'email' => $email, 'page_id' => $page_id ] );
+	/**
+	 * Add log when user try to visit restricted page but access denied
+	 */
+	public function quentn_user_access_denied( $page_id, $emails ) {
+		if ( empty( $emails ) || empty( $page_id ) ) {
+			return;
+		}
+
+		//get email addresses from email hash
+		global $wpdb;
+		$emails = implode( "','", $emails );
+		$sql = "SELECT email FROM " . $wpdb->prefix . TABLE_QUENTN_RESTRICTIONS. " where email_hash IN ('" . $emails . "')";
+		$results = $wpdb->get_results( $sql, 'ARRAY_A' );
+		$email_addresses = array_column($results, 'email');
+		$logs = [];
+		foreach ( $email_addresses as $email ) {
+			$logs[] = array(
+				'email'   => $email,
+				'page_id' => $page_id,
+			);
+		}
+		$this->add_quentn_logs( self::USER_DENIED_RESTRICTED_PAGE_ACCESS, $logs );
+
 	}
 
+	/**
+	 * Add log when updated log expiry option
+	 */
 	public function quentn_log_expire_days_option_updated( $old_value, $value, $option ) {
-		$context = "new days set: " . $value;
+		$context = $value." days";
 		if ( $old_value !== $value ) {
 			$this->add_quentn_log( self::LOG_EXPIRY_TIME_UPDATED, [ 'context' => $context ] );
 
 		}
 	}
 
+	/**
+	 * Add log when user access are granted to a restricted page
+	 */
 	public function quentn_access_granted( $emails, $pages, $added_by ) {
 		if ( empty( $emails ) || empty( $pages ) ) {
 			return;
@@ -140,6 +205,9 @@ class Quentn_Wp_Log {
 		$this->add_quentn_logs( $event_id, $logs );
 	}
 
+	/**
+	 * Add log when user access are revoked from a restricted page
+	 */
 	public function quentn_access_revoked( $emails, $pages, $revoked_by ) {
 
 		if ( empty( $emails ) || empty( $pages ) ) {
@@ -158,6 +226,9 @@ class Quentn_Wp_Log {
 		$this->add_quentn_logs( $event_id, $logs );
 	}
 
+	/**
+	 * Add log to database
+	 */
 	public function add_quentn_log( $event_id, $log = [] ) {
 
 		$values['event']      = $event_id;
@@ -186,7 +257,13 @@ class Quentn_Wp_Log {
 
 	}
 
+	/**
+	 * Add multiple logs to database at once
+	 */
 	public function add_quentn_logs( $event_id, $logs = [] ) {
+		if ( empty( $logs ) ) {
+			return;
+		}
 		$values        = array();
 		$place_holders = array();
 

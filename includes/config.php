@@ -13,6 +13,7 @@ $events = [
 	11 => "Role was removed by campaign",
 	12 => "Email visits a restricted page (access granted)",
 	13 => "Email gets access denied for restricted page",
-	14 => "Email gets logged in with autologin link from campaign",
-	15 => "Email tried to reuse autologin link",
+	14 => "User gets logged in with autologin link from campaign",
+	15 => "User tried to reuse autologin link",
+	16 => "User was redirected to reset password page",
 ];
