@@ -584,11 +584,9 @@ class Quentn_Wp_Rest_Api
                 $is_send_user_email = false;
                 //update meta_value
                 foreach ( $qn_userdata as $meta_key => $meta_value ) {
-                    $user_updated = update_user_meta( $user_id, $meta_key, $meta_value );
-					if ( $user_updated ) {
-						do_action( 'quentn_user_updated', $qn_userdata['user_email'], $user_id );
-					}
+                    update_user_meta( $user_id, $meta_key, $meta_value );
                 }
+	            do_action( 'quentn_user_updated', $qn_userdata['user_email'], $user_id );
             } else {
                 //no default role set
                 $qn_userdata['role'] = '';
@@ -597,8 +595,8 @@ class Quentn_Wp_Rest_Api
                 // On success, add user meta last login as false
                 if ( ! is_wp_error( $user_id ) ) {
                     update_user_meta( $user_id, 'quentn_last_login', 0 );
+	                do_action( 'quentn_user_created', $qn_userdata['user_email'], $user_id );
                 }
-	            do_action( 'quentn_user_created', $qn_userdata['user_email'], $user_id );
             }
 
             //if user could not created
