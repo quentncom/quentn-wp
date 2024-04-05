@@ -152,24 +152,39 @@ class Quentn_Wp_Log {
 	/**
 	 * Add log when user try to visit restricted page but access denied
 	 */
-	public function quentn_user_access_denied( $page_id, $emails ) {
-		if ( empty( $emails ) || empty( $page_id ) ) {
+	public function quentn_user_access_denied( $page_id, $email_hashes ) {
+		if ( empty( $email_hashes ) || empty( $page_id ) ) {
 			return;
 		}
 
+		//try to get email from url
+		$emails = [];
+		if ( isset( $_GET["qntn"] ) ) { //if request is from quentn
+			$qntn = json_decode( base64_decode( sanitize_text_field( $_GET["qntn"] ) ), true );
+			if ( isset( $qntn['email'] ) && is_email( sanitize_email( $qntn['email'] ) ) ) {
+				$emails[] = sanitize_email( $qntn['email'] );
+			}
+		} elseif ( isset( $_GET["email"] ) ) { //if there is plain email address in url
+			$emails[] = str_replace( " ", "+", sanitize_email( $_GET["email"] ) );
+		}
+
 		//get email addresses from email hash
-		global $wpdb;
-		$emails = implode( "','", $emails );
-		$sql = "SELECT email FROM " . $wpdb->prefix . TABLE_QUENTN_RESTRICTIONS. " where email_hash IN ('" . $emails . "')";
-		$results = $wpdb->get_results( $sql, 'ARRAY_A' );
-		$email_addresses = array_column($results, 'email');
+		//Note: It will not work in case user removed email access from database
+		if ( empty( $emails ) ) {
+			global $wpdb;
+			$email_hashes_str = implode( "','", $email_hashes );
+			$sql = "SELECT email FROM " . $wpdb->prefix . TABLE_QUENTN_RESTRICTIONS. " where email_hash IN ('" . $email_hashes_str . "') group by email";
+			$results = $wpdb->get_results( $sql, 'ARRAY_A' );
+			$emails = array_column( $results, 'email' );
+		}
 		$logs = [];
-		foreach ( $email_addresses as $email ) {
+		foreach ( $emails as $email ) {
 			$logs[] = array(
 				'email'   => $email,
 				'page_id' => $page_id,
 			);
 		}
+
 		$this->add_quentn_logs( self::USER_DENIED_RESTRICTED_PAGE_ACCESS, $logs );
 
 	}

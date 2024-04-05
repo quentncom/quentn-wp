@@ -87,7 +87,7 @@ class Quentn_Wp_Page_Restriction_Meta_Box
             $quentn_page_access_mode                        = array_key_exists( 'access_mode', $quentn_post_restrict_meta  ) ? $quentn_post_restrict_meta['access_mode'] : '';
             $quentn_page_restrict_absolute_date             = array_key_exists( 'absolute_date', $quentn_post_restrict_meta  ) ? $quentn_post_restrict_meta['absolute_date'] : '';
             $quentn_page_restrict_default_countdown_status  = array_key_exists( 'display_countdown_default_status', $quentn_post_restrict_meta  ) ? $quentn_post_restrict_meta['display_countdown_default_status'] : '';
-            $quentn_page_countdown_stick_on_top             = array_key_exists( 'quentn_countdown_stick_on_top', $quentn_post_restrict_meta  ) ? ( $quentn_page_restrict_default_countdown_status && $quentn_post_restrict_meta['quentn_countdown_stick_on_top']) : '';
+	        $quentn_page_countdown_stick_on_top             = array_key_exists( 'quentn_countdown_stick_on_top', $quentn_post_restrict_meta  )  && $quentn_page_restrict_default_countdown_status && $quentn_post_restrict_meta['quentn_countdown_stick_on_top'] ? $quentn_post_restrict_meta['quentn_countdown_stick_on_top']  : '';
             $quentn_page_restrict_redirection_type          = array_key_exists( 'redirection_type', $quentn_post_restrict_meta  ) ? $quentn_post_restrict_meta['redirection_type'] : '';
             $quentn_page_restrict_redirect_url              = array_key_exists( 'redirect_url', $quentn_post_restrict_meta  ) ? $quentn_post_restrict_meta['redirect_url'] : '';
             $quentn_page_restrict_error_message             = array_key_exists( 'error_message', $quentn_post_restrict_meta  ) ? $quentn_post_restrict_meta['error_message'] : '';
@@ -269,15 +269,15 @@ class Quentn_Wp_Page_Restriction_Meta_Box
 
         //getting and sanitizing metabox values
         $q_status = sanitize_text_field( $_POST['quentn_page_access_status'] );
-        $q_countdown = sanitize_text_field( $_POST['quentn_page_access_countdown'] );
+        $q_countdown = ! empty( $_POST['quentn_page_access_countdown'] ) ? sanitize_text_field( $_POST['quentn_page_access_countdown'] ) : false;
         $q_countdown_type = sanitize_text_field( $_POST['quentn_page_restrict_countdown_type'] );
         $q_hours = ( ! empty( $_POST['quentn_page_restrict_hours'] ) && filter_var( $_POST['quentn_page_restrict_hours'], FILTER_VALIDATE_INT ) ) ? sanitize_text_field( $_POST['quentn_page_restrict_hours'] ) : 0;
         $q_minutes = ( ! empty( $_POST['quentn_page_restrict_minutes'] ) && filter_var( $_POST['quentn_page_restrict_minutes'], FILTER_VALIDATE_INT ) ) ? sanitize_text_field( $_POST['quentn_page_restrict_minutes'] ) : 0;
         $q_seconds = ( ! empty( $_POST['quentn_page_restrict_seconds'] ) && filter_var( $_POST['quentn_page_restrict_seconds'], FILTER_VALIDATE_INT ) ) ? sanitize_text_field( $_POST['quentn_page_restrict_seconds'] ) : 0;
         $access_mode = sanitize_text_field ( $_POST['access_mode'] );
         $q_absolute_date = sanitize_text_field ( $_POST['quentn_page_restrict_datepicker'] );
-        $q_default_countdown_status = sanitize_text_field( $_POST['quentn_default_display_countdown_status'] );
-        $q_countdown_stick_on_top = sanitize_text_field( $_POST['quentn_countdown_stick_on_top'] );
+        $q_default_countdown_status = ! empty( $_POST['quentn_default_display_countdown_status'] ) ? sanitize_text_field( $_POST['quentn_default_display_countdown_status'] ) : false;
+        $q_countdown_stick_on_top = ! empty( $_POST['quentn_countdown_stick_on_top'] ) ? sanitize_text_field( $_POST['quentn_countdown_stick_on_top'] ) : false;
         $q_redirection_type = sanitize_text_field( $_POST['quentn_page_redirection_type'] );
         $q_redirect_url = sanitize_text_field ( $_POST['quentn_page_restrict_redirect_url'] );
         $q_error_message = ( ! empty( $_POST['quentn_page_access_error_message'] ) ) ? wp_kses_post( wp_unslash( $_POST['quentn_page_access_error_message'] ) ) : '';

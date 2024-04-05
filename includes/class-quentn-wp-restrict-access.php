@@ -74,9 +74,12 @@ class Quentn_Wp_Restrict_Access
 
 		$is_display_content = false;
 
-		$complete_access_emails_list  = $this->get_access_emails();
+		$complete_access_emails_list_raw = $this->get_access_emails();
+		$complete_access_emails_list = array_unique( $complete_access_emails_list_raw );
+		$is_access_countdown = false;
 		//If page restriction is countdown then check expiry time
 		if ( isset( $page_meta['countdown'] ) && $page_meta['countdown'] ) {
+			$is_access_countdown = true;
 			$countdown_access = $this->get_countdown_access();
 			$access_email = $countdown_access['email'];
 			if ( $countdown_access['remaining_time'] > 0 ) {
@@ -102,8 +105,8 @@ class Quentn_Wp_Restrict_Access
 		}
 
 		//when countdown is 'first_visit_mode' then we don't save any log because it has nothing to do with email
-		if ( ! empty( $complete_access_emails_list ) && ( empty( $countdown_access ) || $countdown_access['access_mode'] != 'first_visit_mode' ) ) {
-			do_action( 'quentn_user_access_denied', get_the_ID(), $complete_access_emails_list );
+		if ( ! empty( $complete_access_emails_list ) && ( ! $is_access_countdown || $countdown_access['access_mode'] != 'first_visit_mode' ) ) {
+			do_action( 'quentn_user_access_denied', get_the_ID(), array_unique( $complete_access_emails_list ) );
 		}
 		//page user is not allowed, then redirect/display message
 		if ( $page_meta['redirection_type'] == 'restricted_url' && $page_meta['redirect_url'] != '' ) {
