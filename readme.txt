@@ -2,7 +2,7 @@
 Contributors: quentn
 Tags: Quentn, countdown, page restriction, email, elementor integration, email marketing tool, integration, email automation, marketing automation
 Requires at least: 4.6.0
-Tested up to: 6.3
+Tested up to: 6.4
 Stable tag: 1.2.8
 Requires PHP: 5.6.0
 License: GPLv2 or later
