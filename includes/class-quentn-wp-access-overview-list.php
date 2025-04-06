@@ -214,10 +214,12 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
      */
     public function get_quentn_restrictions( $per_page = 5, $page_number = 1, $page_id ) {
         global $wpdb;
-        $sql = "SELECT * FROM " . $wpdb->prefix . TABLE_QUENTN_RESTRICTIONS. " where page_id='". $page_id."'";
-        //set search
-        if ( ! empty( $_REQUEST['s'] ) ) {
-            $sql .= " and email LIKE '%" . esc_sql( $_REQUEST['s'] )."%'";
+
+        $sql = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}" . TABLE_QUENTN_RESTRICTIONS . " WHERE page_id = %d", $page_id );
+
+        if (!empty($_REQUEST['s'])) {
+            $search = '%' . $wpdb->esc_like($_REQUEST['s']) . '%';
+            $sql .= $wpdb->prepare(" AND email LIKE %s", $search);
         }
 
         //set order by
@@ -297,9 +299,10 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
      */
     public function record_count($page_id) {
         global $wpdb;
-        $sql = "SELECT COUNT(*) FROM ".$wpdb->prefix . TABLE_QUENTN_RESTRICTIONS. " where page_id='".$page_id."'";
-        if ( ! empty( $_REQUEST['s'] ) ) {
-            $sql .= " and email LIKE '%". esc_sql( $_REQUEST['s'] )."%'";
+        $sql = $wpdb->prepare("SELECT COUNT(*) FROM {$wpdb->prefix}" . TABLE_QUENTN_RESTRICTIONS . "  WHERE page_id = %d", $page_id );
+        if (!empty($_REQUEST['s'])) {
+            $search = '%' . $wpdb->esc_like($_REQUEST['s']) . '%';
+            $sql .= $wpdb->prepare(" AND email LIKE %s", $search);
         }
 
         return $wpdb->get_var( $sql );
@@ -386,7 +389,12 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
 
             if( ! empty( $delete_restrict_pages_ids ) ) {
                 //delete multiple accesses
-                $query =  "DELETE FROM ".$wpdb->prefix . TABLE_QUENTN_RESTRICTIONS." where CONCAT_WS('|', page_id, email) IN ('".implode("', '", $delete_restrict_pages_ids)."')";
+                $placeholders = implode(',', array_fill(0, count($delete_restrict_pages_ids), '%s'));
+                $query = $wpdb->prepare(
+                    "DELETE FROM {$wpdb->prefix}" . TABLE_QUENTN_RESTRICTIONS . " 
+                          WHERE CONCAT_WS('|', page_id, email) IN ($placeholders)",
+                          $delete_restrict_pages_ids
+                );
                 //$wpdb->query( $wpdb->query( $query ) );
                 $num_records_deleted = $wpdb->query( $query );
                 //add and remove items from a query string

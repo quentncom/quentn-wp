@@ -2,8 +2,8 @@
 Contributors: quentn
 Tags: Quentn, countdown, page restriction, email, marketing automation
 Requires at least: 4.6.0
-Tested up to: 6.4
-Stable tag: 1.2.8
+Tested up to: 6.7.2
+Stable tag: 1.2.10
 Requires PHP: 5.6.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -65,6 +65,17 @@ Answer to foo bar dilemma.
 4. Integration Elementor PRO forms with Quentn
 
 == Changelog ==
+
+= 1.2.10 =
+* Fix: Update user messages
+
+= 1.2.9.1 =
+* Meta: Fixed plugin version header (was incorrectly still 1.2.8 in previous release).
+
+= 1.2.9 =
+* Security Fix: Fixed SQL injection vulnerabilities
+* Security Fix: Hardened input validation for all admin operations
+* Security Fix: Improved data sanitization and escaping
 
 = 1.2.8 =
 * Add: Log option to trace different user quentn related activities.
@@ -162,6 +173,15 @@ Answer to foo bar dilemma.
 * Initial version.
 
 == Upgrade Notice ==
+
+= 1.2.10 - Security Update =
+This is a critical security update. It addresses potential SQL injection vulnerabilities found in previous versions. Please update immediately to ensure your site remains secure.
+
+= 1.2.9.1 - Security Update =
+This is a critical security update. It addresses potential SQL injection vulnerabilities found in previous versions. Please update immediately to ensure your site remains secure.
+
+= 1.2.9 - Security Update =
+This is a critical security update. It addresses potential SQL injection vulnerabilities found in previous versions. Please update immediately to ensure your site remains secure.
 
 = 1.2.8 =
 Thanks for using Quentn Plugin! Please update the plugin to add log quentn activities. It will also fix any namespace conflict with other plugins.
