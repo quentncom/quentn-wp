@@ -230,7 +230,7 @@ class Quentn_Wp_Admin {
 
         $hook_access_overview = add_submenu_page("NULL", __( 'Quentn User Access', 'quentn-wp'),   __('Access', 'quentn-wp'), "manage_options", "quentn-page-access-overview", array( $this, 'access_restrictions_list' ) );
 
-        add_action( "load-$hook_access_overview", array( $this, 'access_overview_list_screen_option' ) );
+        add_action( "load-$hook_access_overview", array( $this, 'set_access_overview_screen_option' ) );
     }
 
     /**
@@ -311,8 +311,8 @@ class Quentn_Wp_Admin {
         $option = 'per_page';
         $args   = array(
             'label'   => 'Access',
-            'default' => 1,
-            'option'  => 'quentn_restricted_access_records_per_page'
+            'default' => 20,
+            'option'  => 'quentn_restricted_records_per_page'
         );
 
         add_screen_option( $option, $args );
@@ -327,7 +327,7 @@ class Quentn_Wp_Admin {
      * @return void
      */
 
-    public function access_overview_list_screen_option() {
+    public function set_access_overview_screen_option() {
 
         $option = 'per_page';
         $args   = array(
@@ -1112,8 +1112,16 @@ class Quentn_Wp_Admin {
      * @access public
      * @return void
      */
-    public function set_screen_option( $status, $option, $value ) {
-        return $value;
+    public function set_screen_option($status, $option, $value) {
+        $valid_options = [
+            'quentn_restricted_records_per_page',
+            'quentn_access_overview_records_per_page'
+        ];
+
+        if (in_array($option, $valid_options)) {
+            return $value;
+        }
+        return $status;
     }
 
     /**

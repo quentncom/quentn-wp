@@ -212,7 +212,7 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
      *
      * @return mixed
      */
-    public function get_quentn_restrictions( $per_page = 5, $page_number = 1, $page_id ) {
+    public function get_quentn_restrictions( $per_page = 20, $page_number = 1, $page_id ) {
         global $wpdb;
 
         $sql = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}" . TABLE_QUENTN_RESTRICTIONS . " WHERE page_id = %d", $page_id );
@@ -228,10 +228,10 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
             $sql .= ! empty( $_REQUEST['order'] ) ? ' ' . esc_sql( $_REQUEST['order'] ) : ' ASC';
         }
 
-        $sql .= " LIMIT $per_page";
-        $sql .= ' OFFSET ' . ( $page_number - 1 ) * $per_page;
+        $offset = ($page_number - 1) * $per_page;
+        $sql .= $wpdb->prepare(" LIMIT %d OFFSET %d", $per_page, $offset);
 
-        $results = $wpdb->get_results( $sql, 'ARRAY_A' );
+        $results = $wpdb->get_results($sql, 'ARRAY_A');
 
         $is_countdown = ( isset( $this->quentn_page_restriction_data['countdown'] ) && $this->quentn_page_restriction_data['countdown'] ) ?  true : false ;
 
@@ -470,6 +470,19 @@ function quentn_show_data_access_overview_list() {
     }
 
     $qntn_list_table = new Quentn_Wp_Access_Overview( sanitize_text_field( $_REQUEST['page_id'] ) );
+
+    // Get current screen
+    $screen = get_current_screen();
+
+    // Add screen option if not already added
+    if (!empty($screen) && !$screen->get_option('per_page')) {
+        add_screen_option('per_page', [
+            'default' => 20,
+            'option' => 'quentn_access_overview_records_per_page',
+            'label' => __('Records per page', 'quentn-wp')
+        ]);
+    }
+
     $qntn_list_table->prepare_items();
 
     ?>

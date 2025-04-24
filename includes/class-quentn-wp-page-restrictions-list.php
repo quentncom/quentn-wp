@@ -47,7 +47,7 @@ class Quentn_Wp_Page_Restrictions_List extends \WP_List_Table {
         //apply pagination
         $per_page     = $this->get_items_per_page( 'quentn_restricted_records_per_page', 20 );
         $current_page = $this->get_pagenum();
-        $total_items  = count( $this->get_restricted_pages() );
+        $total_items = $this->get_total_restricted_pages_count();
 
         $this->set_pagination_args( array(
             "total_items" => $total_items,
@@ -138,35 +138,37 @@ class Quentn_Wp_Page_Restrictions_List extends \WP_List_Table {
      * @param int $page_number
      * @return array
      */
-    public function get_quentn_restrictions( $per_page = 20, $page_number = 1 ) {
+    public function get_quentn_restrictions($per_page = 20, $page_number = 1) {
+        $restricted_pages = $this->get_restricted_pages($per_page, $page_number);
 
-	    $restricted_pages = $this->get_restricted_pages();
-        if( count( $restricted_pages ) < 1 ) {
+        if(empty($restricted_pages)) {
             return array();
         }
 
         $result = array();
+        $restricted_pages_ids = wp_list_pluck($restricted_pages, 'ID');
+        $number_of_access_links = $this->access_links_count($restricted_pages_ids);
 
-        //get number of access links for all restricted pages
-	    $restricted_pages_ids = array_column( $restricted_pages, 'ID' );
-        $number_of_access_links = $this->access_links_count( $restricted_pages_ids );
+        foreach($restricted_pages as $restricted_page) {
+            $quentn_post_restrict_meta = get_post_meta($restricted_page->ID, '_quentn_post_restrict_meta', true);
 
-        foreach( $restricted_pages as $restricted_page )
-        {
-            //get meta of page
-            $quentn_post_restrict_meta = get_post_meta( $restricted_page->ID, '_quentn_post_restrict_meta', true );
-
-            $restriction_type = ( isset( $quentn_post_restrict_meta['countdown'] ) && $quentn_post_restrict_meta['countdown'] ) ? __( 'CountDown', 'quentn-wp' ): __( 'Access', 'quentn-wp' );
+            $restriction_type = (isset($quentn_post_restrict_meta['countdown']) && $quentn_post_restrict_meta['countdown'])
+                ? __('CountDown', 'quentn-wp')
+                : __('Access', 'quentn-wp');
 
             $result[] = array(
                 "page_id"            => $restricted_page->ID,
                 "page_title"         => $restricted_page->post_title,
                 "restriction_type"   => $restriction_type,
-                "total_access_links" => isset( $number_of_access_links[$restricted_page->ID] ) ? $number_of_access_links[$restricted_page->ID] : 0 ,
+                "total_access_links" => isset($number_of_access_links[$restricted_page->ID])
+                    ? $number_of_access_links[$restricted_page->ID]
+                    : 0,
             );
         }
+
         return $result;
     }
+
 
     /**
      * Returns the count of records in the database.
@@ -224,27 +226,46 @@ class Quentn_Wp_Page_Restrictions_List extends \WP_List_Table {
 
     }
 
-	/**
-	 * get restricted pages list
-	 *
-	 * @since  1.2.8
-	 * @access public
-	 * @return void
-	 */
-	public function get_restricted_pages() {
+    /**
+     * Get restricted pages list with pagination support
+     *
+     * @since  1.2.8
+     * @access public
+     * @param int $per_page Number of items per page
+     * @param int $page_number Current page number
+     * @return array
+     */
+    public function get_restricted_pages($per_page = 20, $page_number = 1) {
+        $args = array(
+            'post_type'      => 'page',
+            'meta_key'       => '_quentn_post_restrict_meta',
+            'orderby'        => 'title',
+            'order'          => 'ASC',
+            'posts_per_page' => $per_page,
+            'paged'          => $page_number,
+            'fields'         => 'all', // Get full post objects
+        );
 
-        $restricted_pages_query = new WP_Query( array(
-            'post_type' => 'page',
-            'meta_key' => '_quentn_post_restrict_meta',
-            'orderby' => 'title',
-            'order' => 'ASC',
-        ) );
-        $restricted_pages = [];
-        if ( $restricted_pages_query->have_posts() ) {
-            $restricted_pages = $restricted_pages_query->posts;
-        }
-        return $restricted_pages;
-	}
+        $restricted_pages_query = new WP_Query($args);
+        return $restricted_pages_query->posts;
+    }
+
+    /**
+     * Get total count of restricted pages
+     *
+     * @return int
+     */
+    public function get_total_restricted_pages_count() {
+        $args = array(
+            'post_type'  => 'page',
+            'meta_key'   => '_quentn_post_restrict_meta',
+            'fields'     => 'ids',
+            'posts_per_page' => -1,
+        );
+
+        $query = new WP_Query($args);
+        return $query->found_posts;
+    }
 }
 
 /**
@@ -254,12 +275,25 @@ class Quentn_Wp_Page_Restrictions_List extends \WP_List_Table {
  * @return void
  */
 function quentn_show_data_page_restrictions_list() {
-    ?>
-    <h3><?php _e( 'List of Pages With Limited Access', 'quentn-wp' ); ?></h3>
-    <?php
     $qntn_list_table = new Quentn_Wp_Page_Restrictions_List();
+
+    // Get current screen
+    $screen = get_current_screen();
+
+    // Add screen option if not already added
+    if (!empty($screen) && !$screen->get_option('per_page')) {
+        add_screen_option('per_page', [
+            'default' => 20,
+            'option' => 'quentn_restricted_records_per_page',
+            'label' => __('Records per page', 'quentn-wp')
+        ]);
+    }
+
+    echo '<div class="wrap">';
+    echo '<h1>' . __('List of Pages With Limited Access', 'quentn-wp') . '</h1>';
     $qntn_list_table->prepare_items();
     $qntn_list_table->display();
+    echo '</div>';
 }
 
 quentn_show_data_page_restrictions_list();
