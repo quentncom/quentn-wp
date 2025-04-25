@@ -588,6 +588,25 @@ class Quentn_Wp_Admin {
         update_option( 'quentn_member_plugin_notice_dismiss', true);
     }
 
+
+    /**
+     * Display warning message for older version than 1.2.9
+     *
+     * @since  1.2.11
+     * @access public
+     * @return void
+     */
+    public function version_update_warning($plugin_data) {
+        if ( version_compare( $plugin_data['Version'], '1.2.9', '<' ) ) {
+            printf(
+                '<span style="display:block; margin-top: 5px; color: #c00;"><strong>⚠️ %s</strong></span>',
+                esc_html__( 'This is an important update! Please update immediately to version 1.2.9 or higher!', 'quentn-wp' )
+            );
+
+        }
+    }
+
+
     /**
      * Check if learndash plugin is active
      *

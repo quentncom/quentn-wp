@@ -591,6 +591,7 @@ class Quentn_Wp_Rest_Api
     public function quentn_get_user_roles( ) {
         $wp_roles = new WP_Roles();
         $all_roles = $wp_roles->get_names();
+        unset($all_roles['administrator']); //do not support anymore to add administrator role using api
         //todo remove json_encode function
         return rest_ensure_response( json_encode( $all_roles ) );
     }

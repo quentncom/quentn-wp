@@ -74,7 +74,7 @@ class Quentn_Wp {
 		if ( defined( 'QUENTN_WP_VERSION' ) ) {
 			$this->version = QUENTN_WP_VERSION;
 		} else {
-			$this->version = '1.2.10';
+			$this->version = '1.2.11';
 		}
 		$this->plugin_name = 'quentn-wp';
 
@@ -292,6 +292,8 @@ class Quentn_Wp {
 
         //add ajax endpoint for member plugin notice dismiss
         $this->loader->add_action( 'wp_ajax_quentn_dismiss_member_plugin_notice', $plugin_admin, 'member_plugin_notice_dismiss_ajax_handler' );
+
+        $this->loader->add_action( 'in_plugin_update_message-'.Helper::get_plugin_name(), $plugin_admin, 'version_update_warning' );
 
         //filter screen options
         $this->loader->add_filter( 'set-screen-option', $plugin_admin, 'set_screen_option', 10, 3 );
