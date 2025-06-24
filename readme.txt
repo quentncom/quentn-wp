@@ -3,7 +3,7 @@ Contributors: quentn
 Tags: Quentn, countdown, page restriction, email, marketing automation
 Requires at least: 4.6.0
 Tested up to: 6.7.2
-Stable tag: 1.2.11
+Stable tag: 1.2.12
 Requires PHP: 5.6.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -65,6 +65,9 @@ Answer to foo bar dilemma.
 4. Integration Elementor PRO forms with Quentn
 
 == Changelog ==
+
+= 1.2.12 =
+* Fix: Fixed access links count for list of restricted pages.
 
 = 1.2.11 =
 * Fix: Fixed pagination and screen options for list of restricted pages and access overview.
@@ -177,7 +180,10 @@ Answer to foo bar dilemma.
 
 == Upgrade Notice ==
 
-= 1.2.11 - Security Update =
+= 1.2.12 =
+Thanks for using Quentn Plugin! Please update the plugin to fix access links count for list of restricted pages.
+
+= 1.2.11 =
 Thanks for using Quentn Plugin! Please update the plugin to fix pagination and screen options for list of restricted pages and access overview.
 
 = 1.2.10 - Security Update =
