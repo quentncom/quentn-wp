@@ -177,13 +177,6 @@ class Quentn_Wp_Page_Restrictions_List extends \WP_List_Table {
      * @return array
      */
     public function access_links_count( $page_ids ) {
-
-	    $args = [
-		    'post_type' => 'page',
-		    'meta_key' => '_quentn_post_restrict_meta'
-	    ];
-	    $restricted_pages_query = new WP_Query( $args );
-	    $page_ids = array_column( $restricted_pages_query->posts, 'ID' );
         global $wpdb;
 
         $sql = "SELECT page_id, COUNT(*) as totoal_access FROM ". $wpdb->prefix . TABLE_QUENTN_RESTRICTIONS. " where page_id IN (".implode(",",$page_ids).")  GROUP BY page_id";
