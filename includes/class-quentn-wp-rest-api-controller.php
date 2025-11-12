@@ -521,7 +521,6 @@ class Quentn_Wp_Rest_Api
         $order_by = ( isset( $request_data['order_by'] ) && in_array( $request_data['order_by'], $allowed_orderby ) )  ? $request_data['order_by']  : 'date';
         $sort = ( isset( $request_data['sort'] ) && in_array( strtoupper( $request_data['sort'] ), $allowed_sort ) )  ? strtoupper( $request_data['sort'] ) : 'DESC';
 
-
         $args = [
             'post_type'      => 'page',
             'meta_key'       => '_quentn_post_restrict_meta',
@@ -530,6 +529,11 @@ class Quentn_Wp_Rest_Api
             'offset'         => $offset,
             'posts_per_page' => $limit,
         ];
+
+        //If WPML Multilingual CMS is active, suppress filters so that we can return pages of all languages
+        if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
+            $args['suppress_filters'] = true;
+        }
 
         // Query restricted pages
         $restricted_pages_query = new WP_Query( $args );

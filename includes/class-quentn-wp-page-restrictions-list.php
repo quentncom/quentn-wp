@@ -239,6 +239,11 @@ class Quentn_Wp_Page_Restrictions_List extends \WP_List_Table {
             'fields'         => 'all', // Get full post objects
         );
 
+        //If WPML Multilingual CMS is active, suppress filters so that we can return pages of all languages
+        if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
+            $args['suppress_filters'] = true;
+        }
+
         $restricted_pages_query = new WP_Query($args);
         return $restricted_pages_query->posts;
     }
@@ -255,6 +260,11 @@ class Quentn_Wp_Page_Restrictions_List extends \WP_List_Table {
             'fields'     => 'ids',
             'posts_per_page' => -1,
         );
+
+        //If WPML Multilingual CMS is active, suppress filters so that we can return pages of all languages
+        if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
+            $args['suppress_filters'] = true;
+        }
 
         $query = new WP_Query($args);
         return $query->found_posts;
