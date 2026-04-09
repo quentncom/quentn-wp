@@ -6,9 +6,17 @@
                 $o.addClass("quentn-initialized");
 
                 if (typeof qncountdown != "undefined") {
+                    var currentLang = qncountdown.wpLang;
+                    var $langHost = jQuery("[qn-countdown-language]").first();
+                    if ($langHost.length) {
+                        var attrLang = $langHost.attr("qn-countdown-language");
+                        if (attrLang) currentLang = String(attrLang).trim().toLowerCase();
+                    } else if (typeof ICL_LANGUAGE_CODE !== "undefined" && ICL_LANGUAGE_CODE) {
+                        currentLang = String(ICL_LANGUAGE_CODE).trim().toLowerCase();
+                    }
                     var clock = jQuery(o).FlipClock(qncountdown.seconds, {
                         clockFace: qncountdown.clockFace,
-                        language: qncountdown.wpLang,
+                        language: currentLang,
                         countdown: true,
                         callbacks : {
                             stop : function () {
