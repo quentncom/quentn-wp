@@ -106,8 +106,11 @@ class Quentn_Wp_Web_Tracking
     public function field_quentn_web_tracking()
     {
         $value = esc_attr( get_option( 'quentn_web_tracking_enabled' ) );
+
+        $http_host = isset( $_SERVER['HTTP_HOST'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : '';
+
         ?>
-        <input type="checkbox" class="form-control" value="1" name="quentn_web_tracking_enabled" id="quentn_web_tracking_enabled" <?php checked( $value); disabled( ! $this->api_handler->is_connected_with_quentn() || ! $this->api_handler->is_web_tracking_enabled() || ! $this->is_domain_registered( $_SERVER['HTTP_HOST'], $this->api_handler->get_registered_domains() )  ); ?>>
+        <input type="checkbox" class="form-control" value="1" name="quentn_web_tracking_enabled" id="quentn_web_tracking_enabled" <?php checked( $value); disabled( ! $this->api_handler->is_connected_with_quentn() || ! $this->api_handler->is_web_tracking_enabled() || ! $this->is_domain_registered( $http_host, $this->api_handler->get_registered_domains() )  ); ?>>
         <?php
     }
 
@@ -121,11 +124,17 @@ class Quentn_Wp_Web_Tracking
     public function field_quentn_consent_method()
     {
         $value = esc_attr( get_option( 'quentn_web_tracking_consent_method' ) );
+
+        // Validate, Unslash, and Sanitize the HTTP_HOST variable
+        $http_host = isset( $_SERVER['HTTP_HOST'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : '';
+
         ?>
-        <select name="quentn_web_tracking_consent_method" id="quentn_web_tracking_consent_method" <?php disabled(  ! get_option( 'quentn_web_tracking_enabled'  ) || ! $this->api_handler->is_connected_with_quentn() || ! $this->api_handler->is_web_tracking_enabled() || ! $this->is_domain_registered( $_SERVER['HTTP_HOST'], $this->api_handler->get_registered_domains() ) ); ?>>
-            <option value="confirm-by-server" <?php  selected( $value, 'confirm-by-server' ); ?>><?php _e( 'Confirm By Server', 'quentn-wp' ) ?></option>
-            <option value="cookie-notice" <?php  selected( $value, 'cookie-notice' ); disabled( ! Helper::is_cookie_notice_plugin_enabled() ) ?>>Cookie Notice</option>
-            <option value="quentn-overlay" <?php  selected( $value, 'quentn-overlay' ); ?>><?php _e('Quentn Overlay', 'quentn-wp' ) ?></option>
+        <select name="quentn_web_tracking_consent_method" id="quentn_web_tracking_consent_method" <?php disabled(  ! get_option( 'quentn_web_tracking_enabled'  ) || ! $this->api_handler->is_connected_with_quentn() || ! $this->api_handler->is_web_tracking_enabled() || ! $this->is_domain_registered( $http_host, $this->api_handler->get_registered_domains() ) ); ?>>
+            <option value="confirm-by-server" <?php  selected( $value, 'confirm-by-server' ); ?>><?php esc_html_e( 'Confirm By Server', 'quentn-wp' ) ?></option>
+
+            <option value="cookie-notice" <?php  selected( $value, 'cookie-notice' ); disabled( ! Helper::is_cookie_notice_plugin_enabled() ) ?>><?php esc_html_e( 'Cookie Notice', 'quentn-wp' ); ?></option>
+
+            <option value="quentn-overlay" <?php  selected( $value, 'quentn-overlay' ); ?>><?php esc_html_e('Quentn Overlay', 'quentn-wp' ) ?></option>
         </select>
         <?php
     }
@@ -147,7 +156,9 @@ class Quentn_Wp_Web_Tracking
             return $return;
         }
         //get domain ID among all registered domain at quentn host
-        $domain_id = $this->get_domain_id( $_SERVER['HTTP_HOST'], $response['data']['domains'] );
+        $http_host = isset( $_SERVER['HTTP_HOST'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : '';
+        $domain_id = $this->get_domain_id( $http_host, $response['data']['domains'] );
+
         //get array index
         if ( ! $domain_id ) {
             return $return;
@@ -179,7 +190,8 @@ class Quentn_Wp_Web_Tracking
             return '';
         }
         //get domain ID
-        $domain_id = $this->get_domain_id( $_SERVER['HTTP_HOST'], $response['data']['domains'] );
+        $http_host = isset( $_SERVER['HTTP_HOST'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : '';
+        $domain_id = $this->get_domain_id( $http_host, $response['data']['domains'] );
 
         if ( ! $domain_id ) {
             return '';
@@ -321,12 +333,12 @@ class Quentn_Wp_Web_Tracking
     public function compare_domain( $domain_1, $domain_2, $level = 0 ) {
 
         //add http:// if needed
-        $domain_1 = ( parse_url( $domain_1, PHP_URL_SCHEME ) ) ? $domain_1 : 'http://'.$domain_1;
-        $domain_2 = ( parse_url( $domain_2, PHP_URL_SCHEME ) ) ? $domain_2 : 'http://'.$domain_2;
+        $domain_1 = ( wp_parse_url( $domain_1, PHP_URL_SCHEME ) ) ? $domain_1 : 'http://' . $domain_1;
+        $domain_2 = ( wp_parse_url( $domain_2, PHP_URL_SCHEME ) ) ? $domain_2 : 'http://'.$domain_2;
 
         //skip domain upto specific level
-        $domain_1_host = $this->skip_subdomain_upto_specific_level( parse_url( $domain_1, PHP_URL_HOST ), $level );
-        $domain_2_host = $this->skip_subdomain_upto_specific_level( parse_url( $domain_2, PHP_URL_HOST ), $level );
+        $domain_1_host = $this->skip_subdomain_upto_specific_level( wp_parse_url( $domain_1, PHP_URL_HOST ), $level );
+        $domain_2_host = $this->skip_subdomain_upto_specific_level( wp_parse_url( $domain_2, PHP_URL_HOST ), $level );
 
         if ( $domain_1_host == $domain_2_host ) {
             return true;

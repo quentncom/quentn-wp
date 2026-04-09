@@ -2,6 +2,10 @@
 
 use QuentnWP\Admin\Utility\Helper;
 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly.
+}
+
 class Quentn_Wp_Restrict_Access
 {
 	private $replacement_values = array();
@@ -109,12 +113,14 @@ class Quentn_Wp_Restrict_Access
 			do_action( 'quentn_user_access_denied', get_the_ID(), array_unique( $complete_access_emails_list ) );
 		}
 		//page user is not allowed, then redirect/display message
-		if ( $page_meta['redirection_type'] == 'restricted_url' && $page_meta['redirect_url'] != '' ) {
-			//todo avoid rest api call, need to find a better way
-			if ( strpos( Helper::get_current_url(), 'wp-json' ) === false ) {
-				wp_redirect( $page_meta['redirect_url'] );
-			}
-		} else {
+        if ( $page_meta['redirection_type'] == 'restricted_url' && $page_meta['redirect_url'] != '' ) {
+            //todo avoid rest api call, need to find a better way
+            if ( strpos( Helper::get_current_url(), 'wp-json' ) === false ) {
+                // phpcs:ignore WordPress.Security.SafeRedirect.wp_redirect_wp_redirect -- Admin-defined redirection URL. Must allow external domains for custom sales funnels or partner links.
+                wp_redirect( $page_meta['redirect_url'] );
+                exit;
+            }
+        } else {
 			$error_message = ! empty( $page_meta['error_message'] ) ? $page_meta['error_message'] : '<h3>' . __( 'Access denied', 'quentn-wp' ) . '</h3>';
 			return apply_filters( 'quentn_access_denied_error_message', $error_message );
 		}
@@ -146,11 +152,12 @@ class Quentn_Wp_Restrict_Access
 	public function set_replacement_values() {
 
 		//get replacement values from url
-		$get_url_values = $_GET;
-		unset( $get_url_values['qntn'] );
-		if ( ! empty( $get_url_values ) ) {
-			$this->add_replacement_values( $get_url_values );
-		}
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Reading URL parameters for template replacement only. No state-changing actions are performed.
+        $get_url_values = $_GET;
+        unset( $get_url_values['qntn'] );
+        if ( ! empty( $get_url_values ) ) {
+            $this->add_replacement_values( $get_url_values );
+        }
 
 		//-wp user if logged in then we will get replacement values from wp user object
 		$current_user = wp_get_current_user();
@@ -173,9 +180,11 @@ class Quentn_Wp_Restrict_Access
 		}
 
 		//if replacement values send by quentn
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Processing inbound tracking link from external CRM/Email system. A WordPress nonce cannot be provided.
 		if ( isset( $_GET['qntn'] ) ) {
 			//decode quentn values
-			$qntn        = sanitize_text_field( $_GET['qntn'] );
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Processing inbound tracking link from external CRM.
+            $qntn = sanitize_text_field( wp_unslash( $_GET['qntn'] ) );
 			$qntn_values = json_decode( base64_decode( $qntn ), true );
 
 			//add quentn values in replacement values
@@ -200,6 +209,7 @@ class Quentn_Wp_Restrict_Access
 			$quentn_cookie      = $this->get_json_cookie( 'qntn_wp_access' );
 			$user_data          = array();
 			//try to find if there is any valid email address in the url
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Scanning inbound URL parameters for an email address. No state-changing actions are performed.
 			foreach ( $_GET as $value ) {
 				if ( ! is_string( $value ) ) {
 					continue;
@@ -220,7 +230,9 @@ class Quentn_Wp_Restrict_Access
 				} else { //if there is valid email in url and no data found in cookie for that email address, try to find it in database
 					global $wpdb;
 					$table_qntn_user_data = $wpdb->prefix . TABLE_QUENTN_USER_DATA;
-					$user_data            = $wpdb->get_results( "SELECT fields FROM " . $table_qntn_user_data . " WHERE email ='" . $valid_email_in_url . "'" );
+                    $user_data = $wpdb->get_results(
+                    // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table names cannot be prepared using placeholders.
+                        $wpdb->prepare( "SELECT fields FROM {$table_qntn_user_data} WHERE email = %s", $valid_email_in_url ) );
 					if ( ! empty( $user_data ) ) {
 						$user_data = unserialize( $user_data[0]->fields );
 					}
@@ -348,14 +360,14 @@ class Quentn_Wp_Restrict_Access
 		$get_new_access = false;
 
 		if ( isset( $_GET["qntn_wp"] ) ) { //get email address if it is in qntn query string
-			$get_new_access = sanitize_text_field( $_GET["qntn_wp"] );
+            $get_new_access = sanitize_text_field( wp_unslash( $_GET["qntn_wp"] ) );
 		} elseif ( isset( $_GET["qntn"] ) ) { //qntn is used when request is created from quentn, it is expected in base64 and json encoded
-			$qntn = json_decode( base64_decode( sanitize_text_field( $_GET["qntn"] ) ), true );
+			$qntn = json_decode( base64_decode( sanitize_text_field( wp_unslash( $_GET["qntn"] ) ) ), true );
 			if ( isset( $qntn['email'] ) && is_email( sanitize_email( $qntn['email'] ) ) ) { //if there is valid email in data send by quentn
 				$get_new_access = hash( 'sha256', sanitize_email( $qntn['email'] ) );
 			}
 		} elseif ( isset( $_GET["email"] ) ) { //if there is plain email address in url
-			$email          = str_replace( " ", "+", sanitize_email( $_GET["email"] ) );
+			$email          = str_replace( " ", "+", sanitize_email( wp_unslash( $_GET["email"] ) ) );
 			$get_new_access = hash( 'sha256', $email );
 		}
 
@@ -371,7 +383,7 @@ class Quentn_Wp_Restrict_Access
      */
     public function set_visitor_cookie() {
         //get the existing quentn cookie
-        $cookie_saved_data = $this->get_json_cookie('qntn_wp_access');
+        $cookie_saved_data = $this->get_json_cookie( 'qntn_wp_access' );
 
 		//set current time as starting time of visitor
 		$set_visited_time = array(
@@ -471,22 +483,50 @@ class Quentn_Wp_Restrict_Access
      * @param int $page_id id of page we are checking access
      * @return bool|string
      */
+    public function get_user_access( array $emails, $page_id = '' ) {
 
-	public function get_user_access( array $emails, $page_id = '' ) {
+        if ( ! $page_id ) {
+            $page_id = get_the_ID();
+        }
 
-		if ( ! $page_id ) {
-			$page_id = get_the_ID();
-		}
+        $page_id = absint( $page_id );
 
-		$emails = implode( "','", $emails );
-		global $wpdb;
-		//if email address is authroized to visit the page, get its creation date, in case of multiple email addresses, latest creation date will be considered
-		$sql = "SELECT page_id, email, created_at FROM " . $wpdb->prefix . TABLE_QUENTN_RESTRICTIONS . " where page_id='" . $page_id . "' and email_hash in ('" . $emails . "') order by created_at DESC LIMIT 1";
-		$results = $wpdb->get_results( $sql, 'ARRAY_A' );
+        // Sanitize + validate hashes
+        $emails = array_filter( array_map( 'sanitize_text_field', $emails ), function( $hash ) {
+            return preg_match( '/^[a-f0-9]{64}$/', $hash ); // assuming SHA256
+        });
 
-		return ! empty( $results ) ? $results[0] : [];
+        if ( empty( $emails ) ) {
+            return [];
+        }
 
-	}
+        // Optional: limit size to prevent abuse
+        $emails = array_slice( $emails, 0, 50 );
+
+        global $wpdb;
+
+        // Create placeholders
+        $placeholders = implode( ',', array_fill( 0, count( $emails ), '%s' ) );
+
+        $table_name = $wpdb->prefix . TABLE_QUENTN_RESTRICTIONS;
+
+        $query = "
+        SELECT page_id, email, created_at 
+        FROM {$table_name}
+        WHERE page_id = %d 
+        AND email_hash IN ($placeholders)
+        ORDER BY created_at DESC 
+        LIMIT 1
+    ";
+
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Dynamically constructed query to support dynamic IN clause placeholders.
+        $prepared = $wpdb->prepare($query, array_merge( [ $page_id ], $emails ));
+
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- The query is securely prepared on the line directly above.
+        $results = $wpdb->get_results( $prepared, ARRAY_A );
+
+        return ! empty( $results ) ? $results[0] : [];
+    }
 
     /**
      * Set flipclock settings
@@ -536,15 +576,24 @@ class Quentn_Wp_Restrict_Access
 			$is_display_quentn_flipclock = 1;
 		}
 
-		echo "<script>var qncountdown = {
-            seconds: $quentn_expiry_page_inseconds,        
-            clockFace: '" . $clock_face . "',
-            wpLang: '" . $get_locale . "',
-            isRedirect: $is_redirect_url_set,
-            isDisplayQuentnFlipclock: $is_display_quentn_flipclock,
-            redirect_url: '" . $redirect_url . "',
-                                
-            };</script>";
+        printf(
+    '<script>
+                var qncountdown = {
+                    seconds: %1$d,
+                    clockFace: "%2$s",
+                    wpLang: "%3$s",
+                    isRedirect: %4$d,
+                    isDisplayQuentnFlipclock: %5$d,
+                    redirect_url: "%6$s"
+                };
+            </script>',
+            absint( $quentn_expiry_page_inseconds ),
+            esc_js( $clock_face ),
+            esc_js( $get_locale ),
+            absint( $is_redirect_url_set ),
+            absint( $is_display_quentn_flipclock ),
+            esc_url( $redirect_url )
+        );
 
 
 		//if user set show clock on top of page
@@ -667,21 +716,37 @@ class Quentn_Wp_Restrict_Access
 	 * @param timestamp $until (default: 6 months from now)
 	 * @param string $domain (default: current base domain)
 	 */
-	public function set_cookie( $name, $data, $until = null, $domain = null, $path = null ) {
+    public function set_cookie( $name, $data, $until = null, $domain = null, $path = null ) {
 
-		if ( ! $until ) {
-			$until = mktime( date( "H" ), date( "i" ), date( "s" ), date( "n" ) + 6 );
-		}
-		if ( ! $domain ) {
-			$site_url = wp_parse_url( get_home_url() );
-			$domain   = ( isset( $site_url['host'] ) ) ? $site_url['host'] : '';
-		}
-		if ( ! $path ) {
-			$path = ( defined( 'SITECOOKIEPATH' ) ) ? SITECOOKIEPATH : '/';
-		}
-		setcookie( $name, $data, $until, $path, "." . $domain );
+        if ( ! $until ) {
+            $until = time() + ( 6 * MONTH_IN_SECONDS );
+        }
 
-	}
+        if ( ! $domain ) {
+            $site_url = wp_parse_url( get_home_url() );
+            $domain   = isset( $site_url['host'] ) ? $site_url['host'] : '';
+        }
+
+        if ( ! $path ) {
+            $path = defined( 'SITECOOKIEPATH' ) ? SITECOOKIEPATH : '/';
+        }
+
+        // Determine if HTTPS
+        $secure = is_ssl();
+
+        // If not localhost, adding the dot helps with subdomain compatibility.
+        $cookie_domain = ( $domain === 'localhost' ) ? $domain : '.' . $domain;
+
+        // Use modern options array (PHP 7.3+)
+        setcookie( $name, $data, [
+            'expires'  => $until,
+            'path'     => $path,
+            'domain'   => $cookie_domain,
+            'secure'   => $secure,
+            'httponly' => true,
+            'samesite' => 'Lax', // or 'Strict' if possible
+        ] );
+    }
 
 	/**
 	 * Same as set_cookie() but works with arrays
@@ -691,14 +756,35 @@ class Quentn_Wp_Restrict_Access
 	 * @param timestamp $until (default: 6 months from now)
 	 * @param string $domain (default: current base domain)
 	 */
-	public function set_json_cookie( $name, $data, $until = null, $domain = null ) {
-		$data        = base64_encode( json_encode( $data ) );
-		$cookie_name = sanitize_text_field( $name );
+    public function set_json_cookie( $name, $data, $until = null, $domain = null ) {
 
-		//set the cookie so we can access it within this session
-		$_COOKIE[$cookie_name] = $data;
-		$this->set_cookie( $cookie_name, $data, $until, $domain );
-	}
+        if ( ! is_array( $data ) ) {
+            return;
+        }
+
+        // Encode safely
+        $json = wp_json_encode( $data );
+
+        if ( false === $json ) {
+            return;
+        }
+
+        // add integrity protection
+        $secret = wp_salt( 'auth' );
+        $hash   = hash_hmac( 'sha256', $json, $secret );
+
+        $payload = base64_encode( wp_json_encode( [
+            'data' => $data,
+            'hash' => $hash,
+        ] ) );
+
+        $cookie_name = sanitize_key( $name );
+
+        // Set for current request
+        $_COOKIE[ $cookie_name ] = $payload;
+
+        $this->set_cookie( $cookie_name, $payload, $until, $domain );
+    }
 
 	/**
 	 * Returns a json decoded cookie
@@ -707,15 +793,39 @@ class Quentn_Wp_Restrict_Access
 	 *
 	 * @return array
 	 */
-	public function get_json_cookie( $name ) {
-		if ( isset( $_COOKIE[$name] ) ) {
-			$cookie_value = sanitize_text_field( $_COOKIE[$name] );
+    public function get_json_cookie( $name ) {
 
-			return json_decode( base64_decode( $cookie_value ), true );
-		}
+        if ( ! isset( $_COOKIE[ $name ] ) ) {
+            return array();
+        }
 
-		return array();
-	}
+        $cookie_value = sanitize_text_field( wp_unslash( $_COOKIE[ $name ] ) );
+
+        $decoded = base64_decode( $cookie_value, true );
+
+        if ( false === $decoded ) {
+            return array();
+        }
+
+        $decoded_payload = json_decode( $decoded, true );
+
+        if ( ! is_array( $decoded_payload ) || empty( $decoded_payload['data'] ) || empty( $decoded_payload['hash'] )) {
+            return array();
+        }
+
+        if ( json_last_error() !== JSON_ERROR_NONE ) {
+            return array();
+        }
+
+        $secret   = wp_salt( 'auth' );
+        $expected = hash_hmac( 'sha256', wp_json_encode( $decoded_payload['data'] ), $secret );
+
+        if ( ! hash_equals( $expected, $decoded_payload['hash'] ) ) {
+            return array();
+        }
+
+        return (array) $decoded_payload['data'];
+    }
 }
 
 Quentn_Wp_Restrict_Access::get_instance();

@@ -220,9 +220,11 @@ class Quentn_Wp_Learndash
             $existing_courses_selection = $quentn_learndash_courses_selection[$args['role']];
         }
         ?>
-        <select class="quentn-select-learndash-courses"  style="width: 70%"  name="quentn_learndash_courses_settings_for_user_roles[<?php echo $args['role']?>][]" id="quentn_learndash_courses_settings_for_user_roles<?php echo $args['role']?>"  multiple>
-            <?php foreach($args['courses'] as $course) { ?>
-`                <option value="<?php echo $course['id']?>" <?php echo ( in_array( $course['id'], $existing_courses_selection ) ) ? 'selected="selected"' : ''; ?>><?php echo $course['title']?></option>
+        <select class="quentn-select-learndash-courses" style="width: 70%" name="quentn_learndash_courses_settings_for_user_roles[<?php echo esc_attr( $args['role'] ); ?>][]" id="quentn_learndash_courses_settings_for_user_roles<?php echo esc_attr( $args['role'] ); ?>" multiple>
+            <?php foreach ( $args['courses'] as $course ) { ?>
+                <option value="<?php echo esc_attr( $course['id'] ); ?>" <?php selected( in_array( $course['id'], $existing_courses_selection ) ); ?>>
+                    <?php echo esc_html( $course['title'] ); ?>
+                </option>
             <?php } ?>
         </select>
         <?php

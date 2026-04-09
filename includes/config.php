@@ -1,4 +1,7 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly.
+}
 $events = [
 	1 => "Log was enabled by user",
 	2 => "Log was disabled by user",

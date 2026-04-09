@@ -22,6 +22,10 @@
  */
 use QuentnWP\Admin\Utility\Helper;
 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly.
+}
+
 class Quentn_Wp_Admin {
 
 
@@ -109,7 +113,7 @@ class Quentn_Wp_Admin {
             wp_enqueue_style(  'quentn.bootstrap.css', plugin_dir_url( __FILE__ ). 'css/bootstrap-qntn.css' );
 
             //add fontawesome cdn
-            wp_enqueue_style(  'quentn.fontawesome.css', 'https://use.fontawesome.com/releases/v5.7.0/css/all.css', array(), '' );
+            wp_enqueue_style(  'quentn.fontawesome.css', plugin_dir_url( __FILE__ ). 'css/fontawesome-5.7.0.css', array(), '5.7.0' );
 
             //add tempusdominus-bootstrap-4
             wp_enqueue_style( 'quentn.empusdominus-bootstrap-4.min', plugin_dir_url( __FILE__ ) . 'css/tempusdominus-bootstrap-4.css' );
@@ -167,35 +171,34 @@ class Quentn_Wp_Admin {
             'admin_page_quentn-page-access-overview',
         ) ) )  {
 
-            wp_register_script( 'quentn.popper.min.js', plugin_dir_url( __FILE__ ) . 'js/popper.min.js', array(), '' );
+            // Popper (depends on jQuery)
+            wp_register_script( 'quentn.popper.min.js', plugin_dir_url( __FILE__ ) . 'js/popper.min.js', array('jquery'), '' );
             wp_enqueue_script( 'quentn.popper.min.js' );
 
-            //add bootstrap for plugin
-            wp_register_script( 'quentn.bootstrap.js', plugin_dir_url( __FILE__ ) . 'js/bootstrap.min.js', array(), '4.4.1' );
+            // Bootstrap (depends on jQuery and Popper)
+            wp_register_script( 'quentn.bootstrap.js', plugin_dir_url( __FILE__ ) . 'js/bootstrap.min.js', array('jquery', 'quentn.popper.min.js'), '4.4.1' );
             wp_enqueue_script( 'quentn.bootstrap.js' );
 
-            wp_register_script( 'quentn.moment.min.js', plugin_dir_url( __FILE__ ) . 'js/moment.min.js', array(), '' );
-            wp_enqueue_script( 'quentn.moment.min.js' );
+            // Built-in Moment
+            wp_enqueue_script( 'moment' );
 
-            wp_register_script( 'quentn.moment.de.js', plugin_dir_url( __FILE__ ) . 'js/moment.de.js', array(), '' );
-            wp_enqueue_script( 'quentn.moment.de.js' );
-
-            wp_register_script( 'quentn.tempusdominus-bootstrap-4.min', plugin_dir_url( __FILE__ ) . 'js/tempusdominus-bootstrap-4.min.js', array(), '4.4.1' );
+            // Tempus Dominus Datetimepicker (depends on jQuery, Moment, and Bootstrap)
+            wp_register_script( 'quentn.tempusdominus-bootstrap-4.min', plugin_dir_url( __FILE__ ) . 'js/tempusdominus-bootstrap-4.min.js', array('jquery', 'moment', 'quentn.bootstrap.js'), '4.4.1' );
             wp_enqueue_script( 'quentn.tempusdominus-bootstrap-4.min' );
 
-            //add select2 script to select quentn tags for new users
+            // Select2 script to select quentn tags for new users
             wp_register_script( 'quentn.select2.js', plugin_dir_url( __FILE__ ) . 'js/select2.min.js', array( 'jquery' ), '4.0.3', true );
             wp_enqueue_script( 'quentn.select2.js' );
 
-            //add touchspin script file
+            //  Touchspin script file
             wp_register_script( 'quentn.jquery.bootstrap-touchspin.js', plugin_dir_url( __FILE__ ) . 'js/jquery.bootstrap-touchspin.js', array( 'jquery' ), '', true );
             wp_enqueue_script( 'quentn.jquery.bootstrap-touchspin.js' );
 
-            //add custom script file
-            wp_register_script('quentn.admin.custom.js', plugin_dir_url( __FILE__ ) . 'js/main.js', array( 'jquery' ), $this->version );
+            // Custom script file (depends on Tempus Dominus so the datetimepicker loads first!)
+            wp_register_script('quentn.admin.custom.js', plugin_dir_url( __FILE__ ) . 'js/main.js', array( 'jquery', 'quentn.tempusdominus-bootstrap-4.min' ), '4.4.1' );
             wp_enqueue_script( 'quentn.admin.custom.js' );
 
-            //Localize the script with new data
+            // Localize the script with new data
             $translation_array = array(
                 'choose_quentn_tags'            =>  __( 'Choose Quentn Tags', 'quentn-wp' ),
                 'choose_learndash_courses'      =>  __( 'Choose LearnDash Courses', 'quentn-wp' ),
@@ -249,8 +252,20 @@ class Quentn_Wp_Admin {
 
             //if a user access was deleted
             if ( $action == 'quentn-access-deleted' ) {
-                if ( $_GET['delete_count'] ) {
-	                $this->notices[] = array( 'message' =>  sprintf( esc_html( _n( '%d user access is deleted', '%d user accesses are deleted', $_GET['delete_count'], 'quentn-wp'  ) ), $_GET['delete_count'] ), 'type' => 'success' );
+
+                if ( ! empty( $_GET['delete_count'] ) ) {
+                    $delete_count = absint( wp_unslash( $_GET['delete_count'] ) );
+
+                    $message = sprintf(
+                        /* translators: %d: number of deleted user accesses */
+                        esc_html( _n( '%d user access is deleted', '%d user accesses are deleted', $delete_count, 'quentn-wp' ) ),
+                        $delete_count
+                    );
+
+                    $this->notices[] = array(
+                        'message' => $message,
+                        'type'    => 'success'
+                    );
                 } else {
 	                $this->notices[] = array( 'message' => __( 'User access could not be deleted.', 'quentn-wp' ), 'type' => 'error' );
                 }
@@ -258,11 +273,33 @@ class Quentn_Wp_Admin {
 
             //if a user data was deleted
             if ( $action == 'quentn-user-data-deleted' ) {
-                if ( $_GET['deleted'] ) {
-                    $this->notices[] = array( 'message' => __( 'Data is deleted successfully', 'quentn-wp' ), 'type' => 'success' );
+                if ( ! empty( $_GET['deleted'] ) ) {
+
+                    $delete_count = isset( $_GET['delete_count'] ) ? absint( wp_unslash( $_GET['delete_count'] ) ) : 0;
+
+                    /* translators: %d: number of deleted user accesses */
+                    $format = _n( '%d user access is deleted', '%d user accesses are deleted', $delete_count, 'quentn-wp' );
+                    $message = esc_html( sprintf( $format, $delete_count ) );
+
+                    $this->notices[] = array(
+                        'message' => $message,
+                        'type'    => 'success'
+                    );
+
                 }
                 else {
-                    $this->notices[] = array( 'message' => sprintf( esc_html__( 'There is no data found with the email address %s', 'quentn-wp' ), sanitize_email( $_GET['email'] ) ), 'type' => 'warning' );
+                    $email = isset( $_GET['email'] ) ? sanitize_email( wp_unslash( $_GET['email'] ) ) : '';
+
+                    $message = sprintf(
+                        /* translators: %s: the searched email address */
+                        esc_html__( 'There is no data found with the email address %s', 'quentn-wp' ),
+                        esc_html( $email )
+                    );
+
+                    $this->notices[] = array(
+                        'message' => $message,
+                        'type'    => 'warning'
+                    );
                 }
             }
             //if direct access added successfully
@@ -291,7 +328,7 @@ class Quentn_Wp_Admin {
             <?php foreach ( $this->notices as $notice ) { ?>
 
                 <div class="notice notice-<?php echo esc_attr( $notice['type'] ); ?> is-dismissible">
-                    <?php echo wpautop( '<strong>' . $notice['message'] . '</strong>' ); ?>
+                    <?php echo wp_kses_post( wpautop( '<strong>' . $notice['message'] . '</strong>' ) ); ?>
                 </div>
 
                 <?php
@@ -504,9 +541,15 @@ class Quentn_Wp_Admin {
             ?>
             <div class="notice notice-warning quentn-cookie-notice is-dismissible">
                 <p>
-                    <?php  printf( esc_html__( 'You need to install the plugin %s to support Quentn cookies. You can download the plugin', 'quentn-wp' ),'<i><b>Cookie Notice for GDPR</i></b>' ); ?>
+                    <?php
+                    printf(
+                        /* translators: %s: the name of the required plugin */
+                        esc_html__( 'You need to install the plugin %s to support Quentn cookies. You can download the plugin', 'quentn-wp' ),
+                        '<i><b>Cookie Notice for GDPR</b></i>'
+                    );
+                    ?>
 
-                    <a href="https://wordpress.org/plugins/cookie-notice/" target="_blank"><?php   _e( 'here', 'quentn-wp' ) ; ?> </a>
+                    <a href="https://wordpress.org/plugins/cookie-notice/" target="_blank"><?php   esc_html_e( 'here', 'quentn-wp' ) ; ?> </a>
                 </p>
             </div>
             <?php
@@ -558,8 +601,14 @@ class Quentn_Wp_Admin {
             ?>
             <div class="notice notice-warning quentn-member-plugin-notice is-dismissible">
                 <p>
-                    <?php  printf( __( 'To create multiple user roles and define different permissions, you must install the plugin %s. You can download the plugin', 'quentn-wp' ),'<i><b>Members</i></b>' ); ?>
-                    <a href="https://wordpress.org/plugins/members/" target="_blank"><?php   _e( 'here', 'quentn-wp' ) ; ?> </a>
+                    <?php
+                    printf(
+                        /* translators: %s: the name of the recommended plugin */
+                        esc_html__( 'To create multiple user roles and define different permissions, you must install the plugin %s. You can download the plugin', 'quentn-wp' ),
+                        '<i><b>Members</b></i>'
+                    );
+                    ?>
+                    <a href="https://wordpress.org/plugins/members/" target="_blank"><?php   esc_html_e( 'here', 'quentn-wp' ) ; ?> </a>
                 </p>
             </div>
             <?php
@@ -839,13 +888,13 @@ class Quentn_Wp_Admin {
      */
     public function field_quentn_auto_login_redirect_url()
     {
-        $value = esc_attr( get_option( 'quentn_auto_login_url' ) );
+        // Get the value raw, we will escape it on the way out
+        $value = get_option( 'quentn_auto_login_url' );
         ?>
-            <input  class="form-control" type="text" name="quentn_auto_login_url" id="quentn_auto_login_url" value="<?php echo $value; ?>" placeholder="<?php  _e( 'URL', 'quentn-wp' ) ?>">
-            <label for="quentn_auto_login_url"> <?php printf( __( 'Redirect user to this page after auto login.', 'quentn-wp'  ) ); ?></label>
+        <input class="form-control" type="text" name="quentn_auto_login_url" id="quentn_auto_login_url" value="<?php echo esc_url( $value ); ?>" placeholder="<?php esc_attr_e( 'URL', 'quentn-wp' ); ?>">
+        <label for="quentn_auto_login_url"> <?php esc_html_e( 'Redirect user to this page after auto login.', 'quentn-wp' ); ?></label>
         <?php
     }
-
 	/**
 	 * Display add log checkbox field
 	 *
@@ -858,7 +907,7 @@ class Quentn_Wp_Admin {
 		$value = get_option( 'quentn_add_log', true );
 		?>
         <input type="checkbox" class="form-control" value="1" name="quentn_add_log" id="quentn_add_log" <?php checked( $value); ?>>
-        <label for="quentn_add_log" style="display:inline" > <?php printf( __( 'Save logs in the database.', 'quentn-wp'  ) ); ?></label>
+        <label for="quentn_add_log" style="display:inline" > <?php printf( esc_html_e( 'Save logs in the database.', 'quentn-wp'  ) ); ?></label>
 		<?php
 	}
 
@@ -880,7 +929,7 @@ class Quentn_Wp_Admin {
             <option value="365" <?php selected ( $value, 365  )  ?>> 365 <?php __( 'days', 'quentn-wp' ) ?></option>
         </select>
 
-        <label for="quentn_log_expire_days" > <?php printf( __( 'Number of days to keep the logs.', 'quentn-wp'  ) ); ?></label>
+        <label for="quentn_log_expire_days" > <?php printf( esc_html_e( 'Number of days to keep the logs.', 'quentn-wp'  ) ); ?></label>
 		<?php
 	}
 
@@ -901,9 +950,13 @@ class Quentn_Wp_Admin {
             $is_add_user_to_qntn_enabled = $quentn_update_wp_user[$args['role']]['add'];
         }
         ?>
-        <input type="checkbox" class="form-control add-wp-qntn" value="1" name="quentn_add_remove_wp_user_from_host[<?php echo $args['role'] ?>][add]" data-role="<?php echo $args['role']?>" id="quentn_tags_add_wp_user<?php echo $args['role']?>"  <?php checked( $is_add_user_to_qntn_enabled); disabled( ! $this->api_handler->is_connected_with_quentn() ); ?>  >
+        <input type="checkbox" class="form-control add-wp-qntn" value="1" name="quentn_add_remove_wp_user_from_host[<?php echo esc_attr( $args['role'] ); ?>][add]" data-role="<?php echo esc_attr( $args['role'] ); ?>" id="quentn_tags_add_wp_user<?php echo esc_attr( $args['role'] ); ?>" <?php checked( $is_add_user_to_qntn_enabled ); disabled( ! $this->api_handler->is_connected_with_quentn() ); ?>>
         <?php
-        printf( __( 'Create or update Quentn contact if user receives role %s , with the following tags', 'quentn-wp' ), ucfirst( $args['role_title'] ) );
+        printf(
+            /* translators: %s: the title of the user role */
+            esc_html__( 'Create or update Quentn contact if user receives role %s , with the following tags', 'quentn-wp' ),
+            esc_html( ucfirst( $args['role_title'] ) )
+        );
     }
 
     /**
@@ -927,9 +980,13 @@ class Quentn_Wp_Admin {
             $is_delete_user_to_qntn_enabled = $quentn_update_wp_user[$args['role']]['remove'];
         }
         ?>
-        <input type="checkbox" class="form-control" value="1" name="quentn_add_remove_wp_user_from_host[<?=$args['role']?>][remove]" id="quentn_tags_remove_wp_user<?=$args['role']?>" <?php checked( $is_delete_user_to_qntn_enabled); disabled( ! $this->api_handler->is_connected_with_quentn() || !$is_add_user_to_qntn_enabled);  ?>  >
+        <input type="checkbox" class="form-control" value="1" name="quentn_add_remove_wp_user_from_host[<?php echo esc_attr( $args['role'] ); ?>][remove]" id="quentn_tags_remove_wp_user<?php echo esc_attr( $args['role'] ); ?>" <?php checked( $is_delete_user_to_qntn_enabled ); disabled( ! $this->api_handler->is_connected_with_quentn() || ! $is_add_user_to_qntn_enabled ); ?>>
         <?php
-        printf( __( 'Remove tags if user looses the role %s', 'quentn-wp' ), ucfirst( $args['role'] ) );
+        printf(
+            /* translators: %s: the title of the user role */
+            esc_html__( 'Remove tags if user looses the role %s', 'quentn-wp' ),
+            esc_html( ucfirst( $args['role'] ) )
+        );
     }
 
     /**
@@ -959,9 +1016,9 @@ class Quentn_Wp_Admin {
         }
 
         ?>
-        <select class="quentn-term-selection"  style="width: 70%"  name="quentn_tags_wp_user[<?php echo $args['role']?>][]" id="quentn_tags_wp_user<?php echo $args['role']?>" <?php disabled( ! $this->api_handler->is_connected_with_quentn() || !$is_add_user_to_qntn_enabled);  ?> multiple>
+        <select class="quentn-term-selection" style="width: 70%" name="quentn_tags_wp_user[<?php echo esc_attr( $args['role'] ); ?>][]" id="quentn_tags_wp_user<?php echo esc_attr( $args['role'] ); ?>" <?php disabled( ! $this->api_handler->is_connected_with_quentn() || ! $is_add_user_to_qntn_enabled ); ?> multiple>
             <?php foreach($args['terms'] as $term) { ?>
-                <option value="<?php echo $term['id']?>" <?php selected ( in_array( $term['id'], $existing_terms ) )  ?>><?php echo $term['name']?></option>
+                <option value="<?php echo esc_attr( $term['id'] ); ?>" <?php selected( in_array( $term['id'], $existing_terms ) ); ?>><?php echo esc_html( $term['name'] ); ?></option>
             <?php } ?>
         </select>
         <?php
@@ -1086,7 +1143,7 @@ class Quentn_Wp_Admin {
                     <div class="alert alert-danger">
                         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                         <?php foreach ( array_unique ( $error_messages ) as $error_message ) : ?>
-                            <span class="glyphicon glyphicon-hand-right"></span>&nbsp;&nbsp;<strong><?php echo $error_message; ?></strong> <br />
+                            <span class="glyphicon glyphicon-hand-right"></span>&nbsp;&nbsp;<strong><?php echo esc_html( $error_message ); ?></strong> <br />
                         <?php endforeach;  ?>
                     </div>
                 </div>

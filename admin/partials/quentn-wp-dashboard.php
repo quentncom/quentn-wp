@@ -1,4 +1,9 @@
 <?php
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly.
+}
+
 //get active tab
 if( isset( $_GET['tab'] ) ) {
     $active_tab = sanitize_key( $_GET['tab'] );
@@ -7,17 +12,17 @@ if( isset( $_GET['tab'] ) ) {
 }
 ?>
 <div class="wrap">
-    <h1><?php _e( 'Quentn Options', 'quentn-wp' ) ?></h1>
+    <h1><?php esc_html_e( 'Quentn Options', 'quentn-wp' ) ?></h1>
     <?php settings_errors(); ?>
 
         <!-- provides the styling for tabs. -->
         <h2 class="nav-tab-wrapper">
-            <a href="?page=quentn-dashboard&tab=quentn_host_connection" class="nav-tab <?php if ( $active_tab == 'quentn_host_connection' ) { echo 'nav-tab-active'; } ?>"><?php _e( 'Connect', 'quentn-wp' ); ?></a>
-            <a href="?page=quentn-dashboard&tab=quentn_tags_selection" class="nav-tab <?php if ( $active_tab == 'quentn_tags_selection' ) { echo 'nav-tab-active'; } ?>"><?php _e( 'Roles', 'quentn-wp' ); ?></a>
-            <a href="?page=quentn-dashboard&tab=quentn_web_tracking_tab" class="nav-tab <?php if ( $active_tab == 'quentn_web_tracking_tab' ) { echo 'nav-tab-active'; } ?>"><?php _e( 'Web Tracking', 'quentn-wp' ); ?></a>
-            <a href="?page=quentn-dashboard&tab=quentn_settings" class="nav-tab <?php if ( $active_tab == 'quentn_settings' ) { echo 'nav-tab-active'; } ?>"><?php _e( 'Misc', 'quentn-wp' ); ?></a>
+            <a href="?page=quentn-dashboard&tab=quentn_host_connection" class="nav-tab <?php if ( $active_tab == 'quentn_host_connection' ) { echo 'nav-tab-active'; } ?>"><?php esc_html_e( 'Connect', 'quentn-wp' ); ?></a>
+            <a href="?page=quentn-dashboard&tab=quentn_tags_selection" class="nav-tab <?php if ( $active_tab == 'quentn_tags_selection' ) { echo 'nav-tab-active'; } ?>"><?php esc_html_e( 'Roles', 'quentn-wp' ); ?></a>
+            <a href="?page=quentn-dashboard&tab=quentn_web_tracking_tab" class="nav-tab <?php if ( $active_tab == 'quentn_web_tracking_tab' ) { echo 'nav-tab-active'; } ?>"><?php esc_html_e( 'Web Tracking', 'quentn-wp' ); ?></a>
+            <a href="?page=quentn-dashboard&tab=quentn_settings" class="nav-tab <?php if ( $active_tab == 'quentn_settings' ) { echo 'nav-tab-active'; } ?>"><?php esc_html_e( 'Misc', 'quentn-wp' ); ?></a>
             <?php if( $this->is_learndash_plugin_active() ) { ?>
-            <a href="?page=quentn-dashboard&tab=quentn_learndash_course_settings" class="nav-tab <?php if ( $active_tab == 'quentn_learndash_course_settings' ) { echo 'nav-tab-active'; } ?>"><?php _e( 'LearnDash', 'quentn-wp' ); ?></a>
+            <a href="?page=quentn-dashboard&tab=quentn_learndash_course_settings" class="nav-tab <?php if ( $active_tab == 'quentn_learndash_course_settings' ) { echo 'nav-tab-active'; } ?>"><?php esc_html_e( 'LearnDash', 'quentn-wp' ); ?></a>
             <?php } ?>
         </h2>
         <?php
@@ -30,10 +35,10 @@ if( isset( $_GET['tab'] ) ) {
         <div class="bootstrap-qntn">
             <div class="alert alert-danger mt-3">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                <h4 class="alert-heading"><?php  _e( 'You are not connected to Quentn', 'quentn-wp' ) ?></h4>
+                <h4 class="alert-heading"><?php  esc_html_e( 'You are not connected to Quentn', 'quentn-wp' ) ?></h4>
                 <hr class="message-inner-separator">
                 <p class="mb-0">
-                    <?php  echo _e( 'Please connect a Quentn account to use this feature', 'quentn-wp' )  ?>
+                    <?php  echo esc_html_e( 'Please connect a Quentn account to use this feature', 'quentn-wp' )  ?>
                 </p>
             </div>
         </div>
@@ -55,12 +60,18 @@ if( isset( $_GET['tab'] ) ) {
         } elseif ( $active_tab == "quentn_web_tracking_tab" ) { //display web tracking options
             $web_tracking = new Quentn_Wp_Web_Tracking();
             $web_tracking->register_web_tracking_fields();
-            echo '<form method="post" action="options.php">';
-            if( get_option('quentn_web_tracking_enabled') ) {
-                update_option("quentn_web_tracking_code", $web_tracking->get_quentn_web_tracking_code() );
-            } else { //if web tracking option is disabled, we will delete previously saved tracking code
-                delete_option('quentn_web_tracking_code');
+            if ( current_user_can( 'manage_options' ) ) {
+                if ( get_option( 'quentn_web_tracking_enabled' ) ) {
+                    $tracking_html = $web_tracking->get_quentn_web_tracking_code();
+                    if ( ! empty( $tracking_html ) ) {
+                        update_option( 'quentn_web_tracking_code', wp_unslash( $tracking_html ) );
+                    }
+                } else {
+                    delete_option( 'quentn_web_tracking_code' );
+                }
             }
+            echo '<form method="post" action="options.php">';
+
 
             //check if plugin is connected with quentn web tracking is not enabled
             if( $this->api_handler->is_connected_with_quentn() && ! $this->api_handler->is_web_tracking_enabled() ) {
@@ -83,7 +94,20 @@ if( isset( $_GET['tab'] ) ) {
                     <div class="alert alert-danger mt-3">
                         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                         <strong class="mb-2">
-                            <?php printf(__( "Could not find %s at the connected Quentn server.  Please add %s as tracked domain in order to use this feature.", 'quentn-wp' ),"'".$_SERVER['HTTP_HOST']."''", "'".$_SERVER['HTTP_HOST']."''" ); ?>
+                            <?php
+                            // Safely extract and escape the host to prevent Host Header Injection XSS
+                            $http_host = isset( $_SERVER['HTTP_HOST'] ) ? esc_html( sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) ) ) : '';
+
+                            // Wrap it in single quotes cleanly
+                            $host_with_quotes = "'" . $http_host . "'";
+
+                            printf(
+                                /* translators: 1: The website domain, 2: The website domain again */
+                                esc_html__( 'Could not find %1$s at the connected Quentn server.  Please add %2$s as tracked domain in order to use this feature.', 'quentn-wp' ),
+                                esc_html( $host_with_quotes ),
+                                esc_html( $host_with_quotes )
+                            );
+                            ?>
                         </strong>
                     </div>
                 </div>
@@ -103,7 +127,7 @@ if( isset( $_GET['tab'] ) ) {
             submit_button( NULL, 'primary', 'submit', true, $submit_button_attributes );
             echo '</form>';
             echo "<hr >";
-            echo '<h2>'.__( 'Delete contact data', 'quentn-wp' ).'</h2>';
+            echo '<h2>' . esc_html__( 'Delete contact data', 'quentn-wp' ) . '</h2>';
             require_once QUENTN_WP_PLUGIN_DIR . '/admin/partials/quentn-delete-user-data.php';
         }
         ?>

@@ -17,7 +17,7 @@ class Quentn_Wp_Elementor_Handler {
 		}
 
 		if ( empty( $base_url ) ) {
-			throw new \Exception( 'Invalid API key' );
+			throw new \Exception( 'Invalid base url' );
 		}
 
 		$this->init_rest_client( $api_key, $base_url );

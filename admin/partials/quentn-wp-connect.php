@@ -1,5 +1,9 @@
 <?php
 use QuentnWP\Admin\Utility\Helper;
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly.
+}
 session_start();
 
 $base_uri = "https://my.quentn.com/public/api/v1/";
@@ -23,7 +27,7 @@ if ( isset( $_GET['update'] ) ) {
                 delete_option( $elementor_api_url );
             }
         }
-        wp_redirect( esc_url_raw( add_query_arg( ['update' => 'quentn-account-removed' ] ) ) );
+        wp_safe_redirect( esc_url_raw( add_query_arg( ['update' => 'quentn-account-removed' ] ) ) );
         exit;
     }
 }
@@ -33,18 +37,24 @@ if ( isset( $_GET['update'] ) ) {
         <div class="text-center">
           <div class="alert alert-success">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-            <h4 class="alert-heading"><?php  _e( 'You are connected to Quentn', 'quentn-wp' ) ?></h4>
+            <h4 class="alert-heading"><?php  esc_html_e( 'You are connected to Quentn', 'quentn-wp' ) ?></h4>
             <hr class="message-inner-separator">
             <p>
-                <?php   printf( __( 'You are connected to Quentn host %s', 'quentn-wp' ), get_option('quentn_base_url') ) ; ?>
+                <?php
+                printf(
+                    /* translators: %s: the Quentn host URL */
+                    esc_html__( 'You are connected to Quentn host %s', 'quentn-wp' ),
+                    esc_url( get_option( 'quentn_base_url' ) )
+                );
+                ?>
             </p>
           </div>
-          <a href="<?php echo $base_uri . $path . "?" . http_build_query( $params ) ?>" class="btn btn-primary" role="button"><?php _e( 'Update Quentn account', 'quentn-wp' ) ?></a>
-          <a href="<?php echo Helper::get_current_url().'&update=remove-quentn-account' ?>" class="btn btn-danger" role="button"><?php _e( 'Remove Quentn account', 'quentn-wp' ) ?></a>
+          <a href="<?php echo esc_url( $base_uri . $path . '?' . http_build_query( $params ) ); ?>" class="btn btn-primary" role="button"><?php esc_html_e( 'Update Quentn account', 'quentn-wp' ); ?></a>
+          <a href="<?php echo esc_url( Helper::get_current_url() . '&update=remove-quentn-account' ); ?>" class="btn btn-danger" role="button"><?php esc_html_e( 'Remove Quentn account', 'quentn-wp' ); ?></a>
         </div>
     <?php } else { ?>
         <div class="text-center">
-        <a href="<?php echo $base_uri . $path . "?" . http_build_query( $params ) ?>" class="btn btn-primary role="button"><?php _e( 'Connect to Quentn', 'quentn-wp' ) ?></a>
+        <a href="<?php echo esc_url( $base_uri . $path . '?' . http_build_query( $params ) ); ?>" class="btn btn-primary" role="button"><?php esc_html_e( 'Connect to Quentn', 'quentn-wp' ); ?></a>
         </div>
     <?php } ?>
 
@@ -82,10 +92,12 @@ if ( ! empty( $_GET['token'] ) ) {
                 'redirect_uri' => esc_url( remove_query_arg(  ['token', 'update'], Helper::get_current_url() ) ), //remove arg token from current url
             ) );
             //oauth call with client id and client secret
+            // phpcs:ignore WordPress.Security.SafeRedirect.wp_redirect_wp_redirect -- OAuth authorization flow requires redirecting to an external provider URL.
             wp_redirect( $this->api_handler->get_oauth_client()->oauth()->getAuthorizationUrl() );
+            exit;
         }
     } catch ( Exception $e ) {
-        echo $e->getMessage();
+        echo esc_html( $e->getMessage() );
     }
 }
 
@@ -116,6 +128,6 @@ if( isset( $_GET['state'] ) ) {
         }
         delete_option( 'quentn_client_id');
         delete_option( 'quentn_client_secret');
-        wp_redirect( esc_url_raw(add_query_arg(['update' => 'qntn-account-connected' ])) );
+        wp_safe_redirect( esc_url_raw(add_query_arg(['update' => 'qntn-account-connected' ])) );
     }
 }

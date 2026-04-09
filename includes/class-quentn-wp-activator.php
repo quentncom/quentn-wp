@@ -41,7 +41,7 @@ class Quentn_Wp_Activator {
         if (  version_compare(PHP_VERSION, '5.6.0', '<=' ) ) {
             deactivate_plugins( plugin_basename( __FILE__ ."../") );
             wp_die(
-                __('Quentn requires PHP version 5.6.0 or higher', 'quentn-wp'),
+                esc_html__( 'Quentn requires PHP version 5.6.0 or higher', 'quentn-wp' ),
                 'Plugin dependency check',
                 array( 'back_link' => true )
             );

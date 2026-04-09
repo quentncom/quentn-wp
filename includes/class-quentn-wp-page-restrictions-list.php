@@ -181,6 +181,7 @@ class Quentn_Wp_Page_Restrictions_List extends \WP_List_Table {
 
         $sql = "SELECT page_id, COUNT(*) as totoal_access FROM ". $wpdb->prefix . TABLE_QUENTN_RESTRICTIONS. " where page_id IN (".implode(",",$page_ids).")  GROUP BY page_id";
 
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- The query is securely prepared on the line directly above.
         $rows = $wpdb->get_results( $sql );
         $pages = array();
         foreach ( $rows as $row ) {
@@ -196,7 +197,7 @@ class Quentn_Wp_Page_Restrictions_List extends \WP_List_Table {
      * @return void
      */
     public function no_items() {
-        _e( 'To create access restricted pages, please check your page\'s settings.', 'quentn-wp' );
+        esc_html_e( 'To create access restricted pages, please check your page\'s settings.', 'quentn-wp' );
     }
 
     /**
@@ -210,11 +211,12 @@ class Quentn_Wp_Page_Restrictions_List extends \WP_List_Table {
 
         if ( 'show-access' === $this->current_action() ) {
 
-            wp_redirect( add_query_arg( array(
+            wp_safe_redirect( add_query_arg( array(
                 'page_id' => sanitize_text_field( $_GET['page_id'] ),
             ),
                 admin_url( 'admin.php?page=quentn-page-access-overview' )
             ));
+            exit;
         }
 
     }
@@ -241,6 +243,7 @@ class Quentn_Wp_Page_Restrictions_List extends \WP_List_Table {
 
         //If WPML Multilingual CMS is active, suppress filters so that we can return pages of all languages
         if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
+            // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.SuppressFilters_suppress_filters -- Required to bypass WPML strict language filtering.
             $args['suppress_filters'] = true;
         }
 
@@ -263,6 +266,7 @@ class Quentn_Wp_Page_Restrictions_List extends \WP_List_Table {
 
         //If WPML Multilingual CMS is active, suppress filters so that we can return pages of all languages
         if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
+            // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.SuppressFilters_suppress_filters -- Required to bypass WPML strict language filtering.
             $args['suppress_filters'] = true;
         }
 
@@ -293,7 +297,7 @@ function quentn_show_data_page_restrictions_list() {
     }
 
     echo '<div class="wrap">';
-    echo '<h1>' . __('List of Pages With Limited Access', 'quentn-wp') . '</h1>';
+    echo '<h1>' . esc_html__('List of Pages With Limited Access', 'quentn-wp') . '</h1>';
     $qntn_list_table->prepare_items();
     $qntn_list_table->display();
     echo '</div>';

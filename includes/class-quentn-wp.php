@@ -30,6 +30,9 @@
 
 use QuentnWP\Admin\Utility\Helper;
 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly.
+}
 class Quentn_Wp {
 
 	/**
@@ -74,7 +77,7 @@ class Quentn_Wp {
 		if ( defined( 'QUENTN_WP_VERSION' ) ) {
 			$this->version = QUENTN_WP_VERSION;
 		} else {
-			$this->version = '1.2.12';
+			$this->version = '1.2.13';
 		}
 		$this->plugin_name = 'quentn-wp';
 

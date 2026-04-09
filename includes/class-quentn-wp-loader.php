@@ -21,6 +21,11 @@
  * @subpackage Quentn_Wp/includes
  * @author     Quentn Team < info@quentn.com>
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly.
+}
+
 class Quentn_Wp_Loader {
 
 	/**

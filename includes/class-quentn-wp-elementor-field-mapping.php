@@ -46,10 +46,10 @@ class Quentn_Wp_Elementor_Field_Mapping extends Control_Repeater {
         $wp_version = get_bloginfo( 'version' );
         //Add different file for elementor integration for wordpress version equal or greater than 5.6
         if ( version_compare( $wp_version, '5.6', '>=' ) ) {
-            wp_register_script( 'quentn.elementor.integration.js', QUENTN_WP_PLUGIN_URL . 'admin/js/quentn-elementor-integration-5.6.js', array(), '', true );
+            wp_register_script( 'quentn.elementor.integration.js', QUENTN_WP_PLUGIN_URL . 'admin/js/quentn-elementor-integration-5.6.js', array(), QUENTN_WP_VERSION, true );
             wp_enqueue_script( 'quentn.elementor.integration.js' );
         } else {
-            wp_register_script( 'quentn.elementor.integration.js', QUENTN_WP_PLUGIN_URL . 'admin/js/quentn-elementor-integration.js', array(), '', true );
+            wp_register_script( 'quentn.elementor.integration.js', QUENTN_WP_PLUGIN_URL . 'admin/js/quentn-elementor-integration.js', array(), QUENTN_WP_VERSION, true );
             wp_enqueue_script( 'quentn.elementor.integration.js' );
         }
 
@@ -79,30 +79,30 @@ class Quentn_Wp_Elementor_Field_Mapping extends Control_Repeater {
     private function get_mappable_fields( $extra = [] ) {
 
         $defaults = [
-            'title'               => array( 'label' => __( 'Title' ), 'type' => 'select' ),
-            'title2'              => array( 'label' => __( 'Title 2' ), 'type' => 'select' ),
-            'full_name'           => array( 'label' => __( 'Full Name' ), 'type' => 'text' ),
-            'first_name'          => array( 'label' => __( 'First Name' ), 'type' => 'text' ),
-            'family_name'         => array( 'label' => __( 'Family Name' ), 'type' => 'text' ),
-            'company'             => array( 'label' => __( 'Company' ), 'type' => 'text' ),
-            'job_title'           => array( 'label' => __( 'Job title' ), 'type' => 'text' ),
-            'mail'                => array( 'label' => __( 'Primary email' ), 'type' => 'email' ),
-            'mail2'               => array( 'label' => __( 'Secondary email' ), 'type' => 'email' ),
-            'phone_type'          => array( 'label' => __( 'Primary Phone Type' ), 'type' => 'select' ),
-            'phone'               => array( 'label' => __( 'Primary phone number' ), 'type' => 'tel' ),
-            'phone2_type'         => array( 'label' => __( 'Secondary Primary phone number' ), 'type' => 'select' ),
-            'phone2'              => array( 'label' => __( 'Secondary phone number' ), 'type' => 'tel' ),
-            'fax'                 => array( 'label' => __( 'Fax number' ), 'type' => 'text' ),
-            'skype'               => array( 'label' => __( 'Skype name' ), 'type' => 'text' ),
-            'fb'                  => array( 'label' => __( 'Facebook' ), 'type' => 'text' ),
-            'twitter'             => array( 'label' => __( 'Twitter' ), 'type' => 'text' ),
-            'ba_street'           => array( 'label' => __( 'Street (Billing Address)' ), 'type' => 'text' ),
-            'ba_street2'          => array( 'label' => __( 'Street 2 (Billing Address)' ), 'type' => 'text' ),
-            'ba_city'             => array( 'label' => __( 'City (Billing Address)' ), 'type' => 'text' ),
-            'ba_postal_code'      => array( 'label' => __( 'Postal Code (Billing Address)' ), 'type' => 'text' ),
-            'ba_state'            => array( 'label' => __( 'State (Billing Address)' ), 'type' => 'text' ),
-            'ba_country'          => array( 'label' => __( 'Country' ), 'type' => 'text' ),
-            'date_of_birth'       => array( 'label' => __( 'Date of birth' ), 'type' => 'date' ),
+            'title'               => array( 'label' => __( 'Title', 'quentn-wp' ), 'type' => 'select' ),
+            'title2'              => array( 'label' => __( 'Title 2', 'quentn-wp' ), 'type' => 'select' ),
+            'full_name'           => array( 'label' => __( 'Full Name', 'quentn-wp' ), 'type' => 'text' ),
+            'first_name'          => array( 'label' => __( 'First Name', 'quentn-wp' ), 'type' => 'text' ),
+            'family_name'         => array( 'label' => __( 'Family Name', 'quentn-wp' ), 'type' => 'text' ),
+            'company'             => array( 'label' => __( 'Company', 'quentn-wp' ), 'type' => 'text' ),
+            'job_title'           => array( 'label' => __( 'Job title', 'quentn-wp' ), 'type' => 'text' ),
+            'mail'                => array( 'label' => __( 'Primary email', 'quentn-wp' ), 'type' => 'email' ),
+            'mail2'               => array( 'label' => __( 'Secondary email', 'quentn-wp' ), 'type' => 'email' ),
+            'phone_type'          => array( 'label' => __( 'Primary Phone Type', 'quentn-wp' ), 'type' => 'select' ),
+            'phone'               => array( 'label' => __( 'Primary phone number', 'quentn-wp' ), 'type' => 'tel' ),
+            'phone2_type'         => array( 'label' => __( 'Secondary Primary phone number', 'quentn-wp' ), 'type' => 'select' ),
+            'phone2'              => array( 'label' => __( 'Secondary phone number', 'quentn-wp' ), 'type' => 'tel' ),
+            'fax'                 => array( 'label' => __( 'Fax number', 'quentn-wp' ), 'type' => 'text' ),
+            'skype'               => array( 'label' => __( 'Skype name', 'quentn-wp' ), 'type' => 'text' ),
+            'fb'                  => array( 'label' => __( 'Facebook', 'quentn-wp' ), 'type' => 'text' ),
+            'twitter'             => array( 'label' => __( 'Twitter', 'quentn-wp' ), 'type' => 'text' ),
+            'ba_street'           => array( 'label' => __( 'Street (Billing Address)', 'quentn-wp' ), 'type' => 'text' ),
+            'ba_street2'          => array( 'label' => __( 'Street 2 (Billing Address)', 'quentn-wp' ), 'type' => 'text' ),
+            'ba_city'             => array( 'label' => __( 'City (Billing Address)', 'quentn-wp' ), 'type' => 'text' ),
+            'ba_postal_code'      => array( 'label' => __( 'Postal Code (Billing Address)', 'quentn-wp' ), 'type' => 'text' ),
+            'ba_state'            => array( 'label' => __( 'State (Billing Address)', 'quentn-wp' ), 'type' => 'text' ),
+            'ba_country'          => array( 'label' => __( 'Country', 'quentn-wp' ), 'type' => 'text' ),
+            'date_of_birth'       => array( 'label' => __( 'Date of birth', 'quentn-wp' ), 'type' => 'date' ),
         ];
 
         return $fields = array_merge( $defaults, $extra );

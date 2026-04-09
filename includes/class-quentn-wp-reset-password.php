@@ -28,20 +28,20 @@ class Quentn_Wp_Reset_Password {
             $api_key = get_option( 'quentn_app_key' );
 
             if ( ! isset( $data['hash'] ) || ! isset( $data['email'] ) || ! isset( $data['vu'] ) || ! $api_key  ) {
-                wp_redirect( site_url( 'wp-login.php?action=lostpassword&error=invalidkey' ) );
+                wp_safe_redirect( site_url( 'wp-login.php?action=lostpassword&error=invalidkey' ) );
                 exit;
             }
             $hash =  hash( 'sha256', $data['vu'].$data['email'].$api_key.$data['force_login'] );
             //Validate hash
             if ( $hash !== $data["hash"] ) {
 	            do_action( 'quentn_user_autologin_failed', sanitize_email( $data['email'] ), QUENTN_WP_LOGIN_SECURITY_FAILURE );
-                wp_redirect( site_url( 'wp-login.php?action=lostpassword&error=invalidkey' ) );
+                wp_safe_redirect( site_url( 'wp-login.php?action=lostpassword&error=invalidkey' ) );
                 exit;
             }
             //check expiry time
             if( $data['vu'] <= time() ) {
 	            do_action( 'quentn_user_autologin_failed', sanitize_email( $data['email'] ), QUENTN_WP_LOGIN_KEY_EXPIRED );
-                wp_redirect( site_url( 'wp-login.php?action=lostpassword&error=expiredkey' ) );
+                wp_safe_redirect( site_url( 'wp-login.php?action=lostpassword&error=expiredkey' ) );
                 exit;
             }
             $qntn_user_email = sanitize_email( $data['email'] );
@@ -49,14 +49,25 @@ class Quentn_Wp_Reset_Password {
             $user = get_user_by( 'email', $qntn_user_email ) ;
             if ( ! $user instanceof WP_User ) {
                 add_filter( 'authenticate', function( $user ) use ( $qntn_user_email ) {
-                    $user = new WP_Error( 'denied', sprintf( __( "<strong>ERROR</strong>: Link invalid. Email '%s' does not exist.", 'quentn-wp' ), $qntn_user_email ) );
-                    return $user;
-                } );
+                    $message = sprintf(
+                        /* translators: %s: user email address */
+                        esc_html__( "ERROR: Link invalid. Email '%s' does not exist.", 'quentn-wp' ),
+                        esc_html( $qntn_user_email )
+                    );
+
+                    // Use wp_kses to allow the <strong> tag specifically
+                    $final_message = wp_kses(
+                        '<strong>' . $message . '</strong>',
+                        array( 'strong' => array() )
+                    );
+
+                    return new WP_Error( 'denied', $final_message );
+                }, 10, 1 );
             } else  {
                 //check if key already been used
                 if ( in_array($data['vu'], get_user_meta( $user->ID, 'quentn_reset_pwd_vu' ) ) ) {
 	                do_action( 'quentn_user_autologin_failed', $user->user_email, QUENTN_WP_LOGIN_KEY_ALREADY_USED );
-                    wp_redirect( site_url( 'wp-login.php?action=lostpassword&error=invalidkey' ) );
+                    wp_safe_redirect( site_url( 'wp-login.php?action=lostpassword&error=invalidkey' ) );
                     exit;
                 }
                 //if force_login is true or user is ever logged in before, login automatically
@@ -76,10 +87,21 @@ class Quentn_Wp_Reset_Password {
                     $key = get_password_reset_key( $user );
                     if ( is_wp_error( $key ) ) {
                         $error_message = $key->get_error_message();
-                        add_filter( 'authenticate', function( $key ) use ( $error_message ) {
-                            $user = new WP_Error( 'denied', sprintf( __( "<strong>ERROR</strong>: ". $error_message, 'quentn-wp' ) ) );
-                            return $user;
-                        } );
+                        add_filter( 'authenticate', function( $user ) use ( $error_message ) {
+                            $translated_message = sprintf(
+                            /* translators: %s: the specific error message detail */
+                                esc_html__( 'ERROR: %s', 'quentn-wp' ),
+                                esc_html( $error_message )
+                            );
+
+                            // wp_kses explicitly allows the <strong> tag, clearing "Output Not Escaped" errors.
+                            $final_message = wp_kses(
+                                '<strong>' . $translated_message . '</strong>',
+                                array( 'strong' => array() )
+                            );
+
+                            return new WP_Error( 'denied', $final_message );
+                        }, 10, 1 );
                         return;
                     }
                     $user_login = rawurlencode( $user->user_login );
@@ -149,11 +171,21 @@ class Quentn_Wp_Reset_Password {
         //Consider reset password as logged in
         update_user_meta( $user->ID, 'quentn_last_login', time() );
         $rp_cookie = 'wp-resetpass-' . COOKIEHASH;
+
         //get cookie value
         if ( isset( $_COOKIE[ $rp_cookie ] ) && 0 < strpos( $_COOKIE[ $rp_cookie ], ':' ) ) {
-            list( $rp_login, $rp_key ) = explode( ':', wp_unslash( $_COOKIE[ $rp_cookie ] ), 2 );
-            if ( isset( $_COOKIE['qntn-wp-resetpass-'.$rp_key] ) ) {
-                add_user_meta( $user->ID, 'quentn_reset_pwd_vu', $_COOKIE['qntn-wp-resetpass-'.$rp_key]);
+
+            // Sanitize the main cookie before splitting it
+            $clean_rp_cookie = sanitize_text_field( wp_unslash( $_COOKIE[ $rp_cookie ] ) );
+            list( $rp_login, $rp_key ) = explode( ':', $clean_rp_cookie, 2 );
+
+            $vu_cookie_name = 'qntn-wp-resetpass-' . $rp_key;
+
+            if ( isset( $_COOKIE[ $vu_cookie_name ] ) ) {
+                // Sanitize the secondary cookie before saving it to the database
+                $clean_vu_cookie = sanitize_text_field( wp_unslash( $_COOKIE[ $vu_cookie_name ] ) );
+
+                add_user_meta( $user->ID, 'quentn_reset_pwd_vu', $clean_vu_cookie );
             }
         }
     }

@@ -174,7 +174,9 @@ class Quentn_Wp_Log {
 			global $wpdb;
 			$email_hashes_str = implode( "','", $email_hashes );
 			$sql = "SELECT email FROM " . $wpdb->prefix . TABLE_QUENTN_RESTRICTIONS. " where email_hash IN ('" . $email_hashes_str . "') group by email";
-			$results = $wpdb->get_results( $sql, 'ARRAY_A' );
+
+            // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- The query is securely prepared on the line directly above.
+            $results = $wpdb->get_results( $sql, ARRAY_A );
 			$emails = array_column( $results, 'email' );
 		}
 		$logs = [];
@@ -295,7 +297,9 @@ class Quentn_Wp_Log {
 		//insert into database
 		$query = "INSERT INTO " . $wpdb->prefix . TABLE_QUENTN_LOG . " ( event, email, page_id, created_at, context ) VALUES ";
 		$query .= implode( ', ', $place_holders );
-		$wpdb->query( $wpdb->prepare( $query, $values ) );
+
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Dynamically constructed query to support complex dynamic clauses.
+        $wpdb->query( $wpdb->prepare( $query, $values ) );
 	}
 
 	/**

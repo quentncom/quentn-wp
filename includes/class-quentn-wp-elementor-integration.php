@@ -235,7 +235,7 @@ class Quentn_Wp_Elementor_Integration extends Integration_Base {
         $repeater->add_control( 'remote_id', [ 'type' => Controls_Manager::SELECT ] );
 
         $fields_map_control_options = [
-            'label' => __( 'Field Mapping', 'elementor-pro' ),
+            'label' => __( 'Field Mapping', 'quentn-wp' ),
             'type' => Quentn_Wp_Elementor_Field_Mapping::CONTROL_TYPE,
             'separator' => 'before',
             'fields' => $repeater->get_controls(),
@@ -348,13 +348,13 @@ class Quentn_Wp_Elementor_Integration extends Integration_Base {
         $quentn_attach_contact_information = $record->get_form_settings( 'quentn_attach_contact_information' );
 
         //add http as prefix if its not set in redirect_url
-        $parsed = parse_url( $quentn_default_redirect_url );
+        $parsed = wp_parse_url( $quentn_default_redirect_url );
         if ( empty( $parsed['scheme'] ) ) {
             $quentn_default_redirect_url = 'http://' . ltrim( $quentn_default_redirect_url, '/' );
         }
 
         //add http as prefix if its not set in confirm redirect url
-        $parsed_confirmed_url = parse_url( $quentn_confirmed_redirect_url );
+        $parsed_confirmed_url = wp_parse_url( $quentn_confirmed_redirect_url );
         if ( empty( $parsed_confirmed_url['scheme'] ) ) {
             $quentn_confirmed_redirect_url = 'http://' . ltrim( $quentn_confirmed_redirect_url, '/' );
         }
@@ -363,7 +363,7 @@ class Quentn_Wp_Elementor_Integration extends Integration_Base {
             $contact['terms'] = $quentn_terms;
         }
 
-        $contact['request_ip'] = $_SERVER["REMOTE_ADDR"]; //add ip address and terms to subscriber data
+        $contact['request_ip'] = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
         $request_data['contact'] = $contact;
         $request_data['flood_limit'] = ( $quentn_flood_limit === '' ) ? 5 : $quentn_flood_limit;
         $request_data['spam_protection'] = ( $quentn_spam_protection == 'yes' ) ? 1 : 0;
@@ -391,13 +391,14 @@ class Quentn_Wp_Elementor_Integration extends Integration_Base {
             if ( $field['type'] == 'checkbox' ) { //convert multi select values into array
                 $fields[ $id ] = explode( ",", $field['value'] );
             } elseif ( $field['type'] == 'acceptance' && $field['value'] == 'on' ) {
+
                 //get ip address
                 if ( isset( $_SERVER['HTTP_CLIENT_IP'] ) ) {
-                    $ip = $_SERVER['HTTP_CLIENT_IP'];
+                    $ip = sanitize_text_field( wp_unslash( $_SERVER['HTTP_CLIENT_IP'] ) );
                 } elseif ( isset( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
-                    $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+                    $ip = sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_FORWARDED_FOR'] ) );
                 } else {
-                    $ip = $_SERVER['REMOTE_ADDR'];
+                    $ip = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
                 }
                 $fields[ $id ] = array(
                     "ip" => $ip,
@@ -570,45 +571,52 @@ class Quentn_Wp_Elementor_Integration extends Integration_Base {
         return $handler->get_lists();
     }
 
-
-
     public function ajax_validate_api_token() {
         check_ajax_referer( self::OPTION_NAME_API_KEY, '_nonce' );
         if ( ! isset( $_POST['api_key'] ) || ! isset( $_POST['api_url'] ) ) {
             wp_send_json_error();
         }
+
+        // Sanitize the inputs before passing them to the handler
+        $api_key = sanitize_text_field( wp_unslash( $_POST['api_key'] ) );
+        $api_url = esc_url_raw( wp_unslash( $_POST['api_url'] ) );
+
         try {
-            new Quentn_Wp_Elementor_Handler( $_POST['api_key'], $_POST['api_url'] );
+            new Quentn_Wp_Elementor_Handler( $api_key, $api_url );
         } catch ( \Exception $exception ) {
             wp_send_json_error();
         }
+
         wp_send_json_success();
     }
 
     public function register_admin_fields( Settings $settings ) {
         $settings->add_section( Settings::TAB_INTEGRATIONS, 'quentn', [
             'callback' => function() {
-                echo '<hr><h2>' . esc_html__( 'Quentn', 'quentn-wp' ) . '</h2>';
+                echo '<hr><h2>' . esc_attr__( 'Quentn', 'quentn-wp' ) . '</h2>';
             },
             'fields' => [
                 self::OPTION_NAME_API_KEY => [
-                    'label' => __( 'API Key', 'quentn-wp' ),
+                    'label' => esc_attr__( 'API Key', 'quentn-wp' ),
                     'field_args' => [
                         'type' => 'text',
                     ],
                 ],
                 self::OPTION_NAME_API_URL => [
-                    'label' => __( 'API URL', 'quentn-wp' ),
+                    'label' => esc_attr__( 'API URL', 'quentn-wp' ),
                     'field_args' => [
                         'type' => 'url',
-                        'desc' => sprintf( __( 'To integrate with our forms you need an %s', 'quentn-wp' ), '<a href="https://quentn.com/preise" target="_blank">'.__( "API Key", "quentn-wp" ).'</a>.' ) ,
-
+                        'desc' => sprintf(
+                            /* translators: %s: Link to the API Key pricing page */
+                            esc_attr__( 'To integrate with our forms you need an %s.', 'quentn-wp' ),
+                            '<a href="' . esc_url( 'https://quentn.com/preise' ) . '" target="_blank">' . esc_html__( 'API Key', 'quentn-wp' ) . '</a>'
+                        ),
                     ],
                 ],
                 'validate_api_data' => [
                     'field_args' => [
                         'type' => 'raw_html',
-                        'html' => sprintf( '<button data-action="%s" data-nonce="%s" class="button elementor-button-spinner" id="elementor_pro_quentn_api_key_button">%s</button>', self::OPTION_NAME_API_KEY . '_validate', wp_create_nonce( self::OPTION_NAME_API_KEY ), __( 'Validate API Key', 'quentn-wp' ) ),
+                        'html' => sprintf( '<button data-action="%s" data-nonce="%s" class="button elementor-button-spinner" id="elementor_pro_quentn_api_key_button">%s</button>', self::OPTION_NAME_API_KEY . '_validate', wp_create_nonce( self::OPTION_NAME_API_KEY ), esc_attr__( 'Validate API Key', 'quentn-wp' ) ),
                     ],
                 ],
             ],

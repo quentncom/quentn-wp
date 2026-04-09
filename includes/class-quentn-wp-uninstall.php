@@ -50,10 +50,8 @@ class Quentn_Wp_Uninstall {
         $table_log = $wpdb->prefix . 'qntn_log';
 
         //delete quentn table
-        $wpdb->query(
-            "Drop table IF EXISTS ". $table_qntn_restrictions.",".$table_qntn_user_data.",".$table_log
-        );
-
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Database table names cannot be prepared using placeholders.
+        $wpdb->query( "DROP TABLE IF EXISTS {$table_qntn_restrictions}, {$table_qntn_user_data}, {$table_log}" );
 
         //delete quentn options
         $wpdb->query($wpdb->prepare(

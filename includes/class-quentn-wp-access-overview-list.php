@@ -152,8 +152,18 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
             case 'delete-access':
                 return  sprintf( '<a href="?page=%s&action=%s&page_id=%s&email=%s&_wpnonce=%s" onclick="return confirm(\'%s\')" >%s</a>', esc_attr( $_REQUEST['page'] ), 'qntn-delete', $page_id, trim( $item['email'] ), $delete_nonce, __( "Are you sure you want to delete?", 'quentn-wp' ),  __( "Delete", 'quentn-wp' ) );
             case 'view_access':
-                $separator = ( parse_url( get_page_link( sanitize_text_field( $_GET['page_id'] ) ), PHP_URL_QUERY ) ) ? '&' : '?';
-                return  sprintf( "<input type='text' class='get_access_url' readonly  value='%s' /><button class='copy_access_url'>%s</button>", get_page_link( sanitize_text_field( $_GET['page_id'] ) ) . $separator . 'qntn_wp=' . $item['email_hash'], __( 'Copy URL' ) );
+                // Sanitize AND unslash the ID (absint is better than sanitize_text_field for IDs)
+                $page_id = isset( $_GET['page_id'] ) ? absint( wp_unslash( $_GET['page_id'] ) ) : 0;
+                $page_link = get_page_link( $page_id );
+                $separator = ( wp_parse_url( $page_link, PHP_URL_QUERY ) ) ? '&' : '?';
+                $access_url = $page_link . $separator . 'qntn_wp=' . $item['email_hash'];
+
+                // Return the safe HTML
+                return sprintf(
+                    "<input name='copy_access_url' type='text' class='get_access_url' readonly value='%s' /><button type='button' class='copy_access_url'>%s</button>",
+                    esc_url( $access_url ),
+                    __( 'Copy URL', 'quentn-wp' )
+                );
             default:
                 return __( "no value", 'quentn-wp' );
         }
@@ -215,7 +225,10 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
     public function get_quentn_restrictions( $per_page = 20, $page_number = 1, $page_id ) {
         global $wpdb;
 
-        $sql = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}" . TABLE_QUENTN_RESTRICTIONS . " WHERE page_id = %d", $page_id );
+        $table_name = $wpdb->prefix . TABLE_QUENTN_RESTRICTIONS;
+
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table names cannot be prepared using placeholders.
+        $sql = $wpdb->prepare( "SELECT * FROM {$table_name} WHERE page_id = %d", $page_id );
 
         if (!empty($_REQUEST['s'])) {
             $search = '%' . $wpdb->esc_like($_REQUEST['s']) . '%';
@@ -231,7 +244,8 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
         $offset = ($page_number - 1) * $per_page;
         $sql .= $wpdb->prepare(" LIMIT %d OFFSET %d", $per_page, $offset);
 
-        $results = $wpdb->get_results($sql, 'ARRAY_A');
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- The query is securely prepared on the line directly above.
+        $results = $wpdb->get_results( $sql, ARRAY_A );
 
         $is_countdown = ( isset( $this->quentn_page_restriction_data['countdown'] ) && $this->quentn_page_restriction_data['countdown'] ) ?  true : false ;
 
@@ -289,7 +303,7 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
      */
     public function delete_restriction( $page_id, $email ) {
         global $wpdb;
-         return $wpdb->delete( $wpdb->prefix . TABLE_QUENTN_RESTRICTIONS, [ 'page_id' => $page_id, 'email' => $email ], [ '%d', '%s' ] );
+        return $wpdb->delete( $wpdb->prefix . TABLE_QUENTN_RESTRICTIONS, [ 'page_id' => $page_id, 'email' => $email ], [ '%d', '%s' ] );
     }
 
     /**
@@ -299,12 +313,17 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
      */
     public function record_count($page_id) {
         global $wpdb;
-        $sql = $wpdb->prepare("SELECT COUNT(*) FROM {$wpdb->prefix}" . TABLE_QUENTN_RESTRICTIONS . "  WHERE page_id = %d", $page_id );
+        $table_name = $wpdb->prefix . TABLE_QUENTN_RESTRICTIONS;
+
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table names cannot be prepared using placeholders.
+        $sql = $wpdb->prepare( "SELECT COUNT(*) FROM {$table_name} WHERE page_id = %d", $page_id );
+
         if (!empty($_REQUEST['s'])) {
             $search = '%' . $wpdb->esc_like($_REQUEST['s']) . '%';
             $sql .= $wpdb->prepare(" AND email LIKE %s", $search);
         }
 
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- The query is securely prepared on the line directly above.
         return $wpdb->get_var( $sql );
     }
 
@@ -315,7 +334,7 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
      * @return void
      */
     public function no_items() {
-        _e( 'No record avaliable', 'quentn-wp' );
+        esc_html_e( 'No record avaliable', 'quentn-wp' );
     }
 
     /**
@@ -365,15 +384,15 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
                 die( 'Nope! Security check failed' );
             }
 
-	        $page_id = sanitize_text_field( $_GET['page_id'] );
-	        $email = str_replace(" ", "+", $_GET['email'] );
-	        global $wpdb;
-	        $num_records_deleted = $wpdb->delete( $wpdb->prefix . TABLE_QUENTN_RESTRICTIONS, array( 'page_id' => $page_id, 'email' => $email ), array( '%d', '%s' ) );
+            $page_id = sanitize_text_field( $_GET['page_id'] );
+            $email = str_replace(" ", "+", $_GET['email'] );
+            global $wpdb;
+            $num_records_deleted = $wpdb->delete( $wpdb->prefix . TABLE_QUENTN_RESTRICTIONS, array( 'page_id' => $page_id, 'email' => $email ), array( '%d', '%s' ) );
             if ( $num_records_deleted ) {
-	            do_action( 'quentn_access_revoked', array( $email ), array( $page_id ), QUENTN_WP_ACCESS_REVOKED_MANUALLY );
+                do_action( 'quentn_access_revoked', array( $email ), array( $page_id ), QUENTN_WP_ACCESS_REVOKED_MANUALLY );
             }
 
-            wp_redirect( esc_url_raw( remove_query_arg( array( 'action', 'email', '_wpnonce' ), esc_url_raw( add_query_arg( array( 'page_id' => $this->page_id, 'update' => 'quentn-access-deleted', 'delete_count' => $num_records_deleted ) ) ) ) ) );
+            wp_safe_redirect( esc_url_raw( remove_query_arg( array( 'action', 'email', '_wpnonce' ), esc_url_raw( add_query_arg( array( 'page_id' => $this->page_id, 'update' => 'quentn-access-deleted', 'delete_count' => $num_records_deleted ) ) ) ) ) );
             exit;
 
         }
@@ -390,15 +409,20 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
             if( ! empty( $delete_restrict_pages_ids ) ) {
                 //delete multiple accesses
                 $placeholders = implode(',', array_fill(0, count($delete_restrict_pages_ids), '%s'));
+                $table_name = $wpdb->prefix . TABLE_QUENTN_RESTRICTIONS;
+
+                // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table names and dynamic IN clauses cannot be prepared using placeholders.
                 $query = $wpdb->prepare(
-                    "DELETE FROM {$wpdb->prefix}" . TABLE_QUENTN_RESTRICTIONS . " 
-                          WHERE CONCAT_WS('|', page_id, email) IN ($placeholders)",
-                          $delete_restrict_pages_ids
+                    "DELETE FROM {$table_name} 
+                    WHERE CONCAT_WS('|', page_id, email) IN ($placeholders)",
+                    $delete_restrict_pages_ids
                 );
-                //$wpdb->query( $wpdb->query( $query ) );
+
+                // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- The query is securely prepared on the line directly above.
                 $num_records_deleted = $wpdb->query( $query );
+
                 //add and remove items from a query string
-                wp_redirect( esc_url_raw( remove_query_arg( array( 'action', 'action2', '_wpnonce', '_wp_http_referer', 'quentn-bulk-delete-access' ), esc_url_raw(add_query_arg( array( 'page_id' => $this->page_id, 'update' => 'quentn-access-deleted', 'delete_count' => $num_records_deleted ) ) ) ) ) );
+                wp_safe_redirect( esc_url_raw( remove_query_arg( array( 'action', 'action2', '_wpnonce', '_wp_http_referer', 'quentn-bulk-delete-access' ), esc_url_raw(add_query_arg( array( 'page_id' => $this->page_id, 'update' => 'quentn-access-deleted', 'delete_count' => $num_records_deleted ) ) ) ) ) );
                 exit;
             }
         }
@@ -413,44 +437,74 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
             $email = sanitize_email( $_REQUEST['email_direct_access'] );
             //if email is not valid, then display error message and redirect
             if ( ! is_email( $email ) ) {
-                wp_redirect( esc_url_raw( add_query_arg( array( 'page_id' => $this->page_id, 'update' => 'quentn-direct-access-email-invalid' ) ) ) );
+                wp_safe_redirect( esc_url_raw( add_query_arg( array( 'page_id' => $this->page_id, 'update' => 'quentn-direct-access-email-invalid' ) ) ) );
                 exit;
             }
 
             //add/update access, if email address already exist, then only its creation date will be updated
             if( $wpdb->replace( $wpdb->prefix . TABLE_QUENTN_RESTRICTIONS, array( 'page_id' => $this->page_id, 'email' => $email, 'email_hash' => hash( 'sha256', $email ), 'created_at' => time() ), array( '%d', '%s', '%s', '%d' ) ) ) {
-	            do_action( 'quentn_access_granted', array( $email ), array( $this->page_id ), QUENTN_WP_ACCESS_ADDED_MANUALLY );
-                wp_redirect( esc_url_raw( remove_query_arg( array( 'qntn_direct_access_submit_nonce', 'email_direct_access' ), esc_url_raw( add_query_arg( array( 'update' => 'quentn-direct-access-add-success' ) ) ) ) ) );
+                do_action( 'quentn_access_granted', array( $email ), array( $this->page_id ), QUENTN_WP_ACCESS_ADDED_MANUALLY );
+                wp_safe_redirect( esc_url_raw( remove_query_arg( array( 'qntn_direct_access_submit_nonce', 'email_direct_access' ), esc_url_raw( add_query_arg( array( 'update' => 'quentn-direct-access-add-success' ) ) ) ) ) );
                 exit;
             } else {
-                wp_redirect( esc_url_raw( remove_query_arg( array( 'qntn_direct_access_submit_nonce', 'email_direct_access' ), esc_url_raw( add_query_arg( array( 'update' => 'quentn-direct-access-add-failed' ) ) ) ) ) );
+                wp_safe_redirect( esc_url_raw( remove_query_arg( array( 'qntn_direct_access_submit_nonce', 'email_direct_access' ), esc_url_raw( add_query_arg( array( 'update' => 'quentn-direct-access-add-failed' ) ) ) ) ) );
                 exit;
             }
         }
     }
 
     /**
-     *  Convert seconds to time
+     * Convert seconds to time
      *
      * @param int $seconds
      * @return string
      */
-    public function convert_seconds_to_time($seconds) {
+    public function convert_seconds_to_time( $seconds ) {
 
-        $date1 = new DateTime("@0");
-        $date2 = new DateTime("@$seconds");
-        $interval =  date_diff($date1, $date2);
+        $date1    = new DateTime( "@0" );
+        $date2    = new DateTime( "@$seconds" );
+        $interval = date_diff( $date1, $date2 );
 
-        if( $interval->y ) {
-            return sprintf( _n( '%s Year', '%s Years', $interval->y, 'quentn-wp' ).", "._n( '%s Month', '%s Months', $interval->m, 'quentn-wp' ).", "._n( '%s Day', '%s Days', $interval->d, 'quentn-wp' ).", "._n( '%s Hour', '%s Hours', $interval->h, 'quentn-wp' ).' '.__('and', 'quentn-wp').' '._n( '%s Minute', '%s Minutes', $interval->i, 'quentn-wp' ), $interval->y, $interval->m, $interval->d, $interval->h, $interval->i );
-        } elseif( $interval->m ) {
-            return sprintf( _n( '%s Month', '%s Months', $interval->m, 'quentn-wp' ).", "._n( '%s Day', '%s Days', $interval->d, 'quentn-wp' ).", "._n( '%s Hour', '%s Hours', $interval->h, 'quentn-wp' ).' '.__('and', 'quentn-wp').' '._n( '%s Minute', '%s Minutes', $interval->i, 'quentn-wp' ), $interval->m, $interval->d, $interval->h, $interval->i );
-        } elseif( $interval->d ) {
-            return sprintf( _n( '%s Day', '%s Days', $interval->d, 'quentn-wp' ).", "._n( '%s Hour', '%s Hours', $interval->h, 'quentn-wp' ).' '.__('and', 'quentn-wp').' '._n( '%s Minute', '%s Minutes', $interval->i, 'quentn-wp' ), $interval->d, $interval->h, $interval->i );
-        } elseif($interval->h) {
-            return sprintf( _n( '%s Hour', '%s Hours', $interval->h, 'quentn-wp' ).' '.__('and', 'quentn-wp').' '._n( '%s Minute', '%s Minutes', $interval->i, 'quentn-wp' ), $interval->h, $interval->i );
+        // Calculate and translate each piece individually
+        /* translators: %s: number of years */
+        $years   = sprintf( _n( '%s Year', '%s Years', $interval->y, 'quentn-wp' ), $interval->y );
+
+        /* translators: %s: number of months */
+        $months  = sprintf( _n( '%s Month', '%s Months', $interval->m, 'quentn-wp' ), $interval->m );
+
+        /* translators: %s: number of days */
+        $days    = sprintf( _n( '%s Day', '%s Days', $interval->d, 'quentn-wp' ), $interval->d );
+
+        /* translators: %s: number of hours */
+        $hours   = sprintf( _n( '%s Hour', '%s Hours', $interval->h, 'quentn-wp' ), $interval->h );
+
+        /* translators: %s: number of minutes */
+        $minutes = sprintf( _n( '%s Minute', '%s Minutes', $interval->i, 'quentn-wp' ), $interval->i );
+
+        // Combine them using a single translated format string based on interval size
+        if ( $interval->y ) {
+            /* translators: 1: Years, 2: Months, 3: Days, 4: Hours, 5: Minutes */
+            $format = esc_attr__( '%1$s, %2$s, %3$s, %4$s and %5$s', 'quentn-wp' );
+            return sprintf( $format, $years, $months, $days, $hours, $minutes );
+
+        } elseif ( $interval->m ) {
+            /* translators: 1: Months, 2: Days, 3: Hours, 4: Minutes */
+            $format = esc_attr__( '%1$s, %2$s, %3$s and %4$s', 'quentn-wp' );
+            return sprintf( $format, $months, $days, $hours, $minutes );
+
+        } elseif ( $interval->d ) {
+            /* translators: 1: Days, 2: Hours, 3: Minutes */
+            $format = esc_attr__( '%1$s, %2$s and %3$s', 'quentn-wp' );
+            return sprintf( $format, $days, $hours, $minutes );
+
+        } elseif ( $interval->h ) {
+            /* translators: 1: Hours, 2: Minutes */
+            $format = esc_attr__( '%1$s and %2$s', 'quentn-wp' );
+            return sprintf( $format, $hours, $minutes );
+
         } else {
-            return sprintf( _n( '%s Minute', '%s Minutes', $interval->i, 'quentn-wp' ), $interval->i );
+            // Minutes is already translated above, just return it escaped
+            return esc_attr( $minutes );
         }
     }
 }
@@ -466,7 +520,7 @@ function quentn_show_data_access_overview_list() {
 
     //if someone try to access page without page id, then redirect to list of all restricted pages
     if( ! isset($_REQUEST['page_id'] ) ) {
-        wp_redirect( admin_url( 'admin.php?page=quentn-access-pages-restrictions' ) );
+        wp_safe_redirect( admin_url( 'admin.php?page=quentn-access-pages-restrictions' ) );
     }
 
     $qntn_list_table = new Quentn_Wp_Access_Overview( sanitize_text_field( $_REQUEST['page_id'] ) );
@@ -487,12 +541,21 @@ function quentn_show_data_access_overview_list() {
 
     ?>
 
-    <h3><?php  printf( esc_html__( 'Access Overview For Page %s', 'quentn-wp' ),  esc_html( get_the_title( $_REQUEST['page_id'] ) ) ); ?></h3>
+    <h3>
+        <?php
+        $page_id = isset( $_REQUEST['page_id'] ) ? absint( wp_unslash( $_REQUEST['page_id'] ) ) : 0;
+        printf(
+        /* translators: %s: the title of the WordPress page */
+            esc_attr__( 'Access Overview For Page %s', 'quentn-wp' ),
+            esc_attr( get_the_title( $page_id ) )
+        );
+        ?>
+    </h3>
 
     <form method="get">
         <?php  $qntn_list_table->search_box(__('Search Email', 'quentn-wp' ), "search_email_id");  ?>
         <input name='page' value="quentn-page-access-overview" type="hidden">
-        <input name='page_id' value="<?php echo esc_html( sanitize_text_field( $_REQUEST['page_id'] ) ) ?>" type="hidden">
+        <input name='page_id' value="<?php echo esc_attr( sanitize_text_field( $_REQUEST['page_id'] ) ) ?>" type="hidden">
         <?php  $qntn_list_table->display(); ?>
     </form>
     <div id='qntn-add-access' style='display:none;'>
@@ -500,17 +563,17 @@ function quentn_show_data_access_overview_list() {
         <form method="get" name="frm-email-direct-access" id="frm-email-direct-access" >
             <table>
                 <tr>
-                    <td><?php _e('Email', 'quentn-wp' ) ?></td>
+                    <td><?php esc_html_e('Email', 'quentn-wp' ) ?></td>
                     <td><input required type="email"  name='email_direct_access' id='email_direct_access' size='25'>
                         <input name='page' type="hidden" value="<?php echo esc_html( sanitize_text_field( $_REQUEST['page'] ) ) ?>">
                         <input name='page_id' type="hidden" value="<?php echo esc_html( sanitize_text_field( $_REQUEST['page_id'] ) ) ?>">
                         <input name='update' type="hidden" value="quentn-direct-access-add">
-                        <input type="hidden" value="<?php echo wp_create_nonce( 'qntn_direct_access_nonce' )?>" id="qntn_direct_access_submit_nonce" name="qntn_direct_access_submit_nonce">
+                        <?php wp_nonce_field( 'qntn_direct_access_nonce', 'qntn_direct_access_submit_nonce' ); ?>
                     </td>
                 </tr>
                 <tr>
                     <td colspan="2">
-                        <input type="submit" value="<?php _e('Add Access', 'quentn-wp' ) ?>" class="button action" id="submit_email">
+                        <input type="submit" value="<?php esc_html_e('Add Access', 'quentn-wp' ) ?>" class="button action" id="submit_email">
                     </td>
                 </tr>
             </table>

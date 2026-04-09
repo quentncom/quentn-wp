@@ -16,15 +16,15 @@
  * Plugin Name:       Quentn WP
  * Plugin URI:        https://docs.quentn.com/de/beta-quentn-wordpress-plugin/installieren-und-verbinden
  * Description:       This plugin allows you to restrict access to specific pages, create custom access links and create dynamic page countdowns. Optionally, you can connect your Quentn account to your WordPress installation to share contacts and manage access restrictions through Quentn.
- * Version:           1.2.12
+ * Version:           1.2.13
  * Author:            Quentn.com GmbH
  * Author URI:        https://quentn.com/
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       quentn-wp
  * Domain Path:       /languages
- * Elementor tested up to: 3.9.0
- * Elementor Pro tested up to: 3.9.0
+ * Elementor tested up to: 4.0.1
+ * Elementor Pro tested up to: 4.0.1
  */
 
 // If this file is called directly, abort.
@@ -34,7 +34,7 @@ if ( ! defined( 'WPINC' ) ) {
 
 define( "QUENTN_WP_PLUGIN_DIR", plugin_dir_path( __FILE__ ) );
 define( "QUENTN_WP_PLUGIN_URL", plugin_dir_url(  __FILE__ ) );
-define( 'QUENTN_WP_VERSION', '1.2.12' );
+define( 'QUENTN_WP_VERSION', '1.2.13' );
 define( 'QUENTN_WP_DB_VERSION', '1.1' );
 
 define( "TABLE_QUENTN_RESTRICTIONS", 'qntn_restrictions' );

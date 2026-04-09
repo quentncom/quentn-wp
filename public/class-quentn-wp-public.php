@@ -113,8 +113,10 @@ class Quentn_Wp_Public {
 	}
 
 	public function load_quentn_web_tracking() {
-        if( get_option('quentn_web_tracking_code') ) {
-            echo get_option('quentn_web_tracking_code');
+        $tracking_code = get_option( 'quentn_web_tracking_code' );
+        if ( ! empty( $tracking_code ) && is_string( $tracking_code ) ) {
+            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- This is a raw tracking script and cannot be escaped.
+            echo $tracking_code;
         }
     }
 

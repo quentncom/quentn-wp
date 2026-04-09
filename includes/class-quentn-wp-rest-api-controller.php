@@ -412,11 +412,14 @@ class Quentn_Wp_Rest_Api
         }
 
         $table = $wpdb->prefix . TABLE_QUENTN_RESTRICTIONS;
-        $sql = "INSERT INTO $table (page_id, email, email_hash, created_at) VALUES ";
+        $sql = "INSERT INTO {$table} (page_id, email, email_hash, created_at) VALUES ";
         $sql .= implode( ', ', $placeholders );
         $sql .= " ON DUPLICATE KEY UPDATE created_at = VALUES(created_at)";
 
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Dynamically constructed query to support bulk inserts.
         $prepared = $wpdb->prepare( $sql, $values );
+
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- The query is securely prepared on the line directly above.
         $wpdb->query( $prepared );
 
         do_action( 'quentn_access_granted', $emails, $pages, QUENTN_WP_ACCESS_ADDED_BY_API );
@@ -460,10 +463,14 @@ class Quentn_Wp_Rest_Api
         }
 
         // Build secure query
+        $table_name = $wpdb->prefix . TABLE_QUENTN_RESTRICTIONS;
         $where = implode( ' OR ', $conditions );
-        $query = "DELETE FROM {$wpdb->prefix}" . TABLE_QUENTN_RESTRICTIONS . " WHERE $where";
+        $query = "DELETE FROM {$table_name} WHERE {$where}";
 
+         // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Dynamically constructed query to support multiple DELETE conditions.
         $prepared_query = $wpdb->prepare( $query, $values );
+
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- The query is securely prepared on the line directly above.
         $affected_rows = $wpdb->query( $prepared_query );
 
         if ( $affected_rows ) {
@@ -532,6 +539,7 @@ class Quentn_Wp_Rest_Api
 
         //If WPML Multilingual CMS is active, suppress filters so that we can return pages of all languages
         if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
+            // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.SuppressFilters_suppress_filters -- Required to bypass WPML strict language filtering.
             $args['suppress_filters'] = true;
         }
 
@@ -545,18 +553,24 @@ class Quentn_Wp_Rest_Api
             $pages_access_links = [];
 
             if ( ! empty( $page_ids ) ) {
+                $table_name = $wpdb->prefix . TABLE_QUENTN_RESTRICTIONS;
                 $placeholders = implode( ',', array_fill( 0, count( $page_ids ), '%d' ) );
+
+                // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table names and dynamic IN clauses cannot be prepared natively.
                 $sql = $wpdb->prepare(
-                    "SELECT page_id, COUNT(*) as totoal_access
-                 FROM {$wpdb->prefix}" . TABLE_QUENTN_RESTRICTIONS . "
+                    "SELECT page_id, COUNT(*) as total_access
+                 FROM {$table_name}
                  WHERE page_id IN ($placeholders)
                  GROUP BY page_id",
-                    $page_ids
+                            $page_ids
                 );
+
+                // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- The query is securely prepared on the line directly above.
                 $rows = $wpdb->get_results( $sql );
 
                 foreach ( $rows as $row ) {
-                    $pages_access_links[ $row->page_id ] = $row->totoal_access;
+                    // Changed totoal_access to total_access here!
+                    $pages_access_links[ $row->page_id ] = $row->total_access;
                 }
             }
 
@@ -682,6 +696,7 @@ class Quentn_Wp_Rest_Api
 
             //send email if set by quentn call
             if ( $is_send_user_email && isset( $request_data['data']['notify'] ) && $request_data['data']['notify'] ) {
+                // phpcs:ignore WordPress.WP.DeprecatedParameters -- Passing null is required to access the 3rd parameter ($notify) in PHP.
                 wp_new_user_notification( $user_id, NULL, 'user' );
             }
         }
@@ -694,21 +709,32 @@ class Quentn_Wp_Rest_Api
     }
 
     /**
-     * Get list of all wp roles
+     * Get web tracking code
      *
      * @since  1.1.1
      * @access public
      * @return array
      */
-    public function quentn_get_tracking_code( ) {
+    public function quentn_get_tracking_code() {
         $web_tracking = new Quentn_Wp_Web_Tracking();
-        if( ! get_option('quentn_web_tracking_enabled') ) {
+
+        if ( ! get_option( 'quentn_web_tracking_enabled' ) ) {
             return rest_ensure_response( array( 'saved' => 0 ) );
         }
-        update_option("quentn_web_tracking_code", $web_tracking->get_quentn_web_tracking_code() );
-        return rest_ensure_response( array( 'saved' => 1 ) );
-    }
 
+        // Get the generated script string
+        $tracking_code = $web_tracking->get_quentn_web_tracking_code();
+
+        if ( ! empty( $tracking_code ) ) {
+            /** * Use wp_unslash to ensure the JavaScript quotes aren't escaped with extra
+             * backslashes when stored in the database.
+             */
+            update_option( 'quentn_web_tracking_code', wp_unslash( $tracking_code ) );
+            return rest_ensure_response( array( 'saved' => 1 ) );
+        }
+
+        return rest_ensure_response( array( 'saved' => 0 ) );
+    }
     /**
      * Get list of logs
      *
@@ -786,8 +812,12 @@ class Quentn_Wp_Rest_Api
         $values[] = $offset;
 
         // Prepare and execute query
+
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Dynamically constructed query to support complex dynamic clauses.
         $prepared_sql = $wpdb->prepare( $sql, $values );
-        $results = $wpdb->get_results( $prepared_sql, 'ARRAY_A' );
+
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- The query is securely prepared on the line directly above.
+        $results = $wpdb->get_results( $prepared_sql, ARRAY_A );
 
         if ( $wpdb->last_error ) {
             return new WP_Error( 'log_call_failed', $wpdb->last_error );
@@ -863,14 +893,16 @@ class Quentn_Wp_Rest_Api
 
         $sql = "SELECT email, email_hash, created_at FROM $table_name WHERE page_id = %d ORDER BY $order_by $sort_by LIMIT %d, %d";
 
-        $results = $wpdb->get_results($wpdb->prepare($sql, $page_id, $offset, $limit), ARRAY_A);
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Dynamically constructed query to support offset and limit pagination.
+        $results = $wpdb->get_results( $wpdb->prepare( $sql, $page_id, $offset, $limit ), ARRAY_A );
+
         if ($wpdb->last_error) {
             return new WP_Error('page_access_call_failed', $wpdb->last_error);
         }
 
         //prepare response data
         $page_accesses = [];
-        $separator = ( parse_url( get_page_link( $page_id ), PHP_URL_QUERY ) ) ? '&' : '?';
+        $separator = ( wp_parse_url( get_page_link( $page_id ), PHP_URL_QUERY ) ) ? '&' : '?';
         foreach ( $results as $page_access ) {
             $page_access['access_link'] = get_page_link( $page_id ) . $separator.'qntn_wp=' . $page_access['email_hash'];
             unset( $page_access['email_hash'] ); //email not included in response
