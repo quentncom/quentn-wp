@@ -3,7 +3,7 @@ Contributors: quentn
 Tags: Quentn, countdown, page restriction, email, marketing automation
 Requires at least: 4.6.0
 Tested up to: 6.9
-Stable tag: 1.2.13
+Stable tag: 1.2.14
 Requires PHP: 5.6.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -65,6 +65,9 @@ Answer to foo bar dilemma.
 4. Integration Elementor PRO forms with Quentn
 
 == Changelog ==
+
+= 1.2.14 =
+* Fix: Moved FontAwesome assets to the correct admin directory to ensure icons display properly in the backend.
 
 = 1.2.13 =
 * Security Fix: Patched an Unauthenticated SQL Injection vulnerability (CVE-2026-2468). Thanks to Nabil Irawan from Wordfence for responsible disclosure!
