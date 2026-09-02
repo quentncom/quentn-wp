@@ -198,10 +198,11 @@ jQuery(window).on("elementor:init", function () {
             }
         });
 
+        // Register the control
+        e.addControlView('Qntn_fields_map', QntnFieldsMap);
+
         QuentnIntegration = Object.assign(ep.modules.forms.getresponse, QuentnIntegration);
         ep.modules.forms.quentn = QuentnIntegration;
         ep.modules.forms.quentn.addSectionListener('section_quentn_elementor', QuentnIntegration.onSectionActive);
-
-        e.addControlView('Qntn_fields_map', QntnFieldsMap);
     })(elementor, elementorPro, QntnMappableFields.fields, jQuery);
 });

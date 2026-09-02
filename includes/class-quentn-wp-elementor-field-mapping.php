@@ -44,12 +44,20 @@ class Quentn_Wp_Elementor_Field_Mapping extends Control_Repeater {
 	public function enqueue()
     {
         $wp_version = get_bloginfo( 'version' );
+
+        //The integration script extends views from Elementor's editor bundle and modules from
+        //Elementor Pro's forms module, so it must never be printed before them
+        $deps = array( 'jquery', 'elementor-editor' );
+        if ( wp_script_is( 'elementor-pro', 'registered' ) || wp_script_is( 'elementor-pro', 'enqueued' ) ) {
+            $deps[] = 'elementor-pro';
+        }
+
         //Add different file for elementor integration for wordpress version equal or greater than 5.6
         if ( version_compare( $wp_version, '5.6', '>=' ) ) {
-            wp_register_script( 'quentn.elementor.integration.js', QUENTN_WP_PLUGIN_URL . 'admin/js/quentn-elementor-integration-5.6.js', array(), QUENTN_WP_VERSION, true );
+            wp_register_script( 'quentn.elementor.integration.js', QUENTN_WP_PLUGIN_URL . 'admin/js/quentn-elementor-integration-5.6.js', $deps, QUENTN_WP_VERSION, true );
             wp_enqueue_script( 'quentn.elementor.integration.js' );
         } else {
-            wp_register_script( 'quentn.elementor.integration.js', QUENTN_WP_PLUGIN_URL . 'admin/js/quentn-elementor-integration.js', array(), QUENTN_WP_VERSION, true );
+            wp_register_script( 'quentn.elementor.integration.js', QUENTN_WP_PLUGIN_URL . 'admin/js/quentn-elementor-integration.js', $deps, QUENTN_WP_VERSION, true );
             wp_enqueue_script( 'quentn.elementor.integration.js' );
         }
 
