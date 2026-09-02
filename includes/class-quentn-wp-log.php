@@ -172,12 +172,24 @@ class Quentn_Wp_Log {
 		//Note: It will not work in case user removed email access from database
 		if ( empty( $emails ) ) {
 			global $wpdb;
-			$email_hashes_str = implode( "','", $email_hashes );
-			$sql = "SELECT email FROM " . $wpdb->prefix . TABLE_QUENTN_RESTRICTIONS. " where email_hash IN ('" . $email_hashes_str . "') group by email";
 
-            // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- The query is securely prepared on the line directly above.
-            $results = $wpdb->get_results( $sql, ARRAY_A );
-			$emails = array_column( $results, 'email' );
+			//keep valid sha256 hashes only, anything else never reaches the query
+			$email_hashes = array_filter( array_map( 'sanitize_text_field', $email_hashes ), function ( $hash ) {
+				return preg_match( '/^[a-f0-9]{64}$/', $hash );
+			} );
+
+			if ( ! empty( $email_hashes ) ) {
+				$email_hashes = array_slice( $email_hashes, 0, 50 );
+				$table_name   = $wpdb->prefix . TABLE_QUENTN_RESTRICTIONS;
+				$placeholders = implode( ',', array_fill( 0, count( $email_hashes ), '%s' ) );
+
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table names and dynamic IN clause placeholders cannot be prepared using placeholders.
+				$sql = $wpdb->prepare( "SELECT email FROM {$table_name} WHERE email_hash IN ($placeholders) GROUP BY email", $email_hashes );
+
+				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- The query is securely prepared on the line directly above.
+				$results = $wpdb->get_results( $sql, ARRAY_A );
+				$emails  = array_column( $results, 'email' );
+			}
 		}
 		$logs = [];
 		foreach ( $emails as $email ) {

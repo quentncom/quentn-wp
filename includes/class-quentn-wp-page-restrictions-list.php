@@ -179,7 +179,17 @@ class Quentn_Wp_Page_Restrictions_List extends \WP_List_Table {
     public function access_links_count( $page_ids ) {
         global $wpdb;
 
-        $sql = "SELECT page_id, COUNT(*) as totoal_access FROM ". $wpdb->prefix . TABLE_QUENTN_RESTRICTIONS. " where page_id IN (".implode(",",$page_ids).")  GROUP BY page_id";
+        $page_ids = array_values( array_filter( array_map( 'absint', $page_ids ) ) );
+
+        if ( empty( $page_ids ) ) {
+            return array();
+        }
+
+        $table_name   = $wpdb->prefix . TABLE_QUENTN_RESTRICTIONS;
+        $placeholders = implode( ',', array_fill( 0, count( $page_ids ), '%d' ) );
+
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table names and dynamic IN clause placeholders cannot be prepared using placeholders.
+        $sql = $wpdb->prepare( "SELECT page_id, COUNT(*) as totoal_access FROM {$table_name} WHERE page_id IN ($placeholders) GROUP BY page_id", $page_ids );
 
         // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- The query is securely prepared on the line directly above.
         $rows = $wpdb->get_results( $sql );

@@ -360,7 +360,11 @@ class Quentn_Wp_Restrict_Access
 		$get_new_access = false;
 
 		if ( isset( $_GET["qntn_wp"] ) ) { //get email address if it is in qntn query string
-            $get_new_access = sanitize_text_field( wp_unslash( $_GET["qntn_wp"] ) );
+            //qntn_wp is expected to be a sha256 email hash, ignore anything else
+            $qntn_wp = sanitize_text_field( wp_unslash( $_GET["qntn_wp"] ) );
+            if ( preg_match( '/^[a-f0-9]{64}$/', $qntn_wp ) ) {
+                $get_new_access = $qntn_wp;
+            }
 		} elseif ( isset( $_GET["qntn"] ) ) { //qntn is used when request is created from quentn, it is expected in base64 and json encoded
 			$qntn = json_decode( base64_decode( sanitize_text_field( wp_unslash( $_GET["qntn"] ) ) ), true );
 			if ( isset( $qntn['email'] ) && is_email( sanitize_email( $qntn['email'] ) ) ) { //if there is valid email in data send by quentn

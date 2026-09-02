@@ -235,16 +235,21 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
             $sql .= $wpdb->prepare(" AND email LIKE %s", $search);
         }
 
-        //set order by
+        //set order by, restricted to sortable columns and a known direction
         if ( ! empty( $_REQUEST['orderby'] ) ) {
-            $sql .= ' ORDER BY ' . esc_sql( $_REQUEST['orderby'] );
-            $sql .= ! empty( $_REQUEST['order'] ) ? ' ' . esc_sql( $_REQUEST['order'] ) : ' ASC';
+            $sortable = array_keys( $this->get_sortable_columns() );
+            $orderby  = sanitize_key( wp_unslash( $_REQUEST['orderby'] ) );
+
+            if ( in_array( $orderby, $sortable, true ) ) {
+                $order = ( ! empty( $_REQUEST['order'] ) && 'DESC' === strtoupper( sanitize_key( wp_unslash( $_REQUEST['order'] ) ) ) ) ? 'DESC' : 'ASC';
+                $sql  .= " ORDER BY {$orderby} {$order}";
+            }
         }
 
         $offset = ($page_number - 1) * $per_page;
         $sql .= $wpdb->prepare(" LIMIT %d OFFSET %d", $per_page, $offset);
 
-        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- The query is securely prepared on the line directly above.
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql is built only from prepared fragments and an allow-listed ORDER BY.
         $results = $wpdb->get_results( $sql, ARRAY_A );
 
         $is_countdown = ( isset( $this->quentn_page_restriction_data['countdown'] ) && $this->quentn_page_restriction_data['countdown'] ) ?  true : false ;
@@ -404,7 +409,7 @@ class Quentn_Wp_Access_Overview extends \WP_List_Table {
 
             global $wpdb;
 
-            $delete_restrict_pages_ids = esc_sql( $_REQUEST['quentn-bulk-delete-access'] );
+            $delete_restrict_pages_ids = array_values( array_map( 'sanitize_text_field', (array) wp_unslash( $_REQUEST['quentn-bulk-delete-access'] ) ) );
 
             if( ! empty( $delete_restrict_pages_ids ) ) {
                 //delete multiple accesses
