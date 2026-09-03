@@ -2,8 +2,8 @@
 Contributors: quentn
 Tags: Quentn, countdown, page restriction, email, marketing automation
 Requires at least: 4.6.0
-Tested up to: 6.9
-Stable tag: 1.2.14
+Tested up to: 7.0
+Stable tag: 1.2.15
 Requires PHP: 5.6.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -65,6 +65,11 @@ Answer to foo bar dilemma.
 4. Integration Elementor PRO forms with Quentn
 
 == Changelog ==
+
+= 1.2.15 =
+* Security Fix: Patched two SQL Injection vulnerabilities, one unauthenticated in the page access logging and one requiring administrator access in the sorting of the Access Overview page. Thanks to Yaswanth Reddy Sunkara for responsible disclosure!
+* Security: Hardened the remaining dynamic database queries with prepared statements and allow-listed sorting values.
+* Fix: Restored the Elementor Pro form Field Mapping control, which stopped rendering after updating Elementor Pro.
 
 = 1.2.14 =
 * Fix: Moved FontAwesome assets to the correct admin directory to ensure icons display properly in the backend.
@@ -192,7 +197,8 @@ Answer to foo bar dilemma.
 
 == Upgrade Notice ==
 
-== Upgrade Notice ==
+= 1.2.15 - Security Update =
+This release patches two SQL Injection vulnerabilities, one of which can be exploited without logging in. Please update immediately to keep your site secure.
 
 = 1.2.13 - Critical Security Update =
 This is a critical security update that patches an Unauthenticated SQL Injection vulnerability. Please update immediately to keep your site secure and running smoothly.
