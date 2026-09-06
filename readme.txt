@@ -67,7 +67,7 @@ Answer to foo bar dilemma.
 == Changelog ==
 
 = 1.2.15 =
-* Security Fix: Patched two SQL Injection vulnerabilities, one unauthenticated in the page access logging and one requiring administrator access in the sorting of the Access Overview page. Thanks to Yaswanth Reddy Sunkara for responsible disclosure!
+* Security Fix: Patched two SQL Injection vulnerabilities, one unauthenticated in the page access logging (CVE-2026-84068) and one requiring administrator access in the sorting of the Access Overview page (CVE-2026-84113). Thanks to Yaswanth Reddy Sunkara for responsible disclosure!
 * Security: Hardened the remaining dynamic database queries with prepared statements and allow-listed sorting values.
 * Fix: Restored the Elementor Pro form Field Mapping control, which stopped rendering after updating Elementor Pro.
 
