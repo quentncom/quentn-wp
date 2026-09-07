@@ -3,7 +3,7 @@ Contributors: quentn
 Tags: Quentn, countdown, page restriction, email, marketing automation
 Requires at least: 4.6.0
 Tested up to: 7.0
-Stable tag: 1.2.15
+Stable tag: 1.2.16
 Requires PHP: 5.6.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -65,6 +65,9 @@ Answer to foo bar dilemma.
 4. Integration Elementor PRO forms with Quentn
 
 == Changelog ==
+
+= 1.2.16 =
+* Fix: The Quentn section in Elementor Pro forms failed to load on sites where Elementor initialises before the plugin's editor script, leaving Field Mapping empty or unusable.
 
 = 1.2.15 =
 * Security Fix: Patched two SQL Injection vulnerabilities, one unauthenticated in the page access logging (CVE-2026-84068) and one requiring administrator access in the sorting of the Access Overview page (CVE-2026-84113). Thanks to Yaswanth Reddy Sunkara for responsible disclosure!
@@ -196,6 +199,9 @@ Answer to foo bar dilemma.
 * Initial version.
 
 == Upgrade Notice ==
+
+= 1.2.16 =
+Thanks for using Quentn Plugin! Please update the plugin to fix the Quentn section in Elementor Pro forms, which could fail to load and leave Field Mapping empty.
 
 = 1.2.15 - Security Update =
 This release patches two SQL Injection vulnerabilities, one of which can be exploited without logging in. Please update immediately to keep your site secure.
